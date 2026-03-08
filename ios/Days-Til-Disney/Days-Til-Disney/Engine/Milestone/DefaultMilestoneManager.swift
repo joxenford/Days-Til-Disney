@@ -34,7 +34,11 @@ final class DefaultMilestoneManager: MilestoneManager {
 // MARK: - MilestoneEvent
 
 /// A resolved event ready for the UI layer to consume.
-struct MilestoneEvent: Identifiable {
+struct MilestoneEvent: Identifiable, Equatable {
+    static func == (lhs: MilestoneEvent, rhs: MilestoneEvent) -> Bool {
+        lhs.id == rhs.id
+    }
+
     let id = UUID()
     let milestone: Milestone
     let trip: Trip
