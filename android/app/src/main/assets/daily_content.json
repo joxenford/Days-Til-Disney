@@ -1,0 +1,112 @@
+[
+  {
+    "id": "wdw-ff-001",
+    "type": "FUN_FACT",
+    "title": "The Magic Kingdom Is Built on the Second Floor",
+    "body": "The iconic Magic Kingdom park in Walt Disney World sits atop an entire underground city called the Utilidors. Tunnels run beneath the park so cast members can move between lands without breaking the themed immersion above ground.",
+    "parkFilter": null,
+    "resortFilter": "WALT_DISNEY_WORLD",
+    "daysOutMin": 90,
+    "daysOutMax": 9999,
+    "source": "Disney History"
+  },
+  {
+    "id": "wdw-ff-002",
+    "type": "FUN_FACT",
+    "title": "Cinderella Castle Has a Secret Suite",
+    "body": "Deep inside Cinderella Castle at Magic Kingdom is a one-of-a-kind suite that guests can't book — it's used for special Disney guest experiences and sweepstakes winners. The suite features hand-painted mosaic tiles, fiber-optic stars in the ceiling, and a hidden TV behind a magic mirror.",
+    "parkFilter": "MAGIC_KINGDOM",
+    "resortFilter": null,
+    "daysOutMin": 90,
+    "daysOutMax": 9999,
+    "source": "Walt Disney World"
+  },
+  {
+    "id": "wdw-tip-001",
+    "type": "PLANNING_TIP",
+    "title": "Book Dining Reservations Now",
+    "body": "Walt Disney World dining reservations open 60 days in advance. Popular restaurants like Be Our Guest, Cinderella's Royal Table, and Space 220 book up within minutes of opening. Log into My Disney Experience now and set a reminder for exactly 60 days before your trip date.",
+    "parkFilter": null,
+    "resortFilter": "WALT_DISNEY_WORLD",
+    "daysOutMin": 30,
+    "daysOutMax": 89,
+    "source": null
+  },
+  {
+    "id": "wdw-tip-002",
+    "type": "PLANNING_TIP",
+    "title": "Download My Disney Experience",
+    "body": "The My Disney Experience app is your command center for Walt Disney World. Use it to book Lightning Lane passes, view wait times, find Characters, and navigate the parks with live maps. Make sure it's installed and linked to your reservation before you arrive.",
+    "parkFilter": null,
+    "resortFilter": "WALT_DISNEY_WORLD",
+    "daysOutMin": 7,
+    "daysOutMax": 29,
+    "source": null
+  },
+  {
+    "id": "dlr-ff-001",
+    "type": "FUN_FACT",
+    "title": "Walt Disney Walked These Streets",
+    "body": "Disneyland in Anaheim, California is the only Disney park that Walt Disney himself walked during its operation. He opened the park on July 17, 1955, and was a frequent visitor. His private apartment sits above the fire station on Main Street, U.S.A., and a lamp is kept lit in his memory.",
+    "parkFilter": "DISNEYLAND",
+    "resortFilter": null,
+    "daysOutMin": 90,
+    "daysOutMax": 9999,
+    "source": "Disneyland History"
+  },
+  {
+    "id": "dlr-tip-001",
+    "type": "PLANNING_TIP",
+    "title": "Rope Drop Is Your Best Friend at Disneyland",
+    "body": "Disneyland is a compact park, and the biggest attractions fill up fast. Arrive 30-45 minutes before park opening and head straight to Star Wars: Galaxy's Edge or Indiana Jones Adventure. Early morning is magical — crowds are thin and the light is beautiful.",
+    "parkFilter": null,
+    "resortFilter": "DISNEYLAND_RESORT",
+    "daysOutMin": 7,
+    "daysOutMax": 29,
+    "source": null
+  },
+  {
+    "id": "tdr-ff-001",
+    "type": "FUN_FACT",
+    "title": "Tokyo DisneySea Is the World's Most Acclaimed Theme Park",
+    "body": "Tokyo DisneySea has been voted the world's best theme park multiple times by the Themed Entertainment Association. The park is built around a Mediterranean harbor and features seven themed ports of call, each with its own distinct architecture and atmosphere.",
+    "parkFilter": "TOKYO_DISNEYSEA",
+    "resortFilter": null,
+    "daysOutMin": 90,
+    "daysOutMax": 9999,
+    "source": "Themed Entertainment Association"
+  },
+  {
+    "id": "all-trivia-001",
+    "type": "TRIVIA",
+    "title": "Disney Trivia: How Many Attractions?",
+    "body": "Walt Disney World Resort has over 50 rides and attractions across its four theme parks. But here's the tricky part — can you name all four parks? (Magic Kingdom, EPCOT, Hollywood Studios, and Animal Kingdom!)",
+    "parkFilter": null,
+    "resortFilter": null,
+    "daysOutMin": 0,
+    "daysOutMax": 9999,
+    "source": null
+  },
+  {
+    "id": "wdw-ride-001",
+    "type": "RIDE_SPOTLIGHT",
+    "title": "Ride Spotlight: Guardians of the Galaxy — Cosmic Rewind",
+    "body": "EPCOT's Guardians of the Galaxy: Cosmic Rewind is the world's first reverse-launch rollercoaster and one of the longest enclosed rollercoasters on Earth. The omnicoaster ride vehicle rotates 360 degrees so you're always facing the action — and the 80s playlist is genuinely great.",
+    "parkFilter": "EPCOT",
+    "resortFilter": null,
+    "daysOutMin": 0,
+    "daysOutMax": 9999,
+    "source": null
+  },
+  {
+    "id": "all-tip-packing-001",
+    "type": "PLANNING_TIP",
+    "title": "The Packing Essentials for a Disney Day",
+    "body": "Pack light but smart: portable phone charger (you'll use the app constantly), comfortable walking shoes broken in before the trip, sunscreen (reapply every 2 hours!), a light rain poncho (Florida and Paris especially), and a refillable water bottle. Most Disney parks have free water cup stations.",
+    "parkFilter": null,
+    "resortFilter": null,
+    "daysOutMin": 1,
+    "daysOutMax": 6,
+    "source": null
+  }
+]

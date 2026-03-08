@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Theming is primarily handled by Jetpack Compose's MaterialTheme in DisneyTheme.kt.
+    This file contains only the minimal XML theme configuration needed for:
+    - The splash screen (before Compose is initialized)
+    - The activity window background
+    - System UI (status bar, nav bar) configuration
+-->
+<resources>
+
+    <!-- Base app theme. The actual color/typography system lives in Compose. -->
+    <style name="Theme.DaysTilDisney" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Window background matches splash so there's no flash on launch -->
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Splash screen theme — used by MainActivity before Compose content is set -->
+    <style name="Theme.DaysTilDisney.Splash" parent="Theme.SplashScreen">
+        <!-- Splash screen icon background (matches app icon background) -->
+        <item name="windowSplashScreenBackground">#0A0A2A</item>
+        <!-- Duration of animated icon (if using animated vector) -->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <!-- Post-splash theme applied after splash exits -->
+        <item name="postSplashScreenTheme">@style/Theme.DaysTilDisney</item>
+    </style>
+
+</resources>

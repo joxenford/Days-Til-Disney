@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Sample data extraction rules file; uncomment and update rules as appropriate.
+   See https://developer.android.com/about/versions/12/backup-restore for more details.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Local trip data is intentionally excluded from cloud backup in MVP.
+             Users own their data on-device. Cloud sync is a post-MVP feature. -->
+        <exclude domain="database" path="daystildisney.db" />
+        <exclude domain="sharedpref" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="database" path="." />
+        <include domain="sharedpref" path="." />
+        <include domain="file" path="." />
+    </device-transfer>
+</data-extraction-rules>

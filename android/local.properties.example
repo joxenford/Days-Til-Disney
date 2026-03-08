@@ -1,0 +1,16 @@
+# local.properties — DO NOT COMMIT THIS FILE.
+# Copy this file to local.properties and fill in the values for your machine.
+# local.properties is listed in .gitignore by default.
+
+# Path to the Android SDK on your machine.
+# Android Studio sets this automatically when you open the project.
+sdk.dir=/Users/YOUR_USERNAME/Library/Android/sdk
+
+# Example for macOS with Android Studio default install:
+# sdk.dir=/Users/jdoe/Library/Android/sdk
+
+# Example for Linux:
+# sdk.dir=/home/jdoe/Android/Sdk
+
+# Example for Windows:
+# sdk.dir=C\:\\Users\\jdoe\\AppData\\Local\\Android\\Sdk

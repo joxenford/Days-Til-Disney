@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Days \'til Disney</string>
+
+    <!-- Home Screen -->
+    <string name="home_no_trips_title">No trips planned yet</string>
+    <string name="home_no_trips_subtitle">Add your first Disney adventure!</string>
+    <string name="home_add_trip">Add Trip</string>
+    <string name="home_days_until">days until Disney</string>
+    <string name="home_today_title">Today\'s the Day!</string>
+    <string name="home_daily_content_title">Your Disney Tip</string>
+
+    <!-- Countdown -->
+    <string name="countdown_days">days</string>
+    <string name="countdown_hours">hours</string>
+    <string name="countdown_minutes">minutes</string>
+    <string name="countdown_today">TODAY!</string>
+    <string name="countdown_accessibility_days">%1$d days until your Disney trip</string>
+    <string name="countdown_accessibility_today">Today is your Disney trip day!</string>
+
+    <!-- Trip Detail -->
+    <string name="trip_detail_resort">Resort</string>
+    <string name="trip_detail_parks">Parks</string>
+    <string name="trip_detail_dates">Dates</string>
+    <string name="trip_detail_set_primary">Set as Primary Trip</string>
+    <string name="trip_detail_edit">Edit Trip</string>
+    <string name="trip_detail_delete">Delete Trip</string>
+    <string name="trip_detail_delete_confirm_title">Delete Trip?</string>
+    <string name="trip_detail_delete_confirm_body">This will permanently delete \"%1$s\" and all its data.</string>
+    <string name="trip_detail_delete_confirm">Delete</string>
+
+    <!-- Add/Edit Trip -->
+    <string name="add_trip_title">New Trip</string>
+    <string name="edit_trip_title">Edit Trip</string>
+    <string name="add_trip_name_label">Trip Name</string>
+    <string name="add_trip_name_placeholder">e.g., Smith Family Magic Kingdom Adventure</string>
+    <string name="add_trip_resort_label">Destination</string>
+    <string name="add_trip_parks_label">Parks</string>
+    <string name="add_trip_start_date_label">Start Date</string>
+    <string name="add_trip_end_date_label">End Date</string>
+    <string name="add_trip_primary_label">Set as my primary countdown</string>
+    <string name="add_trip_save">Save Trip</string>
+    <string name="add_trip_cancel">Cancel</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_theme_title">Appearance</string>
+    <string name="settings_theme_auto">Follow system</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_credits">Made with magic by Thinkup LLC</string>
+
+    <!-- Resorts -->
+    <string name="resort_wdw">Walt Disney World</string>
+    <string name="resort_dlr">Disneyland Resort</string>
+    <string name="resort_tdr">Tokyo Disney Resort</string>
+    <string name="resort_dlp">Disneyland Paris</string>
+    <string name="resort_hkdl">Hong Kong Disneyland</string>
+    <string name="resort_shdl">Shanghai Disneyland</string>
+
+    <!-- Parks -->
+    <string name="park_magic_kingdom">Magic Kingdom</string>
+    <string name="park_epcot">EPCOT</string>
+    <string name="park_hollywood_studios">Hollywood Studios</string>
+    <string name="park_animal_kingdom">Animal Kingdom</string>
+    <string name="park_disneyland">Disneyland</string>
+    <string name="park_california_adventure">Disney California Adventure</string>
+    <string name="park_tokyo_disneyland">Tokyo Disneyland</string>
+    <string name="park_tokyo_disneysea">Tokyo DisneySea</string>
+    <string name="park_disneyland_paris">Disneyland Park Paris</string>
+    <string name="park_wds_paris">Walt Disney Studios Park</string>
+    <string name="park_hong_kong">Hong Kong Disneyland</string>
+    <string name="park_shanghai">Shanghai Disneyland</string>
+
+    <!-- Milestones -->
+    <string name="milestone_100">100 Days of Magic!</string>
+    <string name="milestone_50">50 Days to Go!</string>
+    <string name="milestone_30">One Month Until Disney!</string>
+    <string name="milestone_14">Two Weeks Away!</string>
+    <string name="milestone_7">One Week to Go!</string>
+    <string name="milestone_3">Three Days!</string>
+    <string name="milestone_1">Tomorrow\'s the Day!</string>
+    <string name="milestone_0">TODAY IS THE DAY!</string>
+
+    <!-- Errors -->
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="error_no_trips">No trips found</string>
+    <string name="error_save_trip">Could not save your trip. Please try again.</string>
+
+    <!-- Content Types -->
+    <string name="content_type_fun_fact">Fun Fact</string>
+    <string name="content_type_planning_tip">Planning Tip</string>
+    <string name="content_type_trivia">Trivia</string>
+    <string name="content_type_ride_spotlight">Ride Spotlight</string>
+</resources>

@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "content": [
+    {
+      "id": "ff-001",
+      "type": "fun_fact",
+      "title": "The Castle Has a Secret Apartment",
+      "body": "Walt Disney had a private apartment built above the fire station on Main Street, U.S.A. at Disneyland. He never actually slept there, but a light in the window is kept on to this day in his honor — a tradition that has continued since his passing in 1966.",
+      "parkFilter": ["disneyland"],
+      "daysOutRange": null
+    },
+    {
+      "id": "ff-002",
+      "type": "fun_fact",
+      "title": "EPCOT Stands For Something",
+      "body": "EPCOT is an acronym — it stands for Experimental Prototype Community of Tomorrow. Walt Disney's original vision was an actual functioning city of the future, not a theme park. The current EPCOT park opened in 1982, 16 years after Walt passed, and was reimagined as a world's fair-style experience celebrating human achievement.",
+      "parkFilter": ["epcot"],
+      "daysOutRange": null
+    },
+    {
+      "id": "ff-003",
+      "type": "fun_fact",
+      "title": "Tokyo DisneySea Is Universally Beloved",
+      "body": "Tokyo DisneySea consistently ranks as one of the most beautiful theme parks on Earth. It was the first Disney park to be built entirely without a traditional Main Street, and its theming is so detailed that Imagineers from other parks regularly visit it for inspiration. The Mediterranean Harbor at park entrance took nearly a decade to design.",
+      "parkFilter": ["tokyoDisneySea"],
+      "daysOutRange": null
+    },
+    {
+      "id": "pt-001",
+      "type": "planning_tip",
+      "title": "Dining Reservations Open 60 Days Out",
+      "body": "Walt Disney World dining reservations open exactly 60 days before your visit date. The most sought-after restaurants — Be Our Guest, Cinderella's Royal Table, Space 220, and Oga's Cantina — book up within minutes of opening. Set an alarm for 6:00 AM Eastern on your 60-day mark and have the My Disney Experience app ready to go.",
+      "parkFilter": ["magicKingdom", "epcot", "hollywoodStudios", "animalKingdom"],
+      "daysOutRange": { "min": 61, "max": 120 }
+    },
+    {
+      "id": "pt-002",
+      "type": "planning_tip",
+      "title": "Arrive Before Park Opening",
+      "body": "Getting to the park gates 30-45 minutes before official opening is one of the best moves you can make. Disney often begins letting guests in early (called 'rope drop'), and the first hour sees dramatically shorter wait times. At Magic Kingdom, heading straight to Tomorrowland or Fantasyland while others are still on Main Street can save hours of waiting.",
+      "parkFilter": null,
+      "daysOutRange": { "min": 1, "max": 14 }
+    },
+    {
+      "id": "pt-003",
+      "type": "planning_tip",
+      "title": "The Disneyland Paris Meal Plan Strategy",
+      "body": "Disneyland Paris restaurants can fill up surprisingly fast, especially during European school holidays. Book your sit-down meals through the Disneyland Paris app as soon as your reservation window opens. The Blue Lagoon Restaurant inside Pirates of the Caribbean offers an unbeatable atmosphere — you dine right next to the ride boats gliding past.",
+      "parkFilter": ["disneylandParkParis", "waltDisneyStudiosPark"],
+      "daysOutRange": { "min": 30, "max": 90 }
+    },
+    {
+      "id": "tv-001",
+      "type": "trivia",
+      "title": "How Many Bricks Make Up Cinderella Castle?",
+      "body": "Trick question! Cinderella Castle at Magic Kingdom has no actual bricks at all. The structure is built from steel, concrete, and fiberglass. The 'stones' you see are all painted texture. The castle stands 189 feet tall — just short of 200 feet, which would have required the FAA to put aircraft warning lights on top.",
+      "parkFilter": ["magicKingdom"],
+      "daysOutRange": null
+    },
+    {
+      "id": "tv-002",
+      "type": "trivia",
+      "title": "Which Park Has the Most Rides?",
+      "body": "Among all Disney parks worldwide, Tokyo DisneySea holds an impressive density of major attractions for its size. However, Walt Disney World as a whole resort complex contains the most total attractions across its four parks. Magic Kingdom alone has hosted more annual visitors than any other theme park on Earth for decades running.",
+      "parkFilter": null,
+      "daysOutRange": null
+    },
+    {
+      "id": "rs-001",
+      "type": "ride_spotlight",
+      "title": "Journey to the Center of the Earth",
+      "body": "Located in the Mysterious Island area of Tokyo DisneySea, Journey to the Center of the Earth is widely considered one of the finest theme park rides ever built. Guests board volcanic terrain vehicles and descend into the earth, encountering stunning prehistoric creatures before a thrilling eruption finale. The queue itself is a masterpiece of Imagineering storytelling — plan at least 15 minutes to take it all in. Ride it early, as waits regularly exceed 90 minutes by mid-morning.",
+      "parkFilter": ["tokyoDisneySea"],
+      "daysOutRange": null
+    },
+    {
+      "id": "rs-002",
+      "type": "ride_spotlight",
+      "title": "Haunted Mansion: 999 Happy Haunts",
+      "body": "The Haunted Mansion at Magic Kingdom has been terrifying — and delighting — guests since 1971. The attraction contains exactly 999 'happy haunts' according to the Ghost Host narrator, who always notes there is room for one more. Look for the famous Leota tombstone in the pet cemetery outside (a nod to Imagineer Leota Toombs, whose face appears in the Seance Room crystal ball). The Doom Buggies travel 1.5 miles through the mansion at a carefully calibrated slow speed designed to maximize every scene.",
+      "parkFilter": ["magicKingdom", "disneyland"],
+      "daysOutRange": null
+    }
+  ]
+}

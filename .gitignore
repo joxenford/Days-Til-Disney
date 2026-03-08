@@ -1,0 +1,208 @@
+# ============================================================
+# DaysTilDisney — Mono-Repo .gitignore
+# Covers: iOS (Xcode/SwiftUI), Android (Gradle/Compose), Shared
+# ============================================================
+
+
+# ============================================================
+# macOS
+# ============================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+
+# ============================================================
+# Xcode & iOS
+# ============================================================
+
+# Build output
+build/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+
+# User-specific Xcode settings
+*.xcuserstate
+*.xccheckout
+.xcuserdata/
+**/*.xcodeproj/xcuserdata/
+**/*.xcworkspace/xcuserdata/
+
+# Xcode project generated files (keep xcodeproj and xcworkspace, exclude generated)
+*.moved-aside
+*.orig
+
+# Xcode Previews
+**/__Previews/
+
+# Instruments
+*.trace
+
+# Simulator logs
+*.simlog
+
+# Code signing
+*.p12
+*.p8
+*.mobileprovision
+*.cer
+*.certSigningRequest
+ExportOptions.plist
+
+# Fastlane (if added later)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+fastlane/README.md
+
+# Swift Package Manager
+.build/
+.swiftpm/
+**/checkouts/
+**/artifacts/
+**/repositories/
+Package.resolved
+
+# CocoaPods (just in case)
+Pods/
+*.xcworkspace
+!*.xcodeproj/*.xcworkspace
+Podfile.lock
+
+# Carthage (just in case)
+Carthage/Build/
+Carthage/Checkouts/
+
+# TestFlight / App Store
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+
+# ============================================================
+# Android
+# ============================================================
+
+# Gradle build output
+android/build/
+android/**/build/
+android/**/.gradle/
+android/local.properties
+
+# Kotlin/Java compiled output
+*.class
+*.jar
+*.aar
+*.ap_
+
+# Android Studio
+*.iml
+.idea/
+android/.idea/
+android/**/*.iml
+
+# Android-specific OS files
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+
+# Google Services (keep the template, exclude actual keys)
+google-services.json
+GoogleService-Info.plist
+
+# Keystore files (NEVER commit signing keys)
+*.jks
+*.keystore
+android/keystore.properties
+android/**/keystore.properties
+
+# Proguard
+android/**/proguard/
+
+
+# ============================================================
+# IDE — JetBrains (Android Studio / IntelliJ)
+# ============================================================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+
+# ============================================================
+# IDE — VS Code
+# ============================================================
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+
+# ============================================================
+# Environment & Secrets
+# ============================================================
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.*
+!.env.example
+secrets/
+*.secret
+config/secrets.yml
+
+
+# ============================================================
+# Node / JavaScript (for any tooling scripts)
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm
+.yarn/cache
+
+
+# ============================================================
+# Miscellaneous
+# ============================================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "11111111-0000-0000-0000-000000000001",
+    "type": "fun_fact",
+    "title": "Walt's Secret Land Deal",
+    "body": "Walt Disney purchased the land for Walt Disney World in 1964 under a secret alias — 'Reedy Creek Improvement District' — to keep prices from skyrocketing. He paid roughly $5 million for 27,000 acres, about $185 per acre. Today that land is worth billions.",
+    "days_out_min": 90,
+    "days_out_max": 9999,
+    "source": "Disney History"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000002",
+    "type": "fun_fact",
+    "title": "Sleeping Beauty Castle's Scale Trick",
+    "body": "Disneyland's Sleeping Beauty Castle uses a technique called 'forced perspective' to look taller than it really is. The upper floors and turrets are built at smaller scales than the base, tricking your eye into perceiving the castle as much larger. The castle is actually only 77 feet tall.",
+    "park": "disneyland",
+    "days_out_min": 90,
+    "days_out_max": 9999,
+    "source": "Disney Imagineering"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000003",
+    "type": "fun_fact",
+    "title": "The Underground City of Magic Kingdom",
+    "body": "Beneath Magic Kingdom lies a network of underground tunnels called 'utilidors' — short for utility corridors. Cast members use these tunnels to move around the park without breaking the magic. This keeps costumed characters from being seen in the 'wrong' themed land.",
+    "park": "magicKingdom",
+    "days_out_min": 90,
+    "days_out_max": 9999,
+    "source": "Disney Operations"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000004",
+    "type": "planning_tip",
+    "title": "Book Dining 60 Days Before Check-In",
+    "body": "Walt Disney World resort hotel guests can book dining reservations 60 days before check-in for their entire stay. Off-site guests can book 60 days before each individual dining date. Log into My Disney Experience at 6:00 AM Eastern Time sharp for the best shot at top restaurants like Cinderella's Royal Table or Be Our Guest.",
+    "resort": "waltDisneyWorld",
+    "days_out_min": 30,
+    "days_out_max": 89,
+    "source": "Disney Dining"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000005",
+    "type": "planning_tip",
+    "title": "Download My Disney Experience Before You Go",
+    "body": "The My Disney Experience app is your command center for Walt Disney World. Download it now and link your park tickets, set up mobile ordering for quick-service restaurants, view wait times in real time, and access your Lightning Lane reservations. Setting it up before you arrive saves precious park time.",
+    "resort": "waltDisneyWorld",
+    "days_out_min": 7,
+    "days_out_max": 89,
+    "source": "Disney App"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000006",
+    "type": "trivia",
+    "title": "How Many Miles of Track Does WDW Have?",
+    "body": "Walt Disney World Resort has approximately 100 miles of track running throughout the property — including the monorail, resort boats, and all the theme park attractions. That's enough track to stretch from Orlando nearly to Jacksonville, FL!",
+    "resort": "waltDisneyWorld",
+    "days_out_min": 0,
+    "days_out_max": 9999,
+    "source": "Disney Engineering"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000007",
+    "type": "ride_spotlight",
+    "title": "Haunted Mansion: 999 Happy Haunts",
+    "body": "The Haunted Mansion claims to be home to 999 happy haunts — but there's always room for one more. The attraction opened in 1969 at Disneyland and 1971 at Magic Kingdom. Look carefully for the famous 'stretching room' ceiling paintings and the hitchhiking ghosts Ezra, Gus, and Phineas who may just follow you home.",
+    "days_out_min": 0,
+    "days_out_max": 9999,
+    "source": "Disney Attraction"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000008",
+    "type": "planning_tip",
+    "title": "Arrive 30 Minutes Before Park Opening",
+    "body": "Arriving at the park gates 30 minutes before the official opening time lets you clear bag check, tap through the turnstiles, and position yourself for the opening show or to sprint to the most popular attraction first. The first 30 minutes of the day often have the shortest wait times of the entire day.",
+    "days_out_min": 0,
+    "days_out_max": 29,
+    "source": "Disney Planning Pro Tips"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000009",
+    "type": "fun_fact",
+    "title": "Tokyo DisneySea: The Only One of Its Kind",
+    "body": "Tokyo DisneySea is completely unique — there is no other DisneySea anywhere in the world. Opened in 2001, it was designed from the ground up with a nautical exploration theme and is widely considered one of the most beautifully themed theme parks ever built. Mount Prometheus, its centerpiece volcano, is a fully functional theatrical volcano.",
+    "park": "tokyoDisneySea",
+    "days_out_min": 90,
+    "days_out_max": 9999,
+    "source": "Oriental Land Company"
+  },
+  {
+    "id": "11111111-0000-0000-0000-000000000010",
+    "type": "planning_tip",
+    "title": "Wear Comfortable, Broken-In Shoes",
+    "body": "The average Disney park visitor walks 8–12 miles per day. Do not wear brand-new shoes to the parks — break them in at home first. Many seasoned Disney veterans swear by Hoka or Brooks running shoes for all-day comfort. Bring a small blister kit just in case, and consider moisture-wicking socks to prevent hot spots.",
+    "days_out_min": 0,
+    "days_out_max": 29,
+    "source": "Disney Trip Planning"
+  }
+]
