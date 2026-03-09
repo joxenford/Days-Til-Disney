@@ -4,6 +4,7 @@ import SwiftUI
 struct DailyContentCardView: View {
     let content: DailyContent
     @State private var isExpanded = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -76,7 +77,7 @@ struct DailyContentCardView: View {
                 }
         }
         .onTapGesture {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
                 isExpanded.toggle()
             }
         }
@@ -86,6 +87,7 @@ struct DailyContentCardView: View {
             : "\(content.type.accessibilityLabel): \(content.title)"
         )
         .accessibilityHint(isExpanded ? "Tap to collapse" : "Tap to expand")
+        .accessibilityAddTraits(.isButton)
     }
 }
 

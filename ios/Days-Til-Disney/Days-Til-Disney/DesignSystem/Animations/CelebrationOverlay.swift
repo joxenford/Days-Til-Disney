@@ -6,6 +6,8 @@ struct CelebrationOverlay: View {
     let event: MilestoneEvent
     @Binding var isPresented: Bool
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     @State private var particles: [ParticleState] = []
     @State private var showContent: Bool = false
 
@@ -31,14 +33,16 @@ struct CelebrationOverlay: View {
                 // Milestone card.
                 if showContent {
                     MilestoneCelebrationCard(event: event, onDismiss: dismiss)
-                        .transition(.scale(scale: 0.7).combined(with: .opacity))
+                        .transition(reduceMotion ? .opacity : .scale(scale: 0.7).combined(with: .opacity))
                         .padding(.horizontal, 32)
                 }
             }
             .onAppear {
                 triggerHaptic()
-                spawnParticles(in: geo.size)
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.75).delay(0.2)) {
+                if !reduceMotion {
+                    spawnParticles(in: geo.size)
+                }
+                withAnimation(reduceMotion ? .none : .spring(response: 0.5, dampingFraction: 0.75).delay(0.2)) {
                     showContent = true
                 }
             }
@@ -54,7 +58,7 @@ struct CelebrationOverlay: View {
     // MARK: - Private
 
     private func dismiss() {
-        withAnimation(.easeInOut(duration: 0.3)) {
+        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
             showContent = false
             isPresented = false
         }
@@ -132,6 +136,7 @@ private struct MilestoneCelebrationCard: View {
                     .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
+            .accessibilityLabel("Let's Go")
             .accessibilityHint("Dismisses the celebration")
         }
         .padding(28)

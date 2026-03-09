@@ -120,6 +120,7 @@ struct SmallWidgetView: View {
                 WidgetCastleSilhouette(size: 70)
                     .opacity(0.12)
                     .offset(x: 10, y: 10)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(trip.primaryPark.emoji)
@@ -151,6 +152,8 @@ struct SmallWidgetView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
             EmptyWidgetView()
         }
@@ -169,6 +172,7 @@ struct MediumWidgetView: View {
                 WidgetCastleSilhouette(size: 100)
                     .opacity(0.2)
                     .offset(x: 30, y: 15)
+                    .accessibilityHidden(true)
 
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -209,6 +213,8 @@ struct MediumWidgetView: View {
                     Spacer()
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
             EmptyWidgetView()
         }
@@ -237,12 +243,15 @@ struct AccessoryCircularWidgetView: View {
                         .font(.system(size: 8, weight: .medium, design: .rounded))
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
             VStack {
                 Image(systemName: "sparkles")
                 Text("—")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
             }
+            .accessibilityLabel("Days Til Disney. No trip configured.")
         }
     }
 }
@@ -277,13 +286,31 @@ struct AccessoryRectangularWidgetView: View {
                         .opacity(0.7)
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
             HStack {
                 Image(systemName: "sparkles")
+                    .accessibilityHidden(true)
                 Text("Add a Disney trip!")
                     .font(.system(size: 12, weight: .medium, design: .rounded))
             }
+            .accessibilityLabel("Days Til Disney. Add a trip to start your countdown.")
         }
+    }
+}
+
+// MARK: - Shared accessibility helper
+
+/// Generates a single descriptive VoiceOver label for any widget size.
+private func widgetAccessibilityLabel(trip: WidgetTripEntry) -> String {
+    if trip.isPast {
+        return "\(trip.tripName). Trip complete."
+    } else if trip.isToday {
+        return "\(trip.tripName). Today is the day!"
+    } else {
+        let days = trip.daysUntilStart
+        return "\(trip.tripName). \(days) \(days == 1 ? "day" : "days") until your Disney trip."
     }
 }
 
@@ -294,10 +321,13 @@ struct EmptyWidgetView: View {
         VStack(spacing: 8) {
             WidgetCastleSilhouette(size: 60)
                 .opacity(0.4)
+                .accessibilityHidden(true)
             Text("Add a trip!")
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white.opacity(0.7))
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Days Til Disney. Add a trip to start your countdown.")
     }
 }
 

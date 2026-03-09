@@ -58,6 +58,7 @@ struct SettingsView: View {
                     Spacer()
                     Image(systemName: "castle.fill")
                         .foregroundStyle(Color.disneyGold)
+                        .accessibilityHidden(true)
                 }
 
                 HStack {

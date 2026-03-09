@@ -118,7 +118,10 @@ struct TripCardView: View {
             Text("This will permanently remove \"\(trip.name)\" and cannot be undone.")
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(isPast ? "\(trip.name), trip complete" : "\(trip.name), \(trip.daysUntilStart) days away")
+        .accessibilityLabel(isPast
+            ? "\(trip.name), trip complete"
+            : "\(trip.name), \(trip.daysUntilStart) \(trip.daysUntilStart == 1 ? "day" : "days") away"
+        )
         .accessibilityHint("Tap to view details. Long press for options.")
     }
 }

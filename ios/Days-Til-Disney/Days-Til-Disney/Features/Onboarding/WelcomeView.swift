@@ -8,6 +8,8 @@ struct WelcomeView: View {
     /// Called when the user taps the skip option — proceeds to HomeView without a trip.
     let onSkip: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     @State private var castleOpacity: Double = 0
     @State private var castleOffset: CGFloat = 60
     @State private var contentOpacity: Double = 0
@@ -49,6 +51,7 @@ struct WelcomeView: View {
                     // Sparkle constellation around the castle.
                     WelcomeSparkles()
                         .opacity(sparkleOpacity)
+                        .accessibilityHidden(true)
                 }
                 .frame(height: 280)
 
@@ -110,6 +113,15 @@ struct WelcomeView: View {
     // MARK: - Entrance animation
 
     private func runEntrance() {
+        if reduceMotion {
+            // Skip animations — show everything immediately.
+            castleOpacity = 0.9
+            castleOffset = 0
+            sparkleOpacity = 1.0
+            contentOpacity = 1.0
+            return
+        }
+
         // Castle rises from below.
         withAnimation(.spring(response: 0.9, dampingFraction: 0.72).delay(0.1)) {
             castleOpacity = 0.9

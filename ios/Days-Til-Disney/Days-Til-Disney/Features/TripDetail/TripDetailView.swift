@@ -6,6 +6,7 @@ struct TripDetailView: View {
 
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: TripDetailViewModel?
     @State private var showCelebration = false
     @State private var isInitialLoad = true
@@ -38,7 +39,7 @@ struct TripDetailView: View {
             Task { await vm.onAppear() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
                 showCelebration = newValue != nil
             }
         }
@@ -179,6 +180,7 @@ struct TripDetailView: View {
             Image(systemName: icon)
                 .foregroundStyle(Color.disneyGold)
                 .font(.title3)
+                .accessibilityHidden(true)
             Text(value)
                 .font(DTDFont.bodyMedium)
                 .foregroundStyle(.white)
@@ -186,6 +188,8 @@ struct TripDetailView: View {
                 .font(DTDFont.caption)
                 .foregroundStyle(.white.opacity(0.6))
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
     }
 
     @ViewBuilder

@@ -5,6 +5,8 @@ import SwiftUI
 struct SplashView: View {
     let onComplete: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     @State private var castleOpacity: Double = 0
     @State private var castleScale: Double = 0.6
     @State private var titleOpacity: Double = 0
@@ -41,6 +43,7 @@ struct SplashView: View {
                 SparkleDecoration()
                     .opacity(sparkleOpacity)
                     .scaleEffect(sparkleScale)
+                    .accessibilityHidden(true)
 
                 // App title
                 VStack(spacing: 8) {
@@ -73,6 +76,16 @@ struct SplashView: View {
     // MARK: - Animation sequence
 
     private func runAnimation() {
+        if reduceMotion {
+            // Show everything immediately — no motion.
+            castleOpacity = 0.85
+            castleScale = 1.0
+            sparkleOpacity = 1.0
+            sparkleScale = 1.0
+            titleOpacity = 1.0
+            return
+        }
+
         // 1. Castle rises
         withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
             castleOpacity = 0.85

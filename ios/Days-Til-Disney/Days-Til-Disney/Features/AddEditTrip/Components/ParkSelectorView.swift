@@ -106,6 +106,12 @@ private struct ResortCard: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(resort.displayName)
+            .accessibilityHint(isSelected
+                ? (isExpanded ? "Tap to collapse park list" : "Tap to expand park list")
+                : "Tap to select this resort"
+            )
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
 
             // Park selection (expanded state).
             if isExpanded && isSelected && resort.parks.count > 1 {

@@ -10,6 +10,7 @@ struct CountdownHeroView: View {
     var onAddTrip: (() -> Void)? = nil
 
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var countdownScale: Double = 1.0
 
@@ -71,10 +72,12 @@ struct CountdownHeroView: View {
                         )
                         .padding(.top, 28)
 
-                        // Park name.
-                        Text(trip.primaryPark.displayName.uppercased())
+                        // Park name — use .textCase(.uppercase) rather than .uppercased()
+                        // so VoiceOver reads the natural name instead of spelling letters.
+                        Text(trip.primaryPark.displayName)
                             .font(DTDFont.captionBold)
                             .foregroundStyle(.white.opacity(0.65))
+                            .textCase(.uppercase)
                             .tracking(2)
                             .padding(.top, 4)
 
@@ -121,6 +124,7 @@ struct CountdownHeroView: View {
             )
             .onChange(of: countdown.days) { _, _ in
                 // Animate the number change when the day flips.
+                guard !reduceMotion else { return }
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                     countdownScale = 1.08
                 }
@@ -157,11 +161,14 @@ struct CountdownHeroView: View {
             Text("\(countdown.days)")
                 .font(.system(size: 88, weight: .black, design: .rounded))
                 .foregroundStyle(.white)
+                .minimumScaleFactor(0.5)
                 .contentTransition(.numericText())
 
-            Text(countdown.days == 1 ? "DAY" : "DAYS")
+            // Use .textCase(.uppercase) so VoiceOver reads "days" not "D-A-Y-S".
+            Text(countdown.days == 1 ? "day" : "days")
                 .font(DTDFont.countdownLabel())
                 .foregroundStyle(.white.opacity(0.75))
+                .textCase(.uppercase)
                 .tracking(3)
         }
     }
@@ -172,6 +179,7 @@ struct CountdownHeroView: View {
                 Text("\(countdown.hours)")
                     .font(.system(size: 64, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
+                    .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
 
                 Text("h")
@@ -181,6 +189,7 @@ struct CountdownHeroView: View {
                 Text("\(countdown.minutes)")
                     .font(.system(size: 64, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
+                    .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
 
                 Text("m")
@@ -188,9 +197,11 @@ struct CountdownHeroView: View {
                     .foregroundStyle(.white.opacity(0.75))
             }
 
-            Text("UNTIL MAGIC")
+            // Use .textCase(.uppercase) so VoiceOver reads "until magic" not "U-N-T-I-L".
+            Text("until magic")
                 .font(DTDFont.countdownLabel())
                 .foregroundStyle(.white.opacity(0.75))
+                .textCase(.uppercase)
                 .tracking(2)
         }
     }

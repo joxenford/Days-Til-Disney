@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: HomeViewModel?
     @State private var showCelebration = false
     @State private var pastTripsExpanded = false
@@ -46,7 +47,7 @@ struct HomeView: View {
             Task { await vm.onRefresh() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
                 showCelebration = newValue != nil
             }
         }
@@ -155,7 +156,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Disclosure header.
             Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.75)) {
                     pastTripsExpanded.toggle()
                 }
             } label: {
@@ -204,6 +205,7 @@ struct HomeView: View {
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .fixedSize()
+                .accessibilityHidden(true)
         }
         ToolbarItem(placement: .navigationBarTrailing) {
             HStack(spacing: 16) {
