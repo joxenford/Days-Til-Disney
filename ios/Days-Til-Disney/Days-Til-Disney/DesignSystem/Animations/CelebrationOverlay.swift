@@ -42,6 +42,12 @@ struct CelebrationOverlay: View {
                     showContent = true
                 }
             }
+            .task {
+                // Clear particles after the fall animation completes.
+                // Task cancels automatically when the overlay disappears.
+                try? await Task.sleep(for: .seconds(2.5))
+                particles = []
+            }
         }
     }
 
@@ -83,11 +89,6 @@ struct CelebrationOverlay: View {
                 particles[i].y += Double.random(in: 200...500)
                 particles[i].opacity = 0
             }
-        }
-
-        // Clear particles after the animation completes to free memory.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            particles = []
         }
     }
 }

@@ -148,6 +148,8 @@ struct TripDetailView: View {
                             .clipShape(Capsule())
                     }
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Parks: \(trip.parks.map(\.displayName).joined(separator: ", "))")
             }
         }
         .padding(.horizontal, 20)

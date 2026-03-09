@@ -78,11 +78,15 @@ final class HomeViewModel {
             let secondary = otherTrips.filter { !$0.isPast }
             let past = otherTrips.filter { $0.isPast }
 
-            viewState = .loaded(primary: primary, secondary: secondary, past: past)
-
-            // Update theme to match primary trip.
+            // Update theme before exposing the loaded state so the gradient
+            // is correct on the very first frame — no one-frame wrong-theme flash.
             if let primary {
                 themeProvider.setActivePark(primary.primaryPark)
+            }
+
+            viewState = .loaded(primary: primary, secondary: secondary, past: past)
+
+            if let primary {
                 await loadDailyContent(for: primary)
                 checkMilestones(for: primary)
             }
@@ -161,6 +165,7 @@ extension HomeViewModel {
 
 // MARK: - Mock implementations for previews
 
+@MainActor
 private final class MockTripRepository: TripRepository {
     func fetchAllTrips() async throws -> [Trip] { [Trip.preview, Trip.previewToday] }
     func fetchPrimaryTrip() async throws -> Trip? { Trip.preview }
@@ -172,7 +177,9 @@ private final class MockTripRepository: TripRepository {
     func setPrimaryTrip(id: UUID) async throws {}
 }
 
+@MainActor
 private final class MockContentEngine: ContentEngine {
     func contentForToday(trip: Trip) async throws -> DailyContent? { .preview }
+    func fetchContentFeed(for trip: Trip, daysOut: Int) async throws -> [DailyContent] { [] }
     func resetHistory(for tripID: UUID) async {}
 }

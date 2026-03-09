@@ -20,20 +20,20 @@ final class TripDetailViewModel {
 
     private let tripID: UUID
     private let tripRepository: any TripRepository
-    private let contentRepository: any ContentRepository
+    private let contentEngine: any ContentEngine
     private let milestoneManager: any MilestoneManager
     private let themeProvider: ParkThemeProvider
 
     init(
         tripID: UUID,
         tripRepository: any TripRepository,
-        contentRepository: any ContentRepository,
+        contentEngine: any ContentEngine,
         milestoneManager: any MilestoneManager,
         themeProvider: ParkThemeProvider
     ) {
         self.tripID = tripID
         self.tripRepository = tripRepository
-        self.contentRepository = contentRepository
+        self.contentEngine = contentEngine
         self.milestoneManager = milestoneManager
         self.themeProvider = themeProvider
     }
@@ -54,7 +54,7 @@ final class TripDetailViewModel {
             }
 
             let daysOut = trip.daysUntilStart
-            let content = try await contentRepository.fetchContent(for: trip, daysOut: daysOut)
+            let content = try await contentEngine.fetchContentFeed(for: trip, daysOut: daysOut)
 
             viewState = .loaded(trip: trip, content: content)
             themeProvider.setActivePark(trip.primaryPark)
@@ -84,7 +84,7 @@ final class TripDetailViewModel {
         TripDetailViewModel(
             tripID: tripID,
             tripRepository: container.tripRepository,
-            contentRepository: container.contentRepository,
+            contentEngine: container.contentEngine,
             milestoneManager: container.milestoneManager,
             themeProvider: container.themeProvider
         )

@@ -50,10 +50,21 @@ private struct ResortCard: View {
     var body: some View {
         VStack(spacing: 0) {
             // Resort header row.
+            // Expansion rules:
+            //   - Newly selected resort: .onChange(of: isSelected) opens it.
+            //   - Already selected resort: tapping toggles open/closed.
+            //   - Switching away from a resort: .onChange closes it implicitly
+            //     because isSelected becomes false, hiding the expanded section.
             Button(action: {
-                onSelect()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                    isExpanded = isSelected ? !isExpanded : true
+                if isSelected {
+                    // Already selected — toggle the expanded panel.
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        isExpanded.toggle()
+                    }
+                } else {
+                    // Selecting a new resort — onSelect triggers .onChange which
+                    // sets isExpanded = true for this card.
+                    onSelect()
                 }
             }) {
                 HStack(spacing: 14) {

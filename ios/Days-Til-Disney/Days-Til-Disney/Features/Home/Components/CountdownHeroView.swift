@@ -123,10 +123,14 @@ struct CountdownHeroView: View {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                     countdownScale = 1.08
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                        countdownScale = 1.0
-                    }
+            }
+            .task(id: countdownScale) {
+                // Return scale to 1.0 after the bounce — Task cancels automatically
+                // when the view disappears or countdownScale changes again.
+                guard countdownScale != 1.0 else { return }
+                try? await Task.sleep(for: .seconds(0.3))
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    countdownScale = 1.0
                 }
             }
         }

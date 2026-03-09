@@ -8,6 +8,7 @@ import Foundation
 /// 3. Pick a deterministically random item seeded by (tripID + date) so the
 ///    same content appears consistently on the same day across app launches.
 /// 4. If all relevant content has been shown, reset shown history and start again.
+@MainActor
 final class LocalContentEngine: ContentEngine {
     private let repository: any ContentRepository
     private let calendar: Calendar
@@ -44,6 +45,10 @@ final class LocalContentEngine: ContentEngine {
 
         await repository.markContentShown(contentID: selected.id, tripID: trip.id)
         return selected
+    }
+
+    func fetchContentFeed(for trip: Trip, daysOut: Int) async throws -> [DailyContent] {
+        try await repository.fetchContent(for: trip, daysOut: daysOut)
     }
 
     func resetHistory(for tripID: UUID) async {

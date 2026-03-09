@@ -18,16 +18,6 @@ extension Date {
         Calendar.current.daysUntil(self)
     }
 
-    /// Hours from now until this date. Useful on the final day countdown.
-    var hoursUntil: Int {
-        max(0, Int(timeIntervalSinceNow / 3600))
-    }
-
-    /// Minutes from now until this date.
-    var minutesUntil: Int {
-        max(0, Int(timeIntervalSinceNow / 60))
-    }
-
     /// True if this date falls on today's calendar day.
     var isToday: Bool {
         Calendar.current.isDateInToday(self)

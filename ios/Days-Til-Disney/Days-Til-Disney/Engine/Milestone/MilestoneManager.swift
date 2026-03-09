@@ -1,6 +1,7 @@
 import Foundation
 
 /// The contract for detecting and emitting milestone celebration events.
+@MainActor
 protocol MilestoneManager {
     /// Checks whether the given days-out count corresponds to a milestone.
     /// Returns the matching Milestone if so, nil otherwise.

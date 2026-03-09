@@ -1,6 +1,7 @@
 import Foundation
 
 /// Default milestone manager backed by UserDefaults for celebration persistence.
+@MainActor
 final class DefaultMilestoneManager: MilestoneManager {
     private let defaults: UserDefaults
 

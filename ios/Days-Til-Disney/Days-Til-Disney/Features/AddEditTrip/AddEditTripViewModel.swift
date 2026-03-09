@@ -151,16 +151,20 @@ final class AddEditTripViewModel {
                     existing.parks = parksOrdered
                     existing.startDate = form.startDate
                     existing.endDate = form.endDate
-                    // Set isPrimary before saving so the update and promotion happen
-                    // in a single atomic save — no second setPrimaryTrip call needed.
                     existing.isPrimary = form.isPrimary
+                    // Always persist field changes explicitly first so no mutation
+                    // is lost regardless of the primary promotion path.
+                    existing.markUpdated()
+                    try await tripRepository.updateTrip(existing)
                     if form.isPrimary {
-                        // setPrimaryTrip clears other trips and saves — passes through updateTrip.
+                        // Atomically clears other primaries and saves.
                         try await tripRepository.setPrimaryTrip(id: id)
-                    } else {
-                        try await tripRepository.updateTrip(existing)
                     }
                     await scheduleNotificationsIfEnabled(for: existing)
+                } else {
+                    saveError = "This trip no longer exists."
+                    isSaving = false
+                    return
                 }
             }
 
