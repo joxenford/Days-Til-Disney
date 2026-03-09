@@ -159,7 +159,7 @@ struct CountdownHeroView: View {
     private func daysDisplay(countdown: Date.CountdownComponents) -> some View {
         VStack(spacing: 4) {
             Text("\(countdown.days)")
-                .font(.system(size: 88, weight: .black, design: .rounded))
+                .font(DTDFont.countdownLarge)
                 .foregroundStyle(.white)
                 .minimumScaleFactor(0.5)
                 .contentTransition(.numericText())
@@ -177,7 +177,7 @@ struct CountdownHeroView: View {
         VStack(spacing: 4) {
             HStack(alignment: .lastTextBaseline, spacing: 4) {
                 Text("\(countdown.hours)")
-                    .font(.system(size: 64, weight: .black, design: .rounded))
+                    .font(DTDFont.countdownSmall)
                     .foregroundStyle(.white)
                     .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
@@ -187,7 +187,7 @@ struct CountdownHeroView: View {
                     .foregroundStyle(.white.opacity(0.75))
 
                 Text("\(countdown.minutes)")
-                    .font(.system(size: 64, weight: .black, design: .rounded))
+                    .font(DTDFont.countdownSmall)
                     .foregroundStyle(.white)
                     .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())

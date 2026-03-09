@@ -90,14 +90,34 @@ struct TripDetailView: View {
             }
 
         case .error(let message):
-            VStack(spacing: 16) {
-                Text("Error: \(message)")
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-                Button("Go Back") { router.navigateBack() }
-                    .foregroundStyle(Color.disneyGold)
+            VStack(spacing: 24) {
+                CastleSilhouetteView(
+                    park: .magicKingdom,
+                    size: 120,
+                    color: .white,
+                    opacity: 0.55
+                )
+                VStack(spacing: 12) {
+                    Text("Something went wrong")
+                        .font(DTDFont.titlePrimary)
+                        .foregroundStyle(.white)
+                    Text(message)
+                        .font(DTDFont.body)
+                        .foregroundStyle(.white.opacity(0.75))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                }
+                Button {
+                    router.navigateBack()
+                } label: {
+                    Text("Go Back")
+                        .font(DTDFont.headline)
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 12)
+                        .background(Color.disneyGold)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
             }
 
         case .loaded(let trip, let content):
@@ -168,6 +188,13 @@ struct TripDetailView: View {
                     value: "\(trip.durationDays)"
                 )
             }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .padding(.horizontal, 20)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(.white.opacity(0.07))
+            )
 
             if trip.parks.count > 1 {
                 HStack(spacing: 8) {
@@ -291,7 +318,7 @@ struct TripDetailView: View {
                         if trip.notes.isEmpty {
                             Text("Jot down reservation numbers, packing lists, dining bookings, or anything you don't want to forget...")
                                 .font(DTDFont.body)
-                                .foregroundStyle(.white.opacity(0.35))
+                                .foregroundStyle(.white.opacity(0.40))
                                 .padding(.horizontal, 12)
                                 .padding(.top, 10)
                                 .allowsHitTesting(false)
@@ -302,12 +329,12 @@ struct TripDetailView: View {
                             set: { vm.updateNotes($0) }
                         ))
                         .font(DTDFont.body)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.white.opacity(0.9))
                         .scrollContentBackground(.hidden)
                         .background(Color.clear)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 6)
-                        .frame(minHeight: 120, alignment: .topLeading)
+                        .frame(minHeight: 140, alignment: .topLeading)
                     }
                     .background(
                         RoundedRectangle(cornerRadius: 12, style: .continuous)

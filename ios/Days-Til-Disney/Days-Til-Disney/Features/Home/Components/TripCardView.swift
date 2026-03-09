@@ -79,9 +79,16 @@ struct TripCardView: View {
                             .fill(trip.colorPalette.primary.opacity(isPast ? 0.03 : 0.08))
                     }
             }
-            // Dim the whole card when the trip is in the past.
-            .opacity(isPast ? 0.75 : 1.0)
-            .saturation(isPast ? 0.6 : 1.0)
+            // Soften past cards to evoke nostalgia — full saturation so colors read as warm memories,
+            // not errors. A gentle warm overlay reinforces the "fond memory" feeling.
+            .opacity(isPast ? 0.85 : 1.0)
+            .overlay {
+                if isPast {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(red: 1.0, green: 0.85, blue: 0.6).opacity(0.06))
+                        .allowsHitTesting(false)
+                }
+            }
         }
         .buttonStyle(.plain)
         .contextMenu {

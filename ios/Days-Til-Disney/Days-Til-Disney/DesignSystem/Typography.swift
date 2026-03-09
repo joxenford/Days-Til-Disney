@@ -15,6 +15,16 @@ enum DTDFont {
         .system(size: size, weight: .semibold, design: .rounded)
     }
 
+    /// Large countdown number for the primary days display (88pt equivalent).
+    static var countdownLarge: Font {
+        .system(size: 88, weight: .black, design: .rounded)
+    }
+
+    /// Smaller countdown number for hours/minutes or secondary contexts (64pt equivalent).
+    static var countdownSmall: Font {
+        .system(size: 64, weight: .black, design: .rounded)
+    }
+
     // MARK: - Display / hero text
 
     /// Large display text used for milestone messages ("100 Days of Magic!").

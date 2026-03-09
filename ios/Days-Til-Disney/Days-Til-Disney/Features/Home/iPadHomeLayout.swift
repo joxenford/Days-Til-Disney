@@ -22,11 +22,13 @@ struct iPadHomeLayout: View {
     @State private var isInitialLoad = true
 
     var body: some View {
-        HStack(spacing: 0) {
-            leftColumn
-            Divider()
-                .background(.white.opacity(0.15))
-            rightColumn
+        GeometryReader { geo in
+            HStack(spacing: 0) {
+                leftColumn(width: geo.size.width * 0.42)
+                Divider()
+                    .background(.white.opacity(0.15))
+                rightColumn
+            }
         }
         .ignoresSafeArea(edges: .all)
         .task {
@@ -58,14 +60,15 @@ struct iPadHomeLayout: View {
 
     // MARK: - Left column
 
-    private var leftColumn: some View {
+    private func leftColumn(width: CGFloat) -> some View {
         ZStack {
             GradientBackgroundView()
             StarFieldView()
             heroContent
         }
-        // Fixed width: roughly 42 % of the screen feels balanced on all iPad sizes.
-        .frame(width: leftColumnWidth)
+        // Width is 42% of the actual available container width from GeometryReader,
+        // so Split View and Slide Over are handled correctly.
+        .frame(width: width)
         .clipped()
     }
 
@@ -150,15 +153,6 @@ struct iPadHomeLayout: View {
         }
     }
 
-    // MARK: - Helpers
-
-    /// A fixed left-column width that looks good across all iPad sizes.
-    /// `UIScreen` dimensions in points: mini/Air/Pro 11″ ≈ 810–834 pt wide,
-    /// Pro 13″ ≈ 1024 pt wide.  42 % keeps the hero comfortably readable.
-    private var leftColumnWidth: CGFloat {
-        let screenWidth = UIScreen.main.bounds.width
-        return screenWidth * 0.42
-    }
 }
 
 // MARK: - Right-panel view
@@ -249,10 +243,16 @@ private struct HomeRightPanelView: View {
                     // Secondary trip cards.
                     if !secondary.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Other Trips")
-                                .font(DTDFont.titleSecondary)
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 20)
+                            HStack(spacing: 8) {
+                                Image(systemName: "suitcase.fill")
+                                    .font(DTDFont.titleSecondary)
+                                    .foregroundStyle(.white.opacity(0.8))
+                                    .accessibilityHidden(true)
+                                Text("Other Trips")
+                                    .font(DTDFont.titleSecondary)
+                                    .foregroundStyle(.white)
+                            }
+                            .padding(.horizontal, 20)
 
                             ForEach(secondary) { trip in
                                 TripCardView(

@@ -123,10 +123,16 @@ struct HomeView: View {
                 // Secondary trip cards (upcoming and ongoing).
                 if !secondary.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Other Trips")
-                            .font(DTDFont.titleSecondary)
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 20)
+                        HStack(spacing: 8) {
+                            Image(systemName: "suitcase.fill")
+                                .font(DTDFont.titleSecondary)
+                                .foregroundStyle(.white.opacity(0.8))
+                                .accessibilityHidden(true)
+                            Text("Other Trips")
+                                .font(DTDFont.titleSecondary)
+                                .foregroundStyle(.white)
+                        }
+                        .padding(.horizontal, 20)
 
                         ForEach(secondary) { trip in
                             TripCardView(

@@ -68,17 +68,19 @@ private struct ResortCard: View {
                 }
             }) {
                 HStack(spacing: 14) {
-                    // Selection indicator.
+                    // Selection indicator — 32pt visual size, 44pt tap target.
                     ZStack {
                         Circle()
                             .strokeBorder(isSelected ? resort.primaryPark.colorPalette.primary : Color.secondary.opacity(0.4), lineWidth: 2)
-                            .frame(width: 24, height: 24)
+                            .frame(width: 32, height: 32)
                         if isSelected {
                             Circle()
                                 .fill(resort.primaryPark.colorPalette.primary)
-                                .frame(width: 14, height: 14)
+                                .frame(width: 18, height: 18)
                         }
                     }
+                    .frame(width: 44, height: 44)
+                    .contentShape(Circle())
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(resort.displayName)
