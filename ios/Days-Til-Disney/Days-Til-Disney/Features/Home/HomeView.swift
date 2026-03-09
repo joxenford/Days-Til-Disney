@@ -143,9 +143,10 @@ struct HomeView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Text("Days Til Disney")
-                .font(DTDFont.headline)
+            Text("Days 'Til Disney")
+                .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
+                .fixedSize()
         }
         ToolbarItem(placement: .navigationBarTrailing) {
             HStack(spacing: 16) {
