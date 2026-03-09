@@ -19,18 +19,13 @@ struct CountdownHeroView: View {
     }
 
     var body: some View {
-        // Use a 1-second interval on the final day so hours/minutes/seconds stay live;
-        // use 60-second interval otherwise to save CPU. TimelineView pauses automatically
-        // when the view is off-screen, so there is no duplicate firing in HomeView and
-        // TripDetailView simultaneously (issue 3.1 is also addressed by this change).
-        let isFinalDay = trip.startDate.countdownComponents.isFinalDay && !trip.isPast && !trip.isOngoing
-        TimelineView(isFinalDay
-            ? .periodic(from: .now, by: 1)
-            : .periodic(from: .now, by: 60)
-        ) { context in
+        // Always use a 1-second interval so the isFinalDay transition fires promptly at
+        // midnight without needing to recompute the schedule. TimelineView pauses
+        // automatically when the view is off-screen, so CPU impact is negligible.
+        TimelineView(.periodic(from: .now, by: 1)) { _ in
             let countdown = trip.startDate.countdownComponents
 
-            Button(action: onTap) {
+            Button(action: trip.isPast ? (onAddTrip ?? onTap) : onTap) {
                 ZStack {
                     // Card background: subtle park gradient tint over glass material.
                     RoundedRectangle(cornerRadius: 28)
@@ -116,8 +111,14 @@ struct CountdownHeroView: View {
             .shadow(color: .black.opacity(0.35), radius: 24, y: 10)
             .shadow(color: accentColor.opacity(0.25), radius: 32, y: 4)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel(countdown.accessibilityDescription)
-            .accessibilityHint("Tap to view full trip details")
+            .accessibilityLabel(trip.isPast
+                ? "Trip complete. \(trip.name)."
+                : countdown.accessibilityDescription
+            )
+            .accessibilityHint(trip.isPast
+                ? "Tap to plan your next adventure"
+                : "Tap to view full trip details"
+            )
             .onChange(of: countdown.days) { _, _ in
                 // Animate the number change when the day flips.
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
@@ -228,20 +229,16 @@ struct CountdownHeroView: View {
                 .font(DTDFont.caption)
                 .foregroundStyle(.white.opacity(0.55))
 
-            if let onAddTrip {
-                Button(action: onAddTrip) {
-                    Label("Plan your next adventure!", systemImage: "plus.circle.fill")
-                        .font(DTDFont.bodyMedium)
-                        .foregroundStyle(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(Color.white.opacity(0.9))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .padding(.horizontal, 8)
-                }
-                .buttonStyle(.plain)
-                .padding(.top, 4)
-                .accessibilityLabel("Plan your next adventure")
+            if onAddTrip != nil {
+                Label("Plan your next adventure!", systemImage: "plus.circle.fill")
+                    .font(DTDFont.bodyMedium)
+                    .foregroundStyle(.black)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Color.white.opacity(0.9))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(.horizontal, 8)
+                    .padding(.top, 4)
             }
         }
     }

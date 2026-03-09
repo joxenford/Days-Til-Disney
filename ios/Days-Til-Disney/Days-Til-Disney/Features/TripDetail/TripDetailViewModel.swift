@@ -56,8 +56,8 @@ final class TripDetailViewModel {
             let daysOut = trip.daysUntilStart
             let content = try await contentEngine.fetchContentFeed(for: trip, daysOut: daysOut)
 
-            viewState = .loaded(trip: trip, content: content)
             themeProvider.setActivePark(trip.primaryPark)
+            viewState = .loaded(trip: trip, content: content)
             checkMilestones(for: trip)
 
         } catch {

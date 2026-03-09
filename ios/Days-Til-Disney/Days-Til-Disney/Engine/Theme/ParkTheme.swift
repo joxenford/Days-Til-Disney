@@ -8,9 +8,6 @@ protocol ParkTheme {
     var castleAssetName: String { get }
     var timeOfDay: TimeOfDay { get }
 
-    // Derived colors accounting for time-of-day overlay.
-    var effectiveGradientStart: Color { get }
-    var effectiveGradientEnd: Color { get }
     var primaryColor: Color { get }
     var secondaryColor: Color { get }
     var accentColor: Color { get }
@@ -25,20 +22,6 @@ extension ParkTheme {
     var secondaryColor: Color { palette.secondary }
     var accentColor: Color { palette.accent }
     var textOnPrimary: Color { palette.textOnPrimary }
-
-    var effectiveGradientStart: Color {
-        blend(palette.backgroundGradientStart, with: timeOfDay.overlayColor, strength: timeOfDay.overlayStrength)
-    }
-
-    var effectiveGradientEnd: Color {
-        blend(palette.backgroundGradientEnd, with: timeOfDay.overlayColor, strength: timeOfDay.overlayStrength)
-    }
-
-    private func blend(_ base: Color, with overlay: Color, strength: Double) -> Color {
-        // Simple approximation: return a mix via opacity layering.
-        // In production this would use UIColor component math for accuracy.
-        base.opacity(1.0 - strength * 0.4)
-    }
 }
 
 // MARK: - TimeOfDay

@@ -133,29 +133,35 @@ struct WelcomeView: View {
 private struct WelcomeSparkles: View {
     private struct Point: Identifiable {
         let id: Int
-        let x: CGFloat
-        let y: CGFloat
+        /// Normalized offset from center: -1.0 to +1.0 relative to container half-width/height.
+        let normalizedX: CGFloat
+        let normalizedY: CGFloat
         let size: CGFloat
     }
 
     private let points: [Point] = [
-        Point(id: 0, x: -110, y: -40,  size: 16),
-        Point(id: 1, x:  110, y: -55,  size: 11),
-        Point(id: 2, x:  -75, y:  50,  size:  9),
-        Point(id: 3, x:   90, y:  40,  size: 13),
-        Point(id: 4, x:    0, y: -80,  size: 10),
-        Point(id: 5, x: -130, y:  10,  size:  8),
-        Point(id: 6, x:  125, y:   5,  size:  8),
+        Point(id: 0, normalizedX: -0.917, normalizedY: -0.286, size: 16),
+        Point(id: 1, normalizedX:  0.917, normalizedY: -0.393, size: 11),
+        Point(id: 2, normalizedX: -0.625, normalizedY:  0.357, size:  9),
+        Point(id: 3, normalizedX:  0.750, normalizedY:  0.286, size: 13),
+        Point(id: 4, normalizedX:  0.000, normalizedY: -0.571, size: 10),
+        Point(id: 5, normalizedX: -1.083, normalizedY:  0.071, size:  8),
+        Point(id: 6, normalizedX:  1.042, normalizedY:  0.036, size:  8),
     ]
 
     var body: some View {
-        ZStack {
-            ForEach(points) { point in
-                Image(systemName: "sparkle")
-                    .foregroundStyle(Color.magicSparkle)
-                    .font(.system(size: point.size))
-                    .offset(x: point.x, y: point.y)
+        GeometryReader { geo in
+            let hw = geo.size.width / 2
+            let hh = geo.size.height / 2
+            ZStack {
+                ForEach(points) { point in
+                    Image(systemName: "sparkle")
+                        .foregroundStyle(Color.magicSparkle)
+                        .font(.system(size: point.size))
+                        .offset(x: point.normalizedX * hw, y: point.normalizedY * hh)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }

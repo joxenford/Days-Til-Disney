@@ -8,6 +8,7 @@ struct TripDetailView: View {
     @Environment(\.parkThemeProvider) private var themeProvider
     @State private var viewModel: TripDetailViewModel?
     @State private var showCelebration = false
+    @State private var isInitialLoad = true
 
     var body: some View {
         ZStack {
@@ -29,6 +30,11 @@ struct TripDetailView: View {
             let vm = TripDetailViewModel.make(tripID: tripID, from: appContainer)
             viewModel = vm
             await vm.onAppear()
+            isInitialLoad = false
+        }
+        .onAppear {
+            guard !isInitialLoad, let vm = viewModel else { return }
+            Task { await vm.onAppear() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
             withAnimation(.easeInOut(duration: 0.3)) {

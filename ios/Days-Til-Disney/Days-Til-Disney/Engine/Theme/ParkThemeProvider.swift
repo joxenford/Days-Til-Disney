@@ -57,11 +57,6 @@ final class ParkThemeProvider {
 
     // MARK: - Convenience
 
-    /// Two-stop gradient retained for backward compatibility.
-    var gradientColors: [Color] {
-        [currentTheme.effectiveGradientStart, currentTheme.effectiveGradientEnd]
-    }
-
     /// Rich 4-stop gradient with time-of-day overlay blended into each stop.
     /// The final stop always receives the strongest overlay effect for depth.
     var richGradientColors: [Color] {

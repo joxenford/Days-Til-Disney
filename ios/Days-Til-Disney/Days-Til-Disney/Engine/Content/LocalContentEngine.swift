@@ -64,7 +64,7 @@ final class LocalContentEngine: ContentEngine {
         let today = calendar.startOfDay(for: Date())
         let daysSinceEpoch = Int(today.timeIntervalSinceReferenceDate / 86_400)
         let uuidHash = djb2Hash(tripID.uuidString)
-        return abs(daysSinceEpoch ^ uuidHash)
+        return (daysSinceEpoch ^ uuidHash) & Int.max
     }
 
     /// djb2 hash: stable across process launches, simple, good distribution.
@@ -73,6 +73,6 @@ final class LocalContentEngine: ContentEngine {
         for byte in string.utf8 {
             hash = ((hash << 5) &+ hash) &+ Int(byte)
         }
-        return abs(hash)
+        return hash & Int.max
     }
 }

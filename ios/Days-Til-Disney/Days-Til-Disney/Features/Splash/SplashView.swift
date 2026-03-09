@@ -99,28 +99,34 @@ struct SplashView: View {
 private struct SparkleDecoration: View {
     private struct SparklePoint: Identifiable {
         let id: Int
-        let x: CGFloat
-        let y: CGFloat
+        /// Normalized offset from center: -1.0 to +1.0 relative to container half-width/height.
+        let normalizedX: CGFloat
+        let normalizedY: CGFloat
         let size: CGFloat
         let delay: Double
     }
 
     private let points: [SparklePoint] = [
-        SparklePoint(id: 0, x: -80, y: -20, size: 14, delay: 0.0),
-        SparklePoint(id: 1, x:  80, y: -30, size: 10, delay: 0.15),
-        SparklePoint(id: 2, x: -50, y:  30, size:  8, delay: 0.30),
-        SparklePoint(id: 3, x:  60, y:  25, size: 12, delay: 0.10),
-        SparklePoint(id: 4, x:   0, y: -50, size:  9, delay: 0.20),
+        SparklePoint(id: 0, normalizedX: -0.80, normalizedY: -0.50, size: 14, delay: 0.0),
+        SparklePoint(id: 1, normalizedX:  0.80, normalizedY: -0.75, size: 10, delay: 0.15),
+        SparklePoint(id: 2, normalizedX: -0.50, normalizedY:  0.75, size:  8, delay: 0.30),
+        SparklePoint(id: 3, normalizedX:  0.60, normalizedY:  0.625, size: 12, delay: 0.10),
+        SparklePoint(id: 4, normalizedX:  0.00, normalizedY: -1.25, size:  9, delay: 0.20),
     ]
 
     var body: some View {
-        ZStack {
-            ForEach(points) { point in
-                Image(systemName: "sparkle")
-                    .foregroundStyle(Color.magicSparkle)
-                    .font(.system(size: point.size))
-                    .offset(x: point.x, y: point.y)
+        GeometryReader { geo in
+            let hw = geo.size.width / 2
+            let hh = geo.size.height / 2
+            ZStack {
+                ForEach(points) { point in
+                    Image(systemName: "sparkle")
+                        .foregroundStyle(Color.magicSparkle)
+                        .font(.system(size: point.size))
+                        .offset(x: point.normalizedX * hw, y: point.normalizedY * hh)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(width: 200, height: 80)
     }

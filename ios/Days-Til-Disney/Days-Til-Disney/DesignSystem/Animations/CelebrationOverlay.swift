@@ -132,6 +132,7 @@ private struct MilestoneCelebrationCard: View {
                     .background(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
+            .accessibilityHint("Dismisses the celebration")
         }
         .padding(28)
         .background(

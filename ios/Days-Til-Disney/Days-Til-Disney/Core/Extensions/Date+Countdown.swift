@@ -83,35 +83,14 @@ extension Date {
 
     // MARK: - Display formatting
 
-    // Cached formatters — created once per process, not on every property access.
-    private static let shortDateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateStyle = .medium
-        f.timeStyle = .none
-        return f
-    }()
-
-    private static let monthYearFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "MMMM yyyy"
-        return f
-    }()
-
+    // Cached formatter — created once per process, not on every property access.
     private static let dayMonthDateFormatter: DateFormatter = {
         let f = DateFormatter()
-        f.dateFormat = "EEE, MMM d"
+        f.setLocalizedDateFormatFromTemplate("EEEMMMd")
         return f
     }()
 
-    var shortDateString: String {
-        Date.shortDateFormatter.string(from: self)
-    }
-
-    var monthYearString: String {
-        Date.monthYearFormatter.string(from: self)
-    }
-
-    /// e.g. "Fri, Mar 14"
+    /// e.g. "Fri, Mar 14" (locale-appropriate ordering and separators).
     var dayMonthDateString: String {
         Date.dayMonthDateFormatter.string(from: self)
     }

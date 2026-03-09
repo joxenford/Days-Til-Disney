@@ -81,7 +81,10 @@ struct DailyContentCardView: View {
             }
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(content.type.accessibilityLabel): \(content.title). \(content.body)")
+        .accessibilityLabel(isExpanded
+            ? "\(content.type.accessibilityLabel): \(content.title). \(content.body)"
+            : "\(content.type.accessibilityLabel): \(content.title)"
+        )
         .accessibilityHint(isExpanded ? "Tap to collapse" : "Tap to expand")
     }
 }

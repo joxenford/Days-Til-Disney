@@ -166,7 +166,6 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
         case 7:   return "\(emoji) One Week Until the Magic!"
         case 3:   return "\(emoji) Almost There — 3 Days!"
         case 1:   return "\(emoji) Tomorrow's the Big Day!"
-        case 0:   return "\(emoji) TODAY IS THE DAY!"
         default:  return "\(emoji) \(milestone.daysOut) Days to Disney!"
         }
     }
@@ -177,7 +176,7 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
         case 100:
             return "Your \(trip.name) adventure starts in 100 days. Time to start dreaming!"
         case 50:
-            return "Halfway to \(parkName)! Now's a great time to start planning dining and FastPass+."
+            return "Halfway to \(parkName)! Now's a great time to start planning dining and Lightning Lane."
         case 30:
             return "\(parkName) is just one month away. Start those packing lists!"
         case 14:
@@ -188,8 +187,6 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
             return "Just 3 days until \(parkName)! Finish those last-minute preparations and rest up."
         case 1:
             return "One sleep left! Tomorrow you'll be at \(parkName). Sweet Disney dreams tonight!"
-        case 0:
-            return "The wait is over — \(trip.name) is HERE! Have the most magical day!"
         default:
             return "\(milestone.daysOut) days until \(trip.name) at \(parkName). The magic is coming!"
         }

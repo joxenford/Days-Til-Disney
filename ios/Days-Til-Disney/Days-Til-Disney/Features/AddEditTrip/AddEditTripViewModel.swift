@@ -152,14 +152,14 @@ final class AddEditTripViewModel {
                     existing.startDate = form.startDate
                     existing.endDate = form.endDate
                     existing.isPrimary = form.isPrimary
-                    // Always persist field changes explicitly first so no mutation
-                    // is lost regardless of the primary promotion path.
-                    existing.markUpdated()
-                    try await tripRepository.updateTrip(existing)
+                    // If this trip should be primary, clear other primaries first so
+                    // there is never a moment where two trips have isPrimary == true.
+                    // updateTrip (called after) then saves all remaining field changes.
                     if form.isPrimary {
-                        // Atomically clears other primaries and saves.
                         try await tripRepository.setPrimaryTrip(id: id)
                     }
+                    // updateTrip calls markUpdated() internally — no need to call it here.
+                    try await tripRepository.updateTrip(existing)
                     await scheduleNotificationsIfEnabled(for: existing)
                 } else {
                     saveError = "This trip no longer exists."
@@ -209,13 +209,20 @@ final class AddEditTripViewModel {
     }
 
     private func loadExistingTrip(id: UUID) async {
-        guard let trip = try? await tripRepository.fetchTrip(by: id) else { return }
-        form.name = trip.name
-        form.selectedResort = trip.resort
-        form.selectedParks = Set(trip.parks)
-        form.startDate = trip.startDate
-        form.endDate = trip.endDate
-        form.isPrimary = trip.isPrimary
+        do {
+            guard let trip = try await tripRepository.fetchTrip(by: id) else {
+                saveError = "This trip could not be found."
+                return
+            }
+            form.name = trip.name
+            form.selectedResort = trip.resort
+            form.selectedParks = Set(trip.parks)
+            form.startDate = trip.startDate
+            form.endDate = trip.endDate
+            form.isPrimary = trip.isPrimary
+        } catch {
+            saveError = error.localizedDescription
+        }
     }
 
     // MARK: - Factory

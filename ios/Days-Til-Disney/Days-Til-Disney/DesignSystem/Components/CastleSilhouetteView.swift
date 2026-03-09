@@ -90,7 +90,7 @@ private struct FallbackCastleShape: Shape {
             radius: w * 0.115,
             startAngle: .degrees(180),
             endAngle: .degrees(0),
-            clockwise: true
+            clockwise: false
         )
         // Rectangular base of gate passage
         path.addRect(CGRect(x: w * 0.385, y: h * 0.71, width: w * 0.23, height: h * 0.29))

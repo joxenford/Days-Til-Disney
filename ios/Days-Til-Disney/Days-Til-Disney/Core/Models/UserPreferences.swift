@@ -5,6 +5,7 @@ import Observation
 /// Not a SwiftData model — preferences are simple scalar values that
 /// don't need relational queries or migrations.
 @Observable
+@MainActor
 final class UserPreferences {
     // MARK: - Stored properties backed by AppStorage
 

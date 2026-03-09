@@ -74,13 +74,13 @@ final class SettingsViewModel {
     private func refreshNotificationStatus() async {
         let status = await notificationManager.authorizationStatus()
         switch status {
-        case .denied, .ephemeral:
+        case .denied:
             notificationPermissionDenied = true
             // If permission was revoked externally, keep the pref in sync.
             if userPreferences.milestoneNotificationsEnabled {
                 userPreferences.milestoneNotificationsEnabled = false
             }
-        case .authorized, .provisional:
+        case .authorized, .provisional, .ephemeral:
             notificationPermissionDenied = false
         case .notDetermined:
             notificationPermissionDenied = false
