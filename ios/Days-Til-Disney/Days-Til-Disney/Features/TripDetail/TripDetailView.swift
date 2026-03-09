@@ -203,8 +203,9 @@ struct TripDetailView: View {
                 Spacer()
 
                 // Progress badge if items exist.
-                let checkedCount = trip.packingItems.filter(\.isChecked).count
-                let totalCount = trip.packingItems.count
+                let items = trip.packingItems ?? []
+                let checkedCount = items.filter(\.isChecked).count
+                let totalCount = items.count
                 if totalCount > 0 {
                     Text("\(checkedCount)/\(totalCount)")
                         .font(DTDFont.captionBold)
@@ -230,7 +231,7 @@ struct TripDetailView: View {
                 .fill(.white.opacity(0.07))
         )
         .padding(.horizontal, 20)
-        .accessibilityLabel("Packing List\(trip.packingItems.isEmpty ? "" : ", \(trip.packingItems.filter(\.isChecked).count) of \(trip.packingItems.count) packed")")
+        .accessibilityLabel("Packing List\((trip.packingItems ?? []).isEmpty ? "" : ", \((trip.packingItems ?? []).filter(\.isChecked).count) of \((trip.packingItems ?? []).count) packed")")
         .accessibilityHint("Navigate to packing checklist")
     }
 

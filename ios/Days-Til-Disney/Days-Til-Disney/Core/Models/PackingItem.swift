@@ -8,14 +8,14 @@ import SwiftData
 /// with Codable enums.
 @Model
 final class PackingItem {
-    var id: UUID
-    var name: String
+    var id: UUID = UUID()
+    var name: String = ""
     /// Backing store for `category` — stored as its rawValue String.
-    var categoryRawValue: String
-    var isChecked: Bool
+    var categoryRawValue: String = PackingCategory.custom.rawValue
+    var isChecked: Bool = false
     /// True when this item was generated from the park-specific defaults.
-    var isParkDefault: Bool
-    var createdAt: Date
+    var isParkDefault: Bool = false
+    var createdAt: Date = Date()
     /// Inverse of the Trip.packingItems relationship.
     var trip: Trip?
 

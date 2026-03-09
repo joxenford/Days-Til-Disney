@@ -8,23 +8,23 @@ import SwiftData
 /// expose the typed enums for use throughout the app.
 @Model
 final class Trip {
-    var id: UUID
-    var name: String
+    var id: UUID = UUID()
+    var name: String = ""
     /// Backing store for the `resort` enum — stored as its rawValue String.
-    var resortRawValue: String
+    var resortRawValue: String = DisneyResort.waltDisneyWorld.rawValue
     /// Backing store for the `parks` array — stored as comma-separated rawValue Strings.
-    var parkRawValues: [String]
-    var startDate: Date
-    var endDate: Date
-    var isPrimary: Bool
-    var notes: String
-    var createdAt: Date
-    var updatedAt: Date
+    var parkRawValues: [String] = []
+    var startDate: Date = Date()
+    var endDate: Date = Date()
+    var isPrimary: Bool = false
+    var notes: String = ""
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
 
     /// Packing checklist items for this trip.
     /// cascade delete ensures items are removed when the trip is deleted.
     @Relationship(deleteRule: .cascade, inverse: \PackingItem.trip)
-    var packingItems: [PackingItem] = []
+    var packingItems: [PackingItem]? = []
 
     init(
         id: UUID = UUID(),
