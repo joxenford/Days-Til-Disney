@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UserNotifications
 
 // MARK: - Mode
 
@@ -59,10 +60,19 @@ final class AddEditTripViewModel {
 
     private let mode: AddEditTripMode
     private let tripRepository: any TripRepository
+    private let notificationManager: (any MilestoneNotificationManager)?
+    private let userPreferences: UserPreferences?
 
-    init(mode: AddEditTripMode, tripRepository: any TripRepository) {
+    init(
+        mode: AddEditTripMode,
+        tripRepository: any TripRepository,
+        notificationManager: (any MilestoneNotificationManager)? = nil,
+        userPreferences: UserPreferences? = nil
+    ) {
         self.mode = mode
         self.tripRepository = tripRepository
+        self.notificationManager = notificationManager
+        self.userPreferences = userPreferences
     }
 
     // MARK: - Lifecycle
@@ -109,7 +119,8 @@ final class AddEditTripViewModel {
                 // Determine if this should be primary: use the user's preference,
                 // or auto-promote if this is the very first trip.
                 let existingTrips = try await tripRepository.fetchAllTrips()
-                let shouldBePrimary = form.isPrimary || existingTrips.isEmpty
+                let isFirstTrip = existingTrips.isEmpty
+                let shouldBePrimary = form.isPrimary || isFirstTrip
                 let trip = Trip(
                     name: form.name.trimmingCharacters(in: .whitespacesAndNewlines),
                     resort: form.selectedResort,
@@ -121,6 +132,13 @@ final class AddEditTripViewModel {
                 try await tripRepository.saveTrip(trip)
                 if shouldBePrimary {
                     try await tripRepository.setPrimaryTrip(id: trip.id)
+                }
+                // On first trip creation, request notification permission automatically.
+                // This is the natural onboarding moment — the user just committed to a trip.
+                if isFirstTrip {
+                    await requestPermissionAndSchedule(for: trip)
+                } else {
+                    await scheduleNotificationsIfEnabled(for: trip)
                 }
 
             case .edit(let id):
@@ -135,6 +153,7 @@ final class AddEditTripViewModel {
                     if form.isPrimary {
                         try await tripRepository.setPrimaryTrip(id: id)
                     }
+                    await scheduleNotificationsIfEnabled(for: existing)
                 }
             }
 
@@ -147,6 +166,36 @@ final class AddEditTripViewModel {
     }
 
     // MARK: - Private
+
+    /// Requests permission on first trip creation (onboarding moment).
+    /// If permission is granted, enables the pref and schedules notifications for the trip.
+    /// If denied or not yet determined, does nothing — user can enable via Settings later.
+    private func requestPermissionAndSchedule(for trip: Trip) async {
+        guard let notificationManager else { return }
+        let status = await notificationManager.authorizationStatus()
+        switch status {
+        case .notDetermined:
+            // This is the onboarding prompt — ask for permission naturally.
+            let granted = await notificationManager.requestPermission()
+            if granted {
+                userPreferences?.milestoneNotificationsEnabled = true
+                await notificationManager.scheduleNotifications(for: trip)
+            }
+        case .authorized, .provisional:
+            // Permission already granted from a prior session.
+            userPreferences?.milestoneNotificationsEnabled = true
+            await notificationManager.scheduleNotifications(for: trip)
+        default:
+            // Denied or restricted — do not re-prompt; user can enable in Settings.
+            break
+        }
+    }
+
+    private func scheduleNotificationsIfEnabled(for trip: Trip) async {
+        guard let notificationManager,
+              userPreferences?.milestoneNotificationsEnabled == true else { return }
+        await notificationManager.scheduleNotifications(for: trip)
+    }
 
     private func loadExistingTrip(id: UUID) async {
         guard let trip = try? await tripRepository.fetchTrip(by: id) else { return }
@@ -161,6 +210,11 @@ final class AddEditTripViewModel {
     // MARK: - Factory
 
     static func make(mode: AddEditTripMode, from container: AppContainer) -> AddEditTripViewModel {
-        AddEditTripViewModel(mode: mode, tripRepository: container.tripRepository)
+        AddEditTripViewModel(
+            mode: mode,
+            tripRepository: container.tripRepository,
+            notificationManager: container.milestoneNotificationManager,
+            userPreferences: container.userPreferences
+        )
     }
 }

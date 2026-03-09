@@ -1,6 +1,7 @@
 import Foundation
 import SwiftData
 import Observation
+import UserNotifications
 
 /// Dependency injection container for the app.
 /// All services and repositories are created once here and injected downward.
@@ -26,6 +27,7 @@ final class AppContainer {
 
     let contentEngine: any ContentEngine
     let milestoneManager: any MilestoneManager
+    let milestoneNotificationManager: any MilestoneNotificationManager
     let themeProvider: ParkThemeProvider
 
     // MARK: - Preferences
@@ -50,6 +52,7 @@ final class AppContainer {
         tripRepository = LocalTripRepository(modelContext: modelContainer.mainContext)
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
+        milestoneNotificationManager = DefaultMilestoneNotificationManager()
         themeProvider = ParkThemeProvider(timeOfDayProvider: LiveTimeOfDayProvider())
     }
 
@@ -67,6 +70,7 @@ final class AppContainer {
         tripRepository = LocalTripRepository(modelContext: modelContainer.mainContext)
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
+        milestoneNotificationManager = DefaultMilestoneNotificationManager()
         themeProvider = ParkThemeProvider(
             park: .magicKingdom,
             timeOfDayProvider: FixedTimeOfDayProvider.day

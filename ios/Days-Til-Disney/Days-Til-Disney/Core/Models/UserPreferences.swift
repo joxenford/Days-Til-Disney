@@ -28,6 +28,13 @@ final class UserPreferences {
         }
     }
 
+    /// Whether the user has opted into local milestone push notifications.
+    /// Toggling this ON will trigger a permission request and schedule notifications
+    /// for all existing trips. Toggling OFF cancels all pending notifications.
+    var milestoneNotificationsEnabled: Bool {
+        didSet { defaults.set(milestoneNotificationsEnabled, forKey: Keys.milestoneNotificationsEnabled) }
+    }
+
     // MARK: - Init
 
     init(defaults: UserDefaults = .standard) {
@@ -37,6 +44,7 @@ final class UserPreferences {
         let rawTheme = defaults.string(forKey: Keys.themeMode) ?? ThemeMode.auto.rawValue
         self.themeMode = ThemeMode(rawValue: rawTheme) ?? .auto
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.hasCompletedOnboarding)
+        self.milestoneNotificationsEnabled = defaults.bool(forKey: Keys.milestoneNotificationsEnabled)
 
         if let uuidString = defaults.string(forKey: Keys.primaryTripID),
            let uuid = UUID(uuidString: uuidString) {
@@ -59,9 +67,10 @@ final class UserPreferences {
     // MARK: - Storage keys
 
     private enum Keys {
-        static let themeMode              = "userPrefs.themeMode"
-        static let hasCompletedOnboarding = "userPrefs.hasCompletedOnboarding"
-        static let primaryTripID          = "userPrefs.primaryTripID"
+        static let themeMode                      = "userPrefs.themeMode"
+        static let hasCompletedOnboarding         = "userPrefs.hasCompletedOnboarding"
+        static let primaryTripID                  = "userPrefs.primaryTripID"
+        static let milestoneNotificationsEnabled  = "userPrefs.milestoneNotificationsEnabled"
     }
 }
 

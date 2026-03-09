@@ -15,7 +15,9 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            viewModel = SettingsViewModel.make(from: appContainer)
+            let vm = SettingsViewModel.make(from: appContainer)
+            viewModel = vm
+            await vm.onAppear()
         }
     }
 
@@ -36,13 +38,20 @@ struct SettingsView: View {
                 .pickerStyle(.menu)
             }
 
+            // Notifications.
+            Section {
+                notificationsRow(vm: vm)
+            } header: {
+                Text("Notifications")
+            } footer: {
+                if vm.notificationPermissionDenied {
+                    Text("Notification permission was denied. Enable it in iOS Settings to receive milestone alerts.")
+                        .font(DTDFont.caption)
+                }
+            }
+
             // Future features (v1.1).
             Section("Coming Soon") {
-                featureComingSoon(
-                    icon: "bell.badge.fill",
-                    title: "Milestone Notifications",
-                    detail: "Get notified at 100 days, 1 week, and more."
-                )
                 featureComingSoon(
                     icon: "square.and.arrow.up",
                     title: "Share Countdown",
@@ -80,6 +89,65 @@ struct SettingsView: View {
                 Link("Support", destination: URL(string: "https://thinkupllc.com/support")!)
                     .font(DTDFont.body)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func notificationsRow(vm: SettingsViewModel) -> some View {
+        if vm.notificationPermissionDenied {
+            // System permission denied — show a link to iOS Settings.
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "bell.badge.fill")
+                    .foregroundStyle(Color.secondary)
+                    .font(.title3)
+                    .frame(width: 28)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Milestone Notifications")
+                        .font(DTDFont.body)
+                    Text("Get notified at 100 days, 1 week, and more.")
+                        .font(DTDFont.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Button("Open Settings") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                .font(DTDFont.captionBold)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
+            }
+        } else {
+            // Normal toggle row.
+            Toggle(isOn: Binding(
+                get: { vm.milestoneNotificationsEnabled },
+                set: { newValue in
+                    Task { await vm.setMilestoneNotifications(enabled: newValue) }
+                }
+            )) {
+                Label {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Milestone Notifications")
+                            .font(DTDFont.body)
+                        Text("Get notified at 100 days, 1 week, and more.")
+                            .font(DTDFont.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                } icon: {
+                    Image(systemName: "bell.badge.fill")
+                        .foregroundStyle(
+                            vm.milestoneNotificationsEnabled ? Color.disneyGold : Color.secondary
+                        )
+                        .font(.title3)
+                        .frame(width: 28)
+                }
+            }
+            .tint(Color.disneyGold)
         }
     }
 

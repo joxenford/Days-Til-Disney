@@ -27,6 +27,7 @@ final class HomeViewModel {
     private let tripRepository: any TripRepository
     private let contentEngine: any ContentEngine
     private let milestoneManager: any MilestoneManager
+    private let notificationManager: (any MilestoneNotificationManager)?
     private let themeProvider: ParkThemeProvider
 
     // MARK: - Init
@@ -35,11 +36,13 @@ final class HomeViewModel {
         tripRepository: any TripRepository,
         contentEngine: any ContentEngine,
         milestoneManager: any MilestoneManager,
+        notificationManager: (any MilestoneNotificationManager)? = nil,
         themeProvider: ParkThemeProvider
     ) {
         self.tripRepository = tripRepository
         self.contentEngine = contentEngine
         self.milestoneManager = milestoneManager
+        self.notificationManager = notificationManager
         self.themeProvider = themeProvider
     }
 
@@ -114,6 +117,8 @@ final class HomeViewModel {
     }
 
     func deleteTrip(id: UUID) async {
+        // Cancel notifications before the delete so we have the ID available.
+        notificationManager?.cancelNotifications(for: id)
         do {
             try await tripRepository.deleteTrip(id: id)
             await loadData()
@@ -131,6 +136,7 @@ extension HomeViewModel {
             tripRepository: container.tripRepository,
             contentEngine: container.contentEngine,
             milestoneManager: container.milestoneManager,
+            notificationManager: container.milestoneNotificationManager,
             themeProvider: container.themeProvider
         )
     }
