@@ -69,7 +69,10 @@ final class HomeViewModel {
                 return
             }
 
-            let primary = allTrips.first { $0.isPrimary } ?? allTrips.first
+            // Prefer the explicitly flagged primary, then a non-past trip, then any trip.
+            let primary = allTrips.first { $0.isPrimary }
+                ?? allTrips.first { !$0.isPast }
+                ?? allTrips.first
             // Separate past trips from upcoming/ongoing secondary trips.
             let otherTrips = allTrips.filter { $0.id != primary?.id }
             let secondary = otherTrips.filter { !$0.isPast }
@@ -120,8 +123,10 @@ final class HomeViewModel {
     }
 
     func deleteTrip(id: UUID) async {
-        // Cancel notifications before the delete so we have the ID available.
+        // Cancel notifications and clear content history before the delete
+        // so we have the trip ID available for cleanup.
         notificationManager?.cancelNotifications(for: id)
+        await contentEngine.resetHistory(for: id)
         do {
             try await tripRepository.deleteTrip(id: id)
             await loadData()
@@ -161,6 +166,7 @@ private final class MockTripRepository: TripRepository {
     func fetchPrimaryTrip() async throws -> Trip? { Trip.preview }
     func fetchTrip(by id: UUID) async throws -> Trip? { Trip.preview }
     func saveTrip(_ trip: Trip) async throws {}
+    func saveTripAsPrimary(_ trip: Trip) async throws {}
     func updateTrip(_ trip: Trip) async throws {}
     func deleteTrip(id: UUID) async throws {}
     func setPrimaryTrip(id: UUID) async throws {}

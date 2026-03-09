@@ -4,7 +4,7 @@ import SwiftUI
 /// Uses a 4-stop gradient keyed to each park's palette plus a time-of-day overlay,
 /// and animates smoothly whenever the park or time of day changes.
 struct GradientBackgroundView: View {
-    @Environment(\.parkTheme) private var themeProvider
+    @Environment(\.parkThemeProvider) private var themeProvider
 
     var body: some View {
         LinearGradient(
@@ -24,7 +24,7 @@ struct GradientBackgroundView: View {
 /// Each star independently twinkles via a `TimelineView`-driven phase animation —
 /// no manual timer management, no retain cycles.
 struct StarFieldView: View {
-    @Environment(\.parkTheme) private var themeProvider
+    @Environment(\.parkThemeProvider) private var themeProvider
 
     // Stars are deterministically generated so the layout is stable across re-renders.
     private struct Star: Identifiable {
@@ -91,12 +91,12 @@ struct StarFieldView: View {
         GradientBackgroundView()
         StarFieldView()
     }
-    .environment(\.parkTheme, ParkThemeProvider.preview(park: .magicKingdom, timeOfDay: .night))
+    .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .magicKingdom, timeOfDay: .night))
 }
 
 #Preview("Disneyland - Dawn") {
     GradientBackgroundView()
-        .environment(\.parkTheme, ParkThemeProvider.preview(park: .disneyland, timeOfDay: .dawn))
+        .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .disneyland, timeOfDay: .dawn))
 }
 
 #Preview("Animal Kingdom - Dusk") {
@@ -104,7 +104,7 @@ struct StarFieldView: View {
         GradientBackgroundView()
         StarFieldView()
     }
-    .environment(\.parkTheme, ParkThemeProvider.preview(park: .animalKingdom, timeOfDay: .dusk))
+    .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .animalKingdom, timeOfDay: .dusk))
 }
 
 #Preview("Hollywood Studios - Night") {
@@ -112,10 +112,10 @@ struct StarFieldView: View {
         GradientBackgroundView()
         StarFieldView()
     }
-    .environment(\.parkTheme, ParkThemeProvider.preview(park: .hollywoodStudios, timeOfDay: .night))
+    .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .hollywoodStudios, timeOfDay: .night))
 }
 
 #Preview("EPCOT - Day") {
     GradientBackgroundView()
-        .environment(\.parkTheme, ParkThemeProvider.preview(park: .epcot, timeOfDay: .day))
+        .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .epcot, timeOfDay: .day))
 }

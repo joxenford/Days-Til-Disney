@@ -83,7 +83,8 @@ struct AddEditTripView: View {
                         get: { vm.form.selectedParks },
                         set: { vm.form.selectedParks = $0 }
                     ),
-                    onResortChange: { vm.resortDidChange(to: $0) }
+                    onResortChange: { vm.resortDidChange(to: $0) },
+                    onTogglePark: { vm.togglePark($0) }
                 )
                 .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
                 .listRowBackground(Color.clear)

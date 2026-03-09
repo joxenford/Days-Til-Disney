@@ -2,10 +2,13 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkTheme) private var themeProvider
+    @Environment(\.parkThemeProvider) private var themeProvider
     @State private var viewModel: HomeViewModel?
     @State private var showCelebration = false
     @State private var pastTripsExpanded = false
+    /// Tracks whether the initial load via `.task` has completed.
+    /// `.onAppear` skips the first fire so only return-from-navigation refreshes run.
+    @State private var isInitialLoad = true
 
     let router: AppNavigationRouter
 
@@ -33,11 +36,13 @@ struct HomeView: View {
             let vm = HomeViewModel.make(from: appContainer)
             viewModel = vm
             await vm.onAppear()
+            isInitialLoad = false
         }
         .onAppear {
             // Re-load data when returning from a navigation push (e.g. after adding/editing a trip).
             // .task only runs once; .onAppear fires every time the view becomes visible.
-            guard let vm = viewModel else { return }
+            // isInitialLoad guards against a redundant refresh racing with the .task load.
+            guard !isInitialLoad, let vm = viewModel else { return }
             Task { await vm.onRefresh() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
@@ -307,5 +312,5 @@ private struct ErrorStateView: View {
 #Preview {
     HomeView(router: AppNavigationRouter())
         .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
-        .environment(\.parkTheme, ParkThemeProvider.preview(park: .magicKingdom))
+        .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .magicKingdom))
 }

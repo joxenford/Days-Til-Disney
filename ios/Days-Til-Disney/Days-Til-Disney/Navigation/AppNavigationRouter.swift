@@ -4,7 +4,6 @@ import SwiftUI
 
 /// All navigable destinations in the app.
 enum AppRoute: Hashable {
-    case home
     case tripDetail(tripID: UUID)
     case addTrip
     case editTrip(tripID: UUID)
@@ -46,7 +45,9 @@ struct AppNavigationRouter: View {
                     preferences.hasCompletedOnboarding = true
                     rootScreen = .home
                     // Append after the state change so the NavigationStack exists.
-                    DispatchQueue.main.async {
+                    // Task { @MainActor in } is safer than DispatchQueue.main.async —
+                    // it participates in Swift Concurrency and is easier to reason about.
+                    Task { @MainActor in
                         navigationPath.append(AppRoute.addTrip)
                     }
                 },
@@ -73,9 +74,6 @@ struct AppNavigationRouter: View {
     @ViewBuilder
     private func destination(for route: AppRoute) -> some View {
         switch route {
-        case .home:
-            HomeView(router: self)
-
         case .tripDetail(let tripID):
             TripDetailView(tripID: tripID, router: self)
 

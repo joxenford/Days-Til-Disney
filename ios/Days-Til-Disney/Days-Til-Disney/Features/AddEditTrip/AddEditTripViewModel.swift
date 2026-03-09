@@ -129,9 +129,12 @@ final class AddEditTripViewModel {
                     endDate: form.endDate,
                     isPrimary: shouldBePrimary
                 )
-                try await tripRepository.saveTrip(trip)
+                // Atomically save and promote to primary in one operation so we never
+                // have a saved trip without the correct isPrimary flag.
                 if shouldBePrimary {
-                    try await tripRepository.setPrimaryTrip(id: trip.id)
+                    try await tripRepository.saveTripAsPrimary(trip)
+                } else {
+                    try await tripRepository.saveTrip(trip)
                 }
                 // On first trip creation, request notification permission automatically.
                 // This is the natural onboarding moment — the user just committed to a trip.
@@ -148,10 +151,14 @@ final class AddEditTripViewModel {
                     existing.parks = parksOrdered
                     existing.startDate = form.startDate
                     existing.endDate = form.endDate
+                    // Set isPrimary before saving so the update and promotion happen
+                    // in a single atomic save — no second setPrimaryTrip call needed.
                     existing.isPrimary = form.isPrimary
-                    try await tripRepository.updateTrip(existing)
                     if form.isPrimary {
+                        // setPrimaryTrip clears other trips and saves — passes through updateTrip.
                         try await tripRepository.setPrimaryTrip(id: id)
+                    } else {
+                        try await tripRepository.updateTrip(existing)
                     }
                     await scheduleNotificationsIfEnabled(for: existing)
                 }

@@ -63,7 +63,7 @@ enum DisneyResort: String, Codable, CaseIterable, Identifiable {
 
     /// The "flagship" park used for theming when no specific park is selected.
     var primaryPark: DisneyPark {
-        parks[0]
+        parks.first ?? .magicKingdom
     }
 
     var castleAssetName: String {

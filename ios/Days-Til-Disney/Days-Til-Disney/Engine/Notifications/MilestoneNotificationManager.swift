@@ -85,11 +85,15 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
 
     func cancelAllNotifications() {
         // Only remove notifications we own (identified by our prefix).
-        notificationCenter.getPendingNotificationRequests { [weak self] requests in
+        // This callback executes on an arbitrary background thread managed by
+        // UNUserNotificationCenter — no MainActor isolation required.
+        // [weak self] is unnecessary: the closure is short-lived and the
+        // notification center holds no strong reference to self.
+        notificationCenter.getPendingNotificationRequests { [notificationCenter] requests in
             let ours = requests
                 .filter { $0.identifier.hasPrefix(Self.notificationPrefix) }
                 .map(\.identifier)
-            self?.notificationCenter.removePendingNotificationRequests(withIdentifiers: ours)
+            notificationCenter.removePendingNotificationRequests(withIdentifiers: ours)
         }
     }
 

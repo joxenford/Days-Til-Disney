@@ -14,7 +14,7 @@ struct DaysTilDisneyApp: App {
                 // Also inject common services individually for convenience.
                 .environment(container.userPreferences)
                 .environment(container.themeProvider)
-                .environment(\.parkTheme, container.themeProvider)
+                .environment(\.parkThemeProvider, container.themeProvider)
                 .preferredColorScheme(container.userPreferences.colorScheme)
                 .onReceive(
                     NotificationCenter.default.publisher(

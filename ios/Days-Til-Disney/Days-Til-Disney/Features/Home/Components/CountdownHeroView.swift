@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 
 /// The large, park-themed countdown hero displayed for the primary trip.
 /// Shows days when >1 day away, switches to hours/minutes on the final day,
@@ -10,13 +9,9 @@ struct CountdownHeroView: View {
     /// Called when the user taps "Plan your next adventure" on a past primary trip.
     var onAddTrip: (() -> Void)? = nil
 
-    @Environment(\.parkTheme) private var themeProvider
+    @Environment(\.parkThemeProvider) private var themeProvider
 
-    @State private var countdown: Date.CountdownComponents = Date().countdownComponents
     @State private var countdownScale: Double = 1.0
-
-    // Refresh the countdown every second on the final day, every minute otherwise.
-    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
     /// Accent color used for glows — prefer the theme's accent, fall back to park palette.
     private var accentColor: Color {
@@ -24,114 +19,135 @@ struct CountdownHeroView: View {
     }
 
     var body: some View {
-        Button(action: onTap) {
-            ZStack {
-                // Card background: subtle park gradient tint over glass material.
-                RoundedRectangle(cornerRadius: 28)
-                    .fill(.ultraThinMaterial)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 28)
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        trip.colorPalette.primary.opacity(0.30),
-                                        trip.colorPalette.backgroundGradientEnd.opacity(0.12),
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
+        // Use a 1-second interval on the final day so hours/minutes/seconds stay live;
+        // use 60-second interval otherwise to save CPU. TimelineView pauses automatically
+        // when the view is off-screen, so there is no duplicate firing in HomeView and
+        // TripDetailView simultaneously (issue 3.1 is also addressed by this change).
+        let isFinalDay = trip.startDate.countdownComponents.isFinalDay && !trip.isPast && !trip.isOngoing
+        TimelineView(isFinalDay
+            ? .periodic(from: .now, by: 1)
+            : .periodic(from: .now, by: 60)
+        ) { context in
+            let countdown = trip.startDate.countdownComponents
+
+            Button(action: onTap) {
+                ZStack {
+                    // Card background: subtle park gradient tint over glass material.
+                    RoundedRectangle(cornerRadius: 28)
+                        .fill(.ultraThinMaterial)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 28)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            trip.colorPalette.primary.opacity(0.30),
+                                            trip.colorPalette.backgroundGradientEnd.opacity(0.12),
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
                                 )
-                            )
+                        }
+                        // Thin accent border for park identity.
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 28)
+                                .strokeBorder(
+                                    LinearGradient(
+                                        colors: [
+                                            accentColor.opacity(0.40),
+                                            accentColor.opacity(0.10),
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1
+                                )
+                        }
+
+                    VStack(spacing: 0) {
+                        // Castle silhouette header — glows with the park's accent color.
+                        CastleSilhouetteView(
+                            park: trip.primaryPark,
+                            size: 110,
+                            color: .white,
+                            opacity: 0.80,
+                            showGlow: true,
+                            glowColor: accentColor
+                        )
+                        .padding(.top, 28)
+
+                        // Park name.
+                        Text(trip.primaryPark.displayName.uppercased())
+                            .font(DTDFont.captionBold)
+                            .foregroundStyle(.white.opacity(0.65))
+                            .tracking(2)
+                            .padding(.top, 4)
+
+                        // Trip name.
+                        Text(trip.name)
+                            .font(DTDFont.titlePrimary)
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            .padding(.horizontal, 24)
+                            .padding(.top, 8)
+
+                        // Countdown display.
+                        countdownDisplay(countdown: countdown)
+                            .padding(.top, 20)
+                            .scaleEffect(countdownScale)
+
+                        // Trip dates.
+                        HStack(spacing: 6) {
+                            Image(systemName: "calendar")
+                                .font(.footnote)
+                            Text("\(trip.startDate.dayMonthDateString) – \(trip.endDate.dayMonthDateString)")
+                                .font(DTDFont.caption)
+                        }
+                        .foregroundStyle(.white.opacity(0.6))
+                        .padding(.top, 12)
+                        .padding(.bottom, 28)
                     }
-                    // Thin accent border for park identity.
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 28)
-                            .strokeBorder(
-                                LinearGradient(
-                                    colors: [
-                                        accentColor.opacity(0.40),
-                                        accentColor.opacity(0.10),
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 1
-                            )
+                }
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 20)
+            // Two-layer shadow: a deep shadow for elevation, plus a colored bloom for magic.
+            .shadow(color: .black.opacity(0.35), radius: 24, y: 10)
+            .shadow(color: accentColor.opacity(0.25), radius: 32, y: 4)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(countdown.accessibilityDescription)
+            .accessibilityHint("Tap to view full trip details")
+            .onChange(of: countdown.days) { _, _ in
+                // Animate the number change when the day flips.
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                    countdownScale = 1.08
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        countdownScale = 1.0
                     }
-
-                VStack(spacing: 0) {
-                    // Castle silhouette header — glows with the park's accent color.
-                    CastleSilhouetteView(
-                        park: trip.primaryPark,
-                        size: 110,
-                        color: .white,
-                        opacity: 0.80,
-                        showGlow: true,
-                        glowColor: accentColor
-                    )
-                    .padding(.top, 28)
-
-                    // Park name.
-                    Text(trip.primaryPark.displayName.uppercased())
-                        .font(DTDFont.captionBold)
-                        .foregroundStyle(.white.opacity(0.65))
-                        .tracking(2)
-                        .padding(.top, 4)
-
-                    // Trip name.
-                    Text(trip.name)
-                        .font(DTDFont.titlePrimary)
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .padding(.horizontal, 24)
-                        .padding(.top, 8)
-
-                    // Countdown display.
-                    countdownDisplay
-                        .padding(.top, 20)
-                        .scaleEffect(countdownScale)
-
-                    // Trip dates.
-                    HStack(spacing: 6) {
-                        Image(systemName: "calendar")
-                            .font(.footnote)
-                        Text("\(trip.startDate.dayMonthDateString) – \(trip.endDate.dayMonthDateString)")
-                            .font(DTDFont.caption)
-                    }
-                    .foregroundStyle(.white.opacity(0.6))
-                    .padding(.top, 12)
-                    .padding(.bottom, 28)
                 }
             }
         }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 20)
-        // Two-layer shadow: a deep shadow for elevation, plus a colored bloom for magic.
-        .shadow(color: .black.opacity(0.35), radius: 24, y: 10)
-        .shadow(color: accentColor.opacity(0.25), radius: 32, y: 4)
-        .onAppear { refreshCountdown() }
-        .onReceive(timer) { _ in refreshCountdown() }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(countdown.accessibilityDescription)
-        .accessibilityHint("Tap to view full trip details")
     }
 
     // MARK: - Countdown display
 
     @ViewBuilder
-    private var countdownDisplay: some View {
+    private func countdownDisplay(countdown: Date.CountdownComponents) -> some View {
         if trip.isPast {
             pastDisplay
         } else if trip.isOngoing {
             ongoingDisplay
         } else if countdown.isFinalDay {
-            finalDayDisplay
+            finalDayDisplay(countdown: countdown)
         } else {
-            daysDisplay
+            daysDisplay(countdown: countdown)
         }
     }
 
-    private var daysDisplay: some View {
+    private func daysDisplay(countdown: Date.CountdownComponents) -> some View {
         VStack(spacing: 4) {
             Text("\(countdown.days)")
                 .font(.system(size: 88, weight: .black, design: .rounded))
@@ -145,7 +161,7 @@ struct CountdownHeroView: View {
         }
     }
 
-    private var finalDayDisplay: some View {
+    private func finalDayDisplay(countdown: Date.CountdownComponents) -> some View {
         VStack(spacing: 4) {
             HStack(alignment: .lastTextBaseline, spacing: 4) {
                 Text("\(countdown.hours)")
@@ -225,24 +241,6 @@ struct CountdownHeroView: View {
             }
         }
     }
-
-    // MARK: - Private
-
-    private func refreshCountdown() {
-        let new = trip.startDate.countdownComponents
-        if new.days != countdown.days {
-            // Animate the number change.
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
-                countdownScale = 1.08
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    countdownScale = 1.0
-                }
-            }
-        }
-        countdown = new
-    }
 }
 
 // MARK: - Preview
@@ -251,7 +249,7 @@ struct CountdownHeroView: View {
     ZStack {
         Color(hex: "#0D2545").ignoresSafeArea()
         CountdownHeroView(trip: Trip.preview, onTap: {})
-            .environment(\.parkTheme, ParkThemeProvider.preview())
+            .environment(\.parkThemeProvider, ParkThemeProvider.preview())
     }
 }
 
@@ -259,6 +257,6 @@ struct CountdownHeroView: View {
     ZStack {
         Color(hex: "#880E4F").ignoresSafeArea()
         CountdownHeroView(trip: Trip.previewToday, onTap: {})
-            .environment(\.parkTheme, ParkThemeProvider.preview(park: .tokyoDisneyland))
+            .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .tokyoDisneyland))
     }
 }

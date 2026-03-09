@@ -2,10 +2,16 @@ import SwiftUI
 
 /// Visual resort/park picker. Displays resort cards grouped by destination.
 /// Each resort card expands to show individual park selection checkmarks.
+///
+/// Park toggle logic lives exclusively in `onTogglePark` — the view never mutates
+/// `selectedParks` directly, avoiding duplicated guard logic.
 struct ParkSelectorView: View {
     @Binding var selectedResort: DisneyResort
     @Binding var selectedParks: Set<DisneyPark>
     let onResortChange: (DisneyResort) -> Void
+    /// Called when the user taps a park row. The parent is responsible for enforcing
+    /// deselection rules (e.g. keeping at least one park selected).
+    let onTogglePark: (DisneyPark) -> Void
 
     var body: some View {
         VStack(spacing: 12) {
@@ -18,12 +24,10 @@ struct ParkSelectorView: View {
                         onResortChange(resort)
                     },
                     onTogglePark: { park in
+                        // Only forward the toggle when the user is acting on the
+                        // currently selected resort's parks.
                         if selectedResort == resort {
-                            if selectedParks.contains(park) && selectedParks.count > 1 {
-                                selectedParks.remove(park)
-                            } else {
-                                selectedParks.insert(park)
-                            }
+                            onTogglePark(park)
                         }
                     }
                 )
@@ -169,7 +173,14 @@ private struct ParkRow: View {
         ParkSelectorView(
             selectedResort: $resort,
             selectedParks: $parks,
-            onResortChange: { resort = $0 }
+            onResortChange: { resort = $0 },
+            onTogglePark: { park in
+                if parks.contains(park) && parks.count > 1 {
+                    parks.remove(park)
+                } else {
+                    parks.insert(park)
+                }
+            }
         )
         .padding()
     }

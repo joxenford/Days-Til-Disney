@@ -10,14 +10,14 @@ struct CelebrationOverlay: View {
     @State private var showContent: Bool = false
 
     var body: some View {
-        ZStack {
-            // Dimmed backdrop.
-            Color.black.opacity(0.55)
-                .ignoresSafeArea()
-                .onTapGesture { dismiss() }
+        GeometryReader { geo in
+            ZStack {
+                // Dimmed backdrop.
+                Color.black.opacity(0.55)
+                    .ignoresSafeArea()
+                    .onTapGesture { dismiss() }
 
-            // Particle field.
-            GeometryReader { geo in
+                // Particle field.
                 ForEach(particles) { particle in
                     Circle()
                         .fill(particle.color)
@@ -26,21 +26,21 @@ struct CelebrationOverlay: View {
                         .opacity(particle.opacity)
                         .scaleEffect(particle.scale)
                 }
-            }
-            .allowsHitTesting(false)
+                .allowsHitTesting(false)
 
-            // Milestone card.
-            if showContent {
-                MilestoneCelebrationCard(event: event, onDismiss: dismiss)
-                    .transition(.scale(scale: 0.7).combined(with: .opacity))
-                    .padding(.horizontal, 32)
+                // Milestone card.
+                if showContent {
+                    MilestoneCelebrationCard(event: event, onDismiss: dismiss)
+                        .transition(.scale(scale: 0.7).combined(with: .opacity))
+                        .padding(.horizontal, 32)
+                }
             }
-        }
-        .onAppear {
-            triggerHaptic()
-            spawnParticles()
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.75).delay(0.2)) {
-                showContent = true
+            .onAppear {
+                triggerHaptic()
+                spawnParticles(in: geo.size)
+                withAnimation(.spring(response: 0.5, dampingFraction: 0.75).delay(0.2)) {
+                    showContent = true
+                }
             }
         }
     }
@@ -64,13 +64,13 @@ struct CelebrationOverlay: View {
         }
     }
 
-    private func spawnParticles() {
+    private func spawnParticles(in size: CGSize) {
         let colors: [Color] = [.yellow, .red, .blue, .green, .orange, .pink, .purple, .white]
         particles = (0..<60).map { i in
             ParticleState(
                 id: i,
-                x: Double.random(in: 0...UIScreen.main.bounds.width),
-                y: Double.random(in: 0...UIScreen.main.bounds.height * 0.5),
+                x: Double.random(in: 0...size.width),
+                y: Double.random(in: 0...size.height * 0.5),
                 size: Double.random(in: 6...14),
                 color: colors.randomElement() ?? .yellow,
                 opacity: Double.random(in: 0.7...1.0),
@@ -83,6 +83,11 @@ struct CelebrationOverlay: View {
                 particles[i].y += Double.random(in: 200...500)
                 particles[i].opacity = 0
             }
+        }
+
+        // Clear particles after the animation completes to free memory.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            particles = []
         }
     }
 }
@@ -149,7 +154,7 @@ private struct MilestoneCelebrationCard: View {
         if isPresented {
             CelebrationOverlay(
                 event: MilestoneEvent(
-                    milestone: Milestone.all.first!,
+                    milestone: Milestone.all[0],
                     trip: Trip.preview
                 ),
                 isPresented: $isPresented

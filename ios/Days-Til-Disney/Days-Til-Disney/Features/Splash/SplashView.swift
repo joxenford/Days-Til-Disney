@@ -60,7 +60,14 @@ struct SplashView: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Days Til Disney, loading")
-        .onAppear { runAnimation() }
+        .task {
+            runAnimation()
+            // Use Task.sleep instead of DispatchQueue.main.asyncAfter so the wait is
+            // cancellable when the view disappears (e.g. if the user force-quits).
+            try? await Task.sleep(for: .seconds(2.2))
+            guard !Task.isCancelled else { return }
+            onComplete()
+        }
     }
 
     // MARK: - Animation sequence
@@ -83,10 +90,7 @@ struct SplashView: View {
             titleOpacity = 1.0
         }
 
-        // 4. Transition out after a brief hold
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-            onComplete()
-        }
+        // Transition timing is handled by the .task modifier using Task.sleep.
     }
 }
 

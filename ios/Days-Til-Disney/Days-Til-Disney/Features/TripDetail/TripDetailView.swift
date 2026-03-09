@@ -5,7 +5,7 @@ struct TripDetailView: View {
     let router: AppNavigationRouter
 
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkTheme) private var themeProvider
+    @Environment(\.parkThemeProvider) private var themeProvider
     @State private var viewModel: TripDetailViewModel?
     @State private var showCelebration = false
 
@@ -205,6 +205,6 @@ struct TripDetailView: View {
     NavigationStack {
         TripDetailView(tripID: Trip.preview.id, router: AppNavigationRouter())
             .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
-            .environment(\.parkTheme, ParkThemeProvider.preview())
+            .environment(\.parkThemeProvider, ParkThemeProvider.preview())
     }
 }

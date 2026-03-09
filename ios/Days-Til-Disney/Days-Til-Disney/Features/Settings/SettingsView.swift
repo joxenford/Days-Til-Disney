@@ -83,11 +83,15 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Link("Privacy Policy", destination: URL(string: "https://thinkupllc.com/privacy")!)
-                    .font(DTDFont.body)
+                if let privacyURL = URL(string: "https://thinkupllc.com/privacy") {
+                    Link("Privacy Policy", destination: privacyURL)
+                        .font(DTDFont.body)
+                }
 
-                Link("Support", destination: URL(string: "https://thinkupllc.com/support")!)
-                    .font(DTDFont.body)
+                if let supportURL = URL(string: "https://thinkupllc.com/support") {
+                    Link("Support", destination: supportURL)
+                        .font(DTDFont.body)
+                }
             }
         }
     }

@@ -34,14 +34,26 @@ final class DefaultMilestoneManager: MilestoneManager {
 // MARK: - MilestoneEvent
 
 /// A resolved event ready for the UI layer to consume.
+/// Uses value types only — no live SwiftData @Model references — so it is safe
+/// to store and compare across actor boundaries.
 struct MilestoneEvent: Identifiable, Equatable {
-    static func == (lhs: MilestoneEvent, rhs: MilestoneEvent) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    let id = UUID()
+    /// Deterministic ID derived from the milestone day and trip UUID so equality
+    /// is stable across re-creations (e.g. the same milestone on app relaunch).
+    let id: String
     let milestone: Milestone
-    let trip: Trip
+    let tripID: UUID
+    let tripName: String
+    let parkDisplayName: String
+    let parkEmoji: String
+
+    init(milestone: Milestone, trip: Trip) {
+        self.id = "\(milestone.daysOut)-\(trip.id.uuidString)"
+        self.milestone = milestone
+        self.tripID = trip.id
+        self.tripName = trip.name
+        self.parkDisplayName = trip.primaryPark.displayName
+        self.parkEmoji = trip.primaryPark.emoji
+    }
 
     var celebrationType: Milestone.CelebrationType { milestone.celebrationType }
     var title: String { milestone.title }

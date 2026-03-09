@@ -64,39 +64,65 @@ extension Date {
     }
 
     /// Full countdown breakdown from now until this date.
+    /// `days` uses the same calendar-day arithmetic as `Calendar.daysUntil(_:)` for
+    /// consistency; hours/minutes/seconds are computed from the remaining wall-clock interval.
     var countdownComponents: CountdownComponents {
-        let interval = timeIntervalSinceNow
-        guard interval > 0 else {
+        let calendar = Calendar.current
+        let calendarDays = calendar.daysUntil(self)
+
+        guard calendarDays >= 0 else {
             return CountdownComponents(days: 0, hours: 0, minutes: 0, seconds: 0)
         }
 
-        let totalSeconds = Int(interval)
-        let days    = totalSeconds / 86_400
-        let hours   = (totalSeconds % 86_400) / 3_600
-        let minutes = (totalSeconds % 3_600) / 60
-        let seconds = totalSeconds % 60
-        return CountdownComponents(days: days, hours: hours, minutes: minutes, seconds: seconds)
+        // Compute the remainder after stripping whole calendar days.
+        // "Start of the target day" is the anchor; everything before it is the sub-day portion.
+        let startOfTargetDay = calendar.startOfDay(for: self)
+        let remainderInterval = max(0, startOfTargetDay.timeIntervalSinceNow)
+        // On the final day (calendarDays == 0) use timeIntervalSinceNow directly.
+        let subDayInterval = calendarDays == 0
+            ? max(0, timeIntervalSinceNow)
+            : max(0, timeIntervalSinceNow - remainderInterval)
+
+        let totalSubSeconds = Int(calendarDays == 0 ? max(0, timeIntervalSinceNow) : subDayInterval)
+        let hours   = (totalSubSeconds % 86_400) / 3_600
+        let minutes = (totalSubSeconds % 3_600) / 60
+        let seconds = totalSubSeconds % 60
+
+        return CountdownComponents(days: calendarDays, hours: hours, minutes: minutes, seconds: seconds)
     }
 
     // MARK: - Display formatting
 
+    // Cached formatters — created once per process, not on every property access.
+    private static let shortDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateStyle = .medium
+        f.timeStyle = .none
+        return f
+    }()
+
+    private static let monthYearFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "MMMM yyyy"
+        return f
+    }()
+
+    private static let dayMonthDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "EEE, MMM d"
+        return f
+    }()
+
     var shortDateString: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter.string(from: self)
+        Date.shortDateFormatter.string(from: self)
     }
 
     var monthYearString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        return formatter.string(from: self)
+        Date.monthYearFormatter.string(from: self)
     }
 
     /// e.g. "Fri, Mar 14"
     var dayMonthDateString: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEE, MMM d"
-        return formatter.string(from: self)
+        Date.dayMonthDateFormatter.string(from: self)
     }
 }

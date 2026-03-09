@@ -164,5 +164,5 @@ private struct WelcomeSparkles: View {
 
 #Preview {
     WelcomeView(onCreateTrip: {}, onSkip: {})
-        .environment(\.parkTheme, ParkThemeProvider.preview(park: .magicKingdom))
+        .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .magicKingdom))
 }

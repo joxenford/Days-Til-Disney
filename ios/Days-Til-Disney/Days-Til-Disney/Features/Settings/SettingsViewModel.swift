@@ -40,7 +40,6 @@ final class SettingsViewModel {
 
     var milestoneNotificationsEnabled: Bool {
         get { userPreferences.milestoneNotificationsEnabled }
-        set { userPreferences.milestoneNotificationsEnabled = newValue }
     }
 
     var appVersion: String {

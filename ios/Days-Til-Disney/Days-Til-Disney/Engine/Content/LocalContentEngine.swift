@@ -24,7 +24,7 @@ final class LocalContentEngine: ContentEngine {
 
     func contentForToday(trip: Trip) async throws -> DailyContent? {
         let daysOut = calendar.daysUntil(trip.startDate)
-        var candidates = try await repository.fetchContent(for: trip, daysOut: daysOut)
+        let candidates = try await repository.fetchContent(for: trip, daysOut: daysOut)
 
         guard !candidates.isEmpty else { return nil }
 
@@ -33,6 +33,7 @@ final class LocalContentEngine: ContentEngine {
 
         // All content exhausted — reset and start over for this trip.
         if unshown.isEmpty {
+            await repository.resetShownContentIDs(for: trip.id)
             unshown = candidates
         }
 
@@ -46,20 +47,27 @@ final class LocalContentEngine: ContentEngine {
     }
 
     func resetHistory(for tripID: UUID) async {
-        // Delegate to the repository's UserDefaults key removal.
-        // ContentRepository doesn't expose a reset method — add it if needed at v1.1.
-        // For now this is a no-op placeholder.
+        await repository.resetShownContentIDs(for: tripID)
     }
 
     // MARK: - Private
 
     /// Produces an integer index seeded by trip ID + today's date.
-    /// Stable across app launches on the same calendar day.
+    /// Uses djb2 hashing of the UUID string bytes for a launch-stable result —
+    /// `hashValue` is not stable across process launches.
     private func daySeed(for tripID: UUID) -> Int {
         let today = calendar.startOfDay(for: Date())
         let daysSinceEpoch = Int(today.timeIntervalSinceReferenceDate / 86_400)
-        // XOR the day count with a portion of the UUID to get trip-specific variance.
-        let uuidHash = abs(tripID.hashValue)
+        let uuidHash = djb2Hash(tripID.uuidString)
         return abs(daysSinceEpoch ^ uuidHash)
+    }
+
+    /// djb2 hash: stable across process launches, simple, good distribution.
+    private func djb2Hash(_ string: String) -> Int {
+        var hash = 5381
+        for byte in string.utf8 {
+            hash = ((hash << 5) &+ hash) &+ Int(byte)
+        }
+        return abs(hash)
     }
 }
