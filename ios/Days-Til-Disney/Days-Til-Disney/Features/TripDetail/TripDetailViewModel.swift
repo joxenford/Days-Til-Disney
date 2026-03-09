@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import SwiftUI
 
 // MARK: - View State
 
@@ -17,6 +18,8 @@ enum TripDetailViewState {
 final class TripDetailViewModel {
     private(set) var viewState: TripDetailViewState = .loading
     private(set) var activeMilestone: MilestoneEvent?
+    private(set) var shareImage: UIImage?
+    private(set) var isGeneratingShareImage = false
 
     private let tripID: UUID
     private let tripRepository: any TripRepository
@@ -76,6 +79,29 @@ final class TripDetailViewModel {
 
     func dismissMilestone() {
         activeMilestone = nil
+    }
+
+    // MARK: - Share image generation
+
+    /// Renders the ShareCountdownCard to a UIImage and stores it in `shareImage`.
+    /// Call this when the user taps the share button, then observe `shareImage`
+    /// to know when to present the share sheet.
+    func generateShareImage(for trip: Trip) {
+        guard !isGeneratingShareImage else { return }
+        isGeneratingShareImage = true
+        shareImage = nil
+
+        // ImageRenderer must be created and used on the main actor.
+        let card = ShareCountdownCard(trip: trip)
+        let renderer = ImageRenderer(content: card)
+        // Render at 3x for crisp social-share quality.
+        renderer.scale = 3.0
+        shareImage = renderer.uiImage
+        isGeneratingShareImage = false
+    }
+
+    func clearShareImage() {
+        shareImage = nil
     }
 
     // MARK: - Factory

@@ -50,20 +50,6 @@ struct SettingsView: View {
                 }
             }
 
-            // Future features (v1.1).
-            Section("Coming Soon") {
-                featureComingSoon(
-                    icon: "square.and.arrow.up",
-                    title: "Share Countdown",
-                    detail: "Share your countdown as a beautiful image."
-                )
-                featureComingSoon(
-                    icon: "rectangle.on.rectangle",
-                    title: "Home Screen Widget",
-                    detail: "See your countdown without opening the app."
-                )
-            }
-
             // About.
             Section("About") {
                 HStack {
@@ -155,32 +141,6 @@ struct SettingsView: View {
         }
     }
 
-    private func featureComingSoon(icon: String, title: String, detail: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .foregroundStyle(Color.secondary)
-                .font(.title3)
-                .frame(width: 28)
-
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text(title)
-                        .font(DTDFont.body)
-                    Text("v1.1")
-                        .font(DTDFont.captionBold)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.secondary.opacity(0.5))
-                        .clipShape(Capsule())
-                }
-                Text(detail)
-                    .font(DTDFont.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .opacity(0.6)
-    }
 }
 
 // MARK: - Preview

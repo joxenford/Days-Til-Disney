@@ -9,6 +9,7 @@ struct TripDetailView: View {
     @State private var viewModel: TripDetailViewModel?
     @State private var showCelebration = false
     @State private var isInitialLoad = true
+    @State private var showShareSheet = false
 
     var body: some View {
         ZStack {
@@ -44,6 +45,18 @@ struct TripDetailView: View {
         .onChange(of: showCelebration) { _, isShown in
             // When the overlay is dismissed (by tapping or the button), clear the VM's state.
             if !isShown { viewModel?.dismissMilestone() }
+        }
+        // When a share image is ready, present the share sheet.
+        .onChange(of: viewModel?.shareImage) { _, image in
+            if image != nil { showShareSheet = true }
+        }
+        .sheet(isPresented: $showShareSheet, onDismiss: {
+            viewModel?.clearShareImage()
+        }) {
+            if let image = viewModel?.shareImage {
+                ShareSheet(image: image)
+                    .ignoresSafeArea()
+            }
         }
         .overlay {
             if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
@@ -195,16 +208,56 @@ struct TripDetailView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            Button {
-                router.navigate(to: .editTrip(tripID: tripID))
-            } label: {
-                Image(systemName: "pencil.circle.fill")
-                    .foregroundStyle(.white)
-                    .font(.title3)
+            HStack(spacing: 4) {
+                // Share button — visible only when the trip is loaded.
+                if case .loaded(let trip, _) = viewModel?.viewState {
+                    Button {
+                        viewModel?.generateShareImage(for: trip)
+                    } label: {
+                        if viewModel?.isGeneratingShareImage == true {
+                            ProgressView()
+                                .tint(.white)
+                                .scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(.white)
+                                .font(.title3)
+                        }
+                    }
+                    .accessibilityLabel("Share countdown")
+                    .disabled(viewModel?.isGeneratingShareImage == true)
+                }
+
+                Button {
+                    router.navigate(to: .editTrip(tripID: tripID))
+                } label: {
+                    Image(systemName: "pencil.circle.fill")
+                        .foregroundStyle(.white)
+                        .font(.title3)
+                }
+                .accessibilityLabel("Edit trip")
             }
-            .accessibilityLabel("Edit trip")
         }
     }
+}
+
+// MARK: - UIActivityViewController wrapper
+
+/// A thin UIViewControllerRepresentable that presents UIActivityViewController
+/// for sharing a UIImage. We use UIKit here because UIActivityViewController
+/// gives full OS share sheet capability (AirDrop, Save to Photos, Messages, etc.)
+/// that ShareLink cannot replicate for arbitrary image data.
+private struct ShareSheet: UIViewControllerRepresentable {
+    let image: UIImage
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Preview

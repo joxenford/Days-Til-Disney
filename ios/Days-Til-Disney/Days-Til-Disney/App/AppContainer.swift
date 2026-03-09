@@ -30,6 +30,12 @@ final class AppContainer {
     let milestoneNotificationManager: any MilestoneNotificationManager
     let themeProvider: ParkThemeProvider
 
+    // MARK: - Deep linking
+
+    /// Receives UNUserNotificationCenter delegate callbacks and exposes the tapped
+    /// trip ID for `AppNavigationRouter` to consume.
+    let notificationDeepLinkHandler: NotificationDeepLinkHandler
+
     // MARK: - Preferences
 
     let userPreferences: UserPreferences
@@ -53,6 +59,7 @@ final class AppContainer {
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
+        notificationDeepLinkHandler = NotificationDeepLinkHandler()
         themeProvider = ParkThemeProvider(timeOfDayProvider: LiveTimeOfDayProvider())
     }
 
@@ -71,6 +78,7 @@ final class AppContainer {
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
+        notificationDeepLinkHandler = NotificationDeepLinkHandler()
         themeProvider = ParkThemeProvider(
             park: .magicKingdom,
             timeOfDayProvider: FixedTimeOfDayProvider.day

@@ -24,47 +24,70 @@ private enum RootScreen {
 /// Handles splash → onboarding (first launch) or splash → home (returning user).
 struct AppNavigationRouter: View {
     @Environment(UserPreferences.self) private var preferences
+    @Environment(AppContainer.self) private var appContainer
     @State private var navigationPath = NavigationPath()
     @State private var rootScreen: RootScreen = .splash
 
     var body: some View {
-        switch rootScreen {
-        case .splash:
-            SplashView {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    rootScreen = preferences.hasCompletedOnboarding ? .home : .onboarding
-                }
-            }
-
-        case .onboarding:
-            // The WelcomeView is presented outside the NavigationStack so it occupies
-            // the full screen without a nav bar. When the user taps "Create Your First
-            // Trip" we flip to .home and immediately push .addTrip onto the stack.
-            WelcomeView(
-                onCreateTrip: {
-                    preferences.hasCompletedOnboarding = true
-                    rootScreen = .home
-                    // Append after the state change so the NavigationStack exists.
-                    // Task { @MainActor in } is safer than DispatchQueue.main.async —
-                    // it participates in Swift Concurrency and is easier to reason about.
-                    Task { @MainActor in
-                        navigationPath.append(AppRoute.addTrip)
+        Group {
+            switch rootScreen {
+            case .splash:
+                SplashView {
+                    withAnimation(.easeInOut(duration: 0.5)) {
+                        rootScreen = preferences.hasCompletedOnboarding ? .home : .onboarding
                     }
-                },
-                onSkip: {
-                    withAnimation(.easeInOut(duration: 0.4)) {
+                }
+
+            case .onboarding:
+                // The WelcomeView is presented outside the NavigationStack so it occupies
+                // the full screen without a nav bar. When the user taps "Create Your First
+                // Trip" we flip to .home and immediately push .addTrip onto the stack.
+                WelcomeView(
+                    onCreateTrip: {
                         preferences.hasCompletedOnboarding = true
                         rootScreen = .home
+                        // Append after the state change so the NavigationStack exists.
+                        // Task { @MainActor in } is safer than DispatchQueue.main.async —
+                        // it participates in Swift Concurrency and is easier to reason about.
+                        Task { @MainActor in
+                            navigationPath.append(AppRoute.addTrip)
+                        }
+                    },
+                    onSkip: {
+                        withAnimation(.easeInOut(duration: 0.4)) {
+                            preferences.hasCompletedOnboarding = true
+                            rootScreen = .home
+                        }
                     }
-                }
-            )
+                )
 
-        case .home:
-            NavigationStack(path: $navigationPath) {
-                HomeView(router: self)
-                    .navigationDestination(for: AppRoute.self) { route in
-                        destination(for: route)
-                    }
+            case .home:
+                NavigationStack(path: $navigationPath) {
+                    HomeView(router: self)
+                        .navigationDestination(for: AppRoute.self) { route in
+                            destination(for: route)
+                        }
+                }
+            }
+        }
+        // Deep-link handling: when a notification is tapped, the handler sets
+        // pendingTripID. We consume it here by navigating to the trip detail view.
+        // The `Task { @MainActor in }` wrapper defers the navigation one run-loop
+        // so that if we are still on the splash screen the rootScreen flip can
+        // complete before we attempt to push onto the NavigationStack.
+        .onChange(of: appContainer.notificationDeepLinkHandler.pendingTripID) { _, tripID in
+            guard let tripID else { return }
+            appContainer.notificationDeepLinkHandler.clearPendingTrip()
+            Task { @MainActor in
+                // Ensure we are on the home screen before pushing.
+                if rootScreen != .home {
+                    preferences.hasCompletedOnboarding = true
+                    rootScreen = .home
+                }
+                // Clear any existing navigation stack so we land cleanly on the
+                // trip detail rather than stacking on top of whatever was open.
+                navigationPath.removeLast(navigationPath.count)
+                navigationPath.append(AppRoute.tripDetail(tripID: tripID))
             }
         }
     }
