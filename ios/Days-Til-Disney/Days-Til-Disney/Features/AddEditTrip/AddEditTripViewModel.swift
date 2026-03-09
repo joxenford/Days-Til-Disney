@@ -106,16 +106,20 @@ final class AddEditTripViewModel {
 
             switch mode {
             case .add:
+                // Determine if this should be primary: use the user's preference,
+                // or auto-promote if this is the very first trip.
+                let existingTrips = try await tripRepository.fetchAllTrips()
+                let shouldBePrimary = form.isPrimary || existingTrips.isEmpty
                 let trip = Trip(
                     name: form.name.trimmingCharacters(in: .whitespacesAndNewlines),
                     resort: form.selectedResort,
                     parks: parksOrdered,
                     startDate: form.startDate,
                     endDate: form.endDate,
-                    isPrimary: form.isPrimary
+                    isPrimary: shouldBePrimary
                 )
                 try await tripRepository.saveTrip(trip)
-                if form.isPrimary {
+                if shouldBePrimary {
                     try await tripRepository.setPrimaryTrip(id: trip.id)
                 }
 

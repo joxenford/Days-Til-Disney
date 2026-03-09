@@ -31,15 +31,19 @@ struct TripDetailView: View {
             await vm.onAppear()
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            showCelebration = newValue != nil
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showCelebration = newValue != nil
+            }
+        }
+        .onChange(of: showCelebration) { _, isShown in
+            // When the overlay is dismissed (by tapping or the button), clear the VM's state.
+            if !isShown { viewModel?.dismissMilestone() }
         }
         .overlay {
             if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
                 CelebrationOverlay(event: event, isPresented: $showCelebration)
+                    .transition(.opacity)
                     .zIndex(100)
-                    .onChange(of: showCelebration) { _, isShown in
-                        if !isShown { vm.dismissMilestone() }
-                    }
             }
         }
     }

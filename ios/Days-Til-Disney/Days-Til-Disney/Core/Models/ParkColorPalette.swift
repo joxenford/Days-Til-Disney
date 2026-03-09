@@ -6,116 +6,160 @@ struct ParkColorPalette: Sendable {
     let secondary: Color
     let accent: Color
     let backgroundGradientStart: Color
+    /// Optional middle stops for richer multi-stop gradients.
+    let backgroundGradientMid1: Color
+    let backgroundGradientMid2: Color
     let backgroundGradientEnd: Color
     let textOnPrimary: Color
 
+    /// Returns the full ordered gradient stops: start → mid1 → mid2 → end.
+    var gradientStops: [Color] {
+        [backgroundGradientStart, backgroundGradientMid1, backgroundGradientMid2, backgroundGradientEnd]
+    }
+
     // MARK: - Pre-defined palettes per park
 
+    /// Magic Kingdom — deep royal blue midnight sky fading to sapphire and golden horizon.
     static let magicKingdom = ParkColorPalette(
-        primary: Color(hex: "#1A3A6B"),           // Royal blue
-        secondary: Color(hex: "#C9A84C"),         // Gold
-        accent: Color(hex: "#E8C84A"),            // Bright gold
-        backgroundGradientStart: Color(hex: "#0D2545"),
-        backgroundGradientEnd: Color(hex: "#2B5BA0"),
+        primary: Color(hex: "#1A3A6B"),
+        secondary: Color(hex: "#C9A84C"),
+        accent: Color(hex: "#E8C84A"),
+        backgroundGradientStart: Color(hex: "#080E24"),   // Near-black midnight
+        backgroundGradientMid1: Color(hex: "#0D2545"),    // Deep royal navy
+        backgroundGradientMid2: Color(hex: "#1A3A6B"),    // Royal blue
+        backgroundGradientEnd: Color(hex: "#2B5BA0"),     // Bright sapphire horizon
         textOnPrimary: .white
     )
 
+    /// EPCOT — futuristic deep navy transitioning to vivid ocean blue.
     static let epcot = ParkColorPalette(
-        primary: Color(hex: "#0077B6"),           // Future blue
-        secondary: Color(hex: "#00B4D8"),         // Aqua
-        accent: Color(hex: "#90E0EF"),            // Light aqua
-        backgroundGradientStart: Color(hex: "#023E8A"),
-        backgroundGradientEnd: Color(hex: "#0096C7"),
+        primary: Color(hex: "#0077B6"),
+        secondary: Color(hex: "#00B4D8"),
+        accent: Color(hex: "#90E0EF"),
+        backgroundGradientStart: Color(hex: "#03112B"),   // Deep space navy
+        backgroundGradientMid1: Color(hex: "#023E8A"),    // Dark future blue
+        backgroundGradientMid2: Color(hex: "#0077B6"),    // EPCOT signature blue
+        backgroundGradientEnd: Color(hex: "#00B4D8"),     // Bright aqua
         textOnPrimary: .white
     )
 
+    /// Hollywood Studios — noir charcoal to dramatic Hollywood crimson-amber.
     static let hollywoodStudios = ParkColorPalette(
-        primary: Color(hex: "#C0392B"),           // Hollywood red
-        secondary: Color(hex: "#F39C12"),         // Golden amber
-        accent: Color(hex: "#F1C40F"),            // Yellow
-        backgroundGradientStart: Color(hex: "#7B241C"),
-        backgroundGradientEnd: Color(hex: "#C0392B"),
+        primary: Color(hex: "#C0392B"),
+        secondary: Color(hex: "#F39C12"),
+        accent: Color(hex: "#F1C40F"),
+        backgroundGradientStart: Color(hex: "#1A0A08"),   // Near-black charcoal
+        backgroundGradientMid1: Color(hex: "#7B241C"),    // Deep Hollywood red
+        backgroundGradientMid2: Color(hex: "#C0392B"),    // Cinematic crimson
+        backgroundGradientEnd: Color(hex: "#E8820C"),     // Warm amber spotlight
         textOnPrimary: .white
     )
 
+    /// Animal Kingdom — rich jungle earth through layered greens to golden savanna.
     static let animalKingdom = ParkColorPalette(
-        primary: Color(hex: "#2E7D32"),           // Safari green
-        secondary: Color(hex: "#8D6E63"),         // Earth brown
-        accent: Color(hex: "#FFC107"),            // Amber
-        backgroundGradientStart: Color(hex: "#1B5E20"),
-        backgroundGradientEnd: Color(hex: "#4CAF50"),
+        primary: Color(hex: "#2E7D32"),
+        secondary: Color(hex: "#8D6E63"),
+        accent: Color(hex: "#FFC107"),
+        backgroundGradientStart: Color(hex: "#0B1F0C"),   // Deep jungle shadow
+        backgroundGradientMid1: Color(hex: "#1B5E20"),    // Dark forest green
+        backgroundGradientMid2: Color(hex: "#2E7D32"),    // Vibrant canopy
+        backgroundGradientEnd: Color(hex: "#558B2F"),     // Sunlit savanna green
         textOnPrimary: .white
     )
 
+    /// Disneyland — Sleeping Beauty castle: deep amethyst to lilac dawn.
     static let disneyland = ParkColorPalette(
-        primary: Color(hex: "#8E44AD"),           // Sleeping Beauty purple
-        secondary: Color(hex: "#E91E8C"),         // Pink
-        accent: Color(hex: "#F8BBD9"),            // Light pink
-        backgroundGradientStart: Color(hex: "#4A148C"),
-        backgroundGradientEnd: Color(hex: "#CE93D8"),
+        primary: Color(hex: "#8E44AD"),
+        secondary: Color(hex: "#E91E8C"),
+        accent: Color(hex: "#F8BBD9"),
+        backgroundGradientStart: Color(hex: "#1A0630"),   // Deep twilight violet
+        backgroundGradientMid1: Color(hex: "#4A148C"),    // Rich amethyst
+        backgroundGradientMid2: Color(hex: "#7B1FA2"),    // Vivid purple
+        backgroundGradientEnd: Color(hex: "#CE93D8"),     // Soft lilac
         textOnPrimary: .white
     )
 
+    /// California Adventure — Pacific sunset: terracotta to blazing orange-gold.
     static let californiaAdventure = ParkColorPalette(
-        primary: Color(hex: "#E64A19"),           // California sunset orange
-        secondary: Color(hex: "#FFB300"),         // Amber gold
-        accent: Color(hex: "#FFE082"),            // Light gold
-        backgroundGradientStart: Color(hex: "#BF360C"),
-        backgroundGradientEnd: Color(hex: "#FF7043"),
+        primary: Color(hex: "#E64A19"),
+        secondary: Color(hex: "#FFB300"),
+        accent: Color(hex: "#FFE082"),
+        backgroundGradientStart: Color(hex: "#3E1000"),   // Deep sunset rust
+        backgroundGradientMid1: Color(hex: "#BF360C"),    // Terracotta
+        backgroundGradientMid2: Color(hex: "#E64A19"),    // California orange
+        backgroundGradientEnd: Color(hex: "#FFB300"),     // Golden hour amber
         textOnPrimary: .white
     )
 
+    /// Tokyo Disneyland — cherry blossom magic: deep crimson to delicate pink.
     static let tokyoDisneyland = ParkColorPalette(
-        primary: Color(hex: "#C62828"),           // Deep red
-        secondary: Color(hex: "#F48FB1"),         // Cherry blossom pink
-        accent: Color(hex: "#FCE4EC"),            // Blossom white-pink
-        backgroundGradientStart: Color(hex: "#880E4F"),
-        backgroundGradientEnd: Color(hex: "#E91E63"),
+        primary: Color(hex: "#C62828"),
+        secondary: Color(hex: "#F48FB1"),
+        accent: Color(hex: "#FCE4EC"),
+        backgroundGradientStart: Color(hex: "#2D0112"),   // Deep ruby
+        backgroundGradientMid1: Color(hex: "#880E4F"),    // Dark cerise
+        backgroundGradientMid2: Color(hex: "#C62828"),    // Cherry red
+        backgroundGradientEnd: Color(hex: "#E91E63"),     // Blossom pink
         textOnPrimary: .white
     )
 
+    /// Tokyo DisneySea — ocean depths: near-black sea to vibrant teal-blue.
     static let tokyoDisneySea = ParkColorPalette(
-        primary: Color(hex: "#1565C0"),           // Deep sea blue
-        secondary: Color(hex: "#0288D1"),         // Ocean blue
-        accent: Color(hex: "#80DEEA"),            // Sea foam
-        backgroundGradientStart: Color(hex: "#0D47A1"),
-        backgroundGradientEnd: Color(hex: "#1976D2"),
+        primary: Color(hex: "#1565C0"),
+        secondary: Color(hex: "#0288D1"),
+        accent: Color(hex: "#80DEEA"),
+        backgroundGradientStart: Color(hex: "#020D20"),   // Abyss black-blue
+        backgroundGradientMid1: Color(hex: "#0D47A1"),    // Deep sea
+        backgroundGradientMid2: Color(hex: "#1565C0"),    // Ocean blue
+        backgroundGradientEnd: Color(hex: "#0288D1"),     // Surface shimmer
         textOnPrimary: .white
     )
 
+    /// Disneyland Paris — Enchanted Storybook: deep indigo to soft lavender rose.
     static let disneylandParkParis = ParkColorPalette(
-        primary: Color(hex: "#7B1FA2"),           // Lavender purple
-        secondary: Color(hex: "#EC407A"),         // Rose
-        accent: Color(hex: "#F8BBD9"),            // Soft rose
-        backgroundGradientStart: Color(hex: "#4A148C"),
-        backgroundGradientEnd: Color(hex: "#AB47BC"),
+        primary: Color(hex: "#7B1FA2"),
+        secondary: Color(hex: "#EC407A"),
+        accent: Color(hex: "#F8BBD9"),
+        backgroundGradientStart: Color(hex: "#160026"),   // Deep twilight indigo
+        backgroundGradientMid1: Color(hex: "#4A148C"),    // Enchanted purple
+        backgroundGradientMid2: Color(hex: "#7B1FA2"),    // Story-book violet
+        backgroundGradientEnd: Color(hex: "#AB47BC"),     // Lavender
         textOnPrimary: .white
     )
 
+    /// Walt Disney Studios Park Paris — silver screen: dark slate to vivid studio red.
     static let waltDisneyStudiosPark = ParkColorPalette(
-        primary: Color(hex: "#D32F2F"),           // Studio red
-        secondary: Color(hex: "#FFA000"),         // Amber
-        accent: Color(hex: "#FFE57F"),            // Golden
-        backgroundGradientStart: Color(hex: "#B71C1C"),
-        backgroundGradientEnd: Color(hex: "#EF5350"),
+        primary: Color(hex: "#D32F2F"),
+        secondary: Color(hex: "#FFA000"),
+        accent: Color(hex: "#FFE57F"),
+        backgroundGradientStart: Color(hex: "#1A0000"),   // Film noir black
+        backgroundGradientMid1: Color(hex: "#B71C1C"),    // Deep cinematic red
+        backgroundGradientMid2: Color(hex: "#D32F2F"),    // Studio red
+        backgroundGradientEnd: Color(hex: "#FF7043"),     // Warm amber-orange
         textOnPrimary: .white
     )
 
+    /// Hong Kong Disneyland — emerald teal contrasted with gold accents.
     static let hongKongDisneylandPark = ParkColorPalette(
-        primary: Color(hex: "#00796B"),           // Teal
-        secondary: Color(hex: "#C9A84C"),         // Gold
-        accent: Color(hex: "#FFD54F"),            // Light gold
-        backgroundGradientStart: Color(hex: "#004D40"),
-        backgroundGradientEnd: Color(hex: "#26A69A"),
+        primary: Color(hex: "#00796B"),
+        secondary: Color(hex: "#C9A84C"),
+        accent: Color(hex: "#FFD54F"),
+        backgroundGradientStart: Color(hex: "#001611"),   // Deep jungle teal
+        backgroundGradientMid1: Color(hex: "#004D40"),    // Dark emerald
+        backgroundGradientMid2: Color(hex: "#00796B"),    // Teal
+        backgroundGradientEnd: Color(hex: "#26A69A"),     // Bright seafoam
         textOnPrimary: .white
     )
 
+    /// Shanghai Disneyland — sapphire storybook: dark midnight to vivid cobalt.
     static let shanghaiDisneylandPark = ParkColorPalette(
-        primary: Color(hex: "#1A237E"),           // Sapphire blue
-        secondary: Color(hex: "#9E9E9E"),         // Silver
-        accent: Color(hex: "#E0E0E0"),            // Light silver
-        backgroundGradientStart: Color(hex: "#0D1757"),
-        backgroundGradientEnd: Color(hex: "#3949AB"),
+        primary: Color(hex: "#1A237E"),
+        secondary: Color(hex: "#9E9E9E"),
+        accent: Color(hex: "#E0E0E0"),
+        backgroundGradientStart: Color(hex: "#050A1E"),   // Midnight sapphire
+        backgroundGradientMid1: Color(hex: "#0D1757"),    // Deep sapphire
+        backgroundGradientMid2: Color(hex: "#1A237E"),    // Cobalt blue
+        backgroundGradientEnd: Color(hex: "#3949AB"),     // Bright indigo
         textOnPrimary: .white
     )
 

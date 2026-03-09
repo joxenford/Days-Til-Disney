@@ -12,9 +12,6 @@ struct AddEditTripView: View {
         Group {
             if let vm = viewModel {
                 form(vm: vm)
-                    .onChange(of: vm.didSaveSuccessfully) { _, saved in
-                        if saved { router.navigateBack() }
-                    }
             } else {
                 ProgressView()
             }
@@ -26,6 +23,11 @@ struct AddEditTripView: View {
             let vm = AddEditTripViewModel.make(mode: mode, from: appContainer)
             viewModel = vm
             await vm.onAppear()
+        }
+        // Observe didSaveSuccessfully at the top level so the modifier is always
+        // active and not gated behind the optional unwrap inside the Group.
+        .onChange(of: viewModel?.didSaveSuccessfully) { _, saved in
+            if saved == true { router.navigateBack() }
         }
     }
 

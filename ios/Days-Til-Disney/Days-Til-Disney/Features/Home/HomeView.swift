@@ -10,8 +10,10 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            // Themed background.
+            // Layer 0: Park-themed gradient fills the entire screen.
             GradientBackgroundView()
+
+            // Layer 1: Star field (visible at dusk/night, invisible during the day).
             StarFieldView()
 
             Group {
@@ -26,21 +28,31 @@ struct HomeView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
         .task {
+            // Create the VM once on first appearance and load data.
             let vm = HomeViewModel.make(from: appContainer)
             viewModel = vm
             await vm.onAppear()
         }
+        .onAppear {
+            // Re-load data when returning from a navigation push (e.g. after adding/editing a trip).
+            // .task only runs once; .onAppear fires every time the view becomes visible.
+            guard let vm = viewModel else { return }
+            Task { await vm.onRefresh() }
+        }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            showCelebration = newValue != nil
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showCelebration = newValue != nil
+            }
+        }
+        .onChange(of: showCelebration) { _, isShown in
+            // When the overlay is dismissed (by tapping or the button), clear the VM's state.
+            if !isShown { viewModel?.dismissMilestone() }
         }
         .overlay {
             if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
                 CelebrationOverlay(event: event, isPresented: $showCelebration)
                     .transition(.opacity)
                     .zIndex(100)
-                    .onChange(of: showCelebration) { _, isShown in
-                        if !isShown { vm.dismissMilestone() }
-                    }
             }
         }
     }
@@ -170,7 +182,9 @@ private struct EmptyTripsView: View {
                 park: .magicKingdom,
                 size: 160,
                 color: .white,
-                opacity: 0.5
+                opacity: 0.85,
+                showGlow: true,
+                glowColor: Color.magicSparkle
             )
 
             VStack(spacing: 12) {

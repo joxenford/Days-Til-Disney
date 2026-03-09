@@ -11,23 +11,54 @@ enum AppRoute: Hashable {
     case settings
 }
 
+// MARK: - Root screen states
+
+private enum RootScreen {
+    case splash
+    case onboarding
+    case home
+}
+
 // MARK: - Router
 
 /// Root navigation container using NavigationStack for path-based routing.
-/// Handles the splash → home transition and all subsequent navigation.
+/// Handles splash → onboarding (first launch) or splash → home (returning user).
 struct AppNavigationRouter: View {
     @Environment(UserPreferences.self) private var preferences
     @State private var navigationPath = NavigationPath()
-    @State private var showSplash = true
+    @State private var rootScreen: RootScreen = .splash
 
     var body: some View {
-        if showSplash {
+        switch rootScreen {
+        case .splash:
             SplashView {
                 withAnimation(.easeInOut(duration: 0.5)) {
-                    showSplash = false
+                    rootScreen = preferences.hasCompletedOnboarding ? .home : .onboarding
                 }
             }
-        } else {
+
+        case .onboarding:
+            // The WelcomeView is presented outside the NavigationStack so it occupies
+            // the full screen without a nav bar. When the user taps "Create Your First
+            // Trip" we flip to .home and immediately push .addTrip onto the stack.
+            WelcomeView(
+                onCreateTrip: {
+                    preferences.hasCompletedOnboarding = true
+                    rootScreen = .home
+                    // Append after the state change so the NavigationStack exists.
+                    DispatchQueue.main.async {
+                        navigationPath.append(AppRoute.addTrip)
+                    }
+                },
+                onSkip: {
+                    withAnimation(.easeInOut(duration: 0.4)) {
+                        preferences.hasCompletedOnboarding = true
+                        rootScreen = .home
+                    }
+                }
+            )
+
+        case .home:
             NavigationStack(path: $navigationPath) {
                 HomeView(router: self)
                     .navigationDestination(for: AppRoute.self) { route in
@@ -36,6 +67,8 @@ struct AppNavigationRouter: View {
             }
         }
     }
+
+    // MARK: - Destinations
 
     @ViewBuilder
     private func destination(for route: AppRoute) -> some View {

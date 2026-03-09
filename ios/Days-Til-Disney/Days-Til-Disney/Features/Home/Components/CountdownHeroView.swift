@@ -8,30 +8,63 @@ struct CountdownHeroView: View {
     let trip: Trip
     let onTap: () -> Void
 
+    @Environment(\.parkTheme) private var themeProvider
+
     @State private var countdown: Date.CountdownComponents = Date().countdownComponents
     @State private var countdownScale: Double = 1.0
 
     // Refresh the countdown every second on the final day, every minute otherwise.
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
 
+    /// Accent color used for glows — prefer the theme's accent, fall back to park palette.
+    private var accentColor: Color {
+        themeProvider.currentTheme.accentColor
+    }
+
     var body: some View {
         Button(action: onTap) {
             ZStack {
-                // Card background with subtle park-color tint.
+                // Card background: subtle park gradient tint over glass material.
                 RoundedRectangle(cornerRadius: 28)
                     .fill(.ultraThinMaterial)
                     .overlay {
                         RoundedRectangle(cornerRadius: 28)
-                            .fill(trip.colorPalette.primary.opacity(0.15))
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        trip.colorPalette.primary.opacity(0.30),
+                                        trip.colorPalette.backgroundGradientEnd.opacity(0.12),
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                    }
+                    // Thin accent border for park identity.
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 28)
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [
+                                        accentColor.opacity(0.40),
+                                        accentColor.opacity(0.10),
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1
+                            )
                     }
 
                 VStack(spacing: 0) {
-                    // Castle silhouette header.
+                    // Castle silhouette header — glows with the park's accent color.
                     CastleSilhouetteView(
                         park: trip.primaryPark,
-                        size: 100,
+                        size: 110,
                         color: .white,
-                        opacity: 0.35
+                        opacity: 0.80,
+                        showGlow: true,
+                        glowColor: accentColor
                     )
                     .padding(.top, 28)
 
@@ -71,7 +104,9 @@ struct CountdownHeroView: View {
         }
         .buttonStyle(.plain)
         .padding(.horizontal, 20)
-        .shadow(color: trip.colorPalette.primary.opacity(0.4), radius: 20, y: 8)
+        // Two-layer shadow: a deep shadow for elevation, plus a colored bloom for magic.
+        .shadow(color: .black.opacity(0.35), radius: 24, y: 10)
+        .shadow(color: accentColor.opacity(0.25), radius: 32, y: 4)
         .onAppear { refreshCountdown() }
         .onReceive(timer) { _ in refreshCountdown() }
         .accessibilityElement(children: .combine)
@@ -141,7 +176,15 @@ struct CountdownHeroView: View {
         VStack(spacing: 8) {
             Text("TODAY!")
                 .font(.system(size: 56, weight: .black, design: .rounded))
-                .foregroundStyle(Color.magicSparkle)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [Color.magicSparkle, accentColor],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                // Sparkle glow behind the text.
+                .shadow(color: Color.magicSparkle.opacity(0.7), radius: 12)
 
             Text("You're at Disney!")
                 .font(DTDFont.headline)
