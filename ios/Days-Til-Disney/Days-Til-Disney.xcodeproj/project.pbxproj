@@ -73,8 +73,11 @@
 			membershipExceptions = (
 				"Core/Extensions/Color+Hex.swift",
 				"Core/Extensions/Date+Countdown.swift",
+				Core/Models/DefaultPackingItems.swift,
 				Core/Models/DisneyPark.swift,
 				Core/Models/DisneyResort.swift,
+				Core/Models/PackingCategory.swift,
+				Core/Models/PackingItem.swift,
 				Core/Models/ParkColorPalette.swift,
 				Core/Models/Trip.swift,
 				Core/Persistence/SwiftDataContainer.swift,

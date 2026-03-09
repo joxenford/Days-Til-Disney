@@ -22,6 +22,7 @@ final class AppContainer {
 
     let tripRepository: any TripRepository
     let contentRepository: any ContentRepository
+    let packingListRepository: any PackingListRepository
 
     // MARK: - Engines
 
@@ -56,6 +57,7 @@ final class AppContainer {
         contentRepository = localContent
 
         tripRepository = LocalTripRepository(modelContext: modelContainer.mainContext)
+        packingListRepository = LocalPackingListRepository(modelContext: modelContainer.mainContext)
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
@@ -75,6 +77,7 @@ final class AppContainer {
         contentRepository = localContent
 
         tripRepository = LocalTripRepository(modelContext: modelContainer.mainContext)
+        packingListRepository = LocalPackingListRepository(modelContext: modelContainer.mainContext)
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()

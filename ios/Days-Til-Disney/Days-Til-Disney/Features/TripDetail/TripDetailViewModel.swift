@@ -81,6 +81,17 @@ final class TripDetailViewModel {
         activeMilestone = nil
     }
 
+    // MARK: - Notes
+
+    /// Updates the notes on the loaded trip. SwiftData persists the change automatically.
+    func updateNotes(_ newValue: String) {
+        guard case .loaded(let trip, let content) = viewState else { return }
+        trip.notes = newValue
+        trip.markUpdated()
+        // Re-publish the state so observers see the change reflected immediately.
+        viewState = .loaded(trip: trip, content: content)
+    }
+
     // MARK: - Share image generation
 
     /// Renders the ShareCountdownCard to a UIImage and stores it in `shareImage`.

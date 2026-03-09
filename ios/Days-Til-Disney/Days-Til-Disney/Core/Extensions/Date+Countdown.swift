@@ -28,6 +28,11 @@ extension Date {
         Calendar.current.startOfDay(for: self) < Calendar.current.startOfDay(for: Date())
     }
 
+    /// Number of calendar days since this date. Returns 0 for today, positive for past dates.
+    var daysSince: Int {
+        max(0, -Calendar.current.daysUntil(self))
+    }
+
     // MARK: - Countdown components
 
     struct CountdownComponents {

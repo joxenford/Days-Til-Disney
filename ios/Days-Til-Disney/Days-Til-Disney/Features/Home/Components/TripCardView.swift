@@ -38,14 +38,15 @@ struct TripCardView: View {
 
                 Spacer()
 
-                // Countdown badge — shows "Trip Complete" for past trips.
+                // Countdown badge — shows days-ago for past trips.
                 if isPast {
+                    let daysAgo = trip.daysSinceEnd
                     VStack(spacing: 2) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 22))
+                        Text(daysAgo == 0 ? "—" : "\(daysAgo)")
+                            .font(.system(size: daysAgo == 0 ? 22 : 28, weight: .black, design: .rounded))
                             .foregroundStyle(.white.opacity(0.4))
 
-                        Text("Complete")
+                        Text(daysAgo == 0 ? "Complete" : daysAgo == 1 ? "day ago" : "days ago")
                             .font(DTDFont.caption)
                             .foregroundStyle(.white.opacity(0.35))
                     }
@@ -118,10 +119,17 @@ struct TripCardView: View {
             Text("This will permanently remove \"\(trip.name)\" and cannot be undone.")
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(isPast
-            ? "\(trip.name), trip complete"
-            : "\(trip.name), \(trip.daysUntilStart) \(trip.daysUntilStart == 1 ? "day" : "days") away"
-        )
+        .accessibilityLabel({
+            if isPast {
+                let d = trip.daysSinceEnd
+                return d == 0
+                    ? "\(trip.name), trip complete"
+                    : "\(trip.name), \(d) \(d == 1 ? "day" : "days") ago"
+            } else {
+                let d = trip.daysUntilStart
+                return "\(trip.name), \(d) \(d == 1 ? "day" : "days") away"
+            }
+        }())
         .accessibilityHint("Tap to view details. Long press for options.")
     }
 }
@@ -141,6 +149,13 @@ struct TripCardView: View {
             )
             TripCardView(
                 trip: Trip.previewToday,
+                onTap: {},
+                onSetPrimary: {},
+                onEdit: {},
+                onDelete: {}
+            )
+            TripCardView(
+                trip: Trip.previewPast,
                 onTap: {},
                 onSetPrimary: {},
                 onEdit: {},

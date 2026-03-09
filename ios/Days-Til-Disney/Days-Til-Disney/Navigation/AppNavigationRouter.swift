@@ -8,6 +8,7 @@ enum AppRoute: Hashable {
     case addTrip
     case editTrip(tripID: UUID)
     case settings
+    case packingList(tripID: UUID)
 }
 
 // MARK: - Root screen states
@@ -22,9 +23,12 @@ private enum RootScreen {
 
 /// Root navigation container using NavigationStack for path-based routing.
 /// Handles splash → onboarding (first launch) or splash → home (returning user).
+/// On iPad (horizontalSizeClass == .regular) the home screen is replaced by the
+/// two-column `iPadHomeLayout`; on iPhone the existing single-column path is unchanged.
 struct AppNavigationRouter: View {
     @Environment(UserPreferences.self) private var preferences
     @Environment(AppContainer.self) private var appContainer
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var navigationPath = NavigationPath()
     @State private var rootScreen: RootScreen = .splash
 
@@ -62,11 +66,18 @@ struct AppNavigationRouter: View {
                 )
 
             case .home:
-                NavigationStack(path: $navigationPath) {
-                    HomeView(router: self)
-                        .navigationDestination(for: AppRoute.self) { route in
-                            destination(for: route)
-                        }
+                if horizontalSizeClass == .regular {
+                    // iPad: two-column layout.  The right column owns its own NavigationStack
+                    // so detail pushes fill the right pane while the hero stays on the left.
+                    iPadHomeLayout(router: self)
+                } else {
+                    // iPhone: unchanged single-column NavigationStack.
+                    NavigationStack(path: $navigationPath) {
+                        HomeView(router: self)
+                            .navigationDestination(for: AppRoute.self) { route in
+                                destination(for: route)
+                            }
+                    }
                 }
             }
         }
@@ -108,6 +119,9 @@ struct AppNavigationRouter: View {
 
         case .settings:
             SettingsView()
+
+        case .packingList(let tripID):
+            PackingListView(tripID: tripID)
         }
     }
 

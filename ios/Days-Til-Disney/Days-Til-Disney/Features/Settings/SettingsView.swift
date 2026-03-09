@@ -38,6 +38,18 @@ struct SettingsView: View {
                 .pickerStyle(.menu)
             }
 
+            // iCloud Sync.
+            Section {
+                iCloudSyncRow(vm: vm)
+            } header: {
+                Text("iCloud")
+            } footer: {
+                if vm.iCloudSyncStatus == .notSignedIn {
+                    Text("Sign in to iCloud in iOS Settings to sync your trips across iPhone and iPad.")
+                        .font(DTDFont.caption)
+                }
+            }
+
             // Notifications.
             Section {
                 notificationsRow(vm: vm)
@@ -81,6 +93,41 @@ struct SettingsView: View {
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func iCloudSyncRow(vm: SettingsViewModel) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: vm.iCloudSyncStatus.systemImage)
+                .foregroundStyle(vm.iCloudSyncStatus.isActive ? Color.disneyGold : Color.secondary)
+                .font(.title3)
+                .frame(width: 28)
+                .animation(.easeInOut(duration: 0.2), value: vm.iCloudSyncStatus.isActive)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Sync Trips")
+                    .font(DTDFont.body)
+                Text(vm.iCloudSyncStatus.displayTitle)
+                    .font(DTDFont.caption)
+                    .foregroundStyle(vm.iCloudSyncStatus.isActive ? .primary : .secondary)
+            }
+
+            Spacer()
+
+            if !vm.iCloudSyncStatus.isActive && vm.iCloudSyncStatus != .unknown {
+                Button("Open Settings") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                .font(DTDFont.captionBold)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("iCloud Sync, \(vm.iCloudSyncStatus.displayTitle)")
     }
 
     @ViewBuilder

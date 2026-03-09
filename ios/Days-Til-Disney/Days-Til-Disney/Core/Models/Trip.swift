@@ -17,8 +17,14 @@ final class Trip {
     var startDate: Date
     var endDate: Date
     var isPrimary: Bool
+    var notes: String
     var createdAt: Date
     var updatedAt: Date
+
+    /// Packing checklist items for this trip.
+    /// cascade delete ensures items are removed when the trip is deleted.
+    @Relationship(deleteRule: .cascade, inverse: \PackingItem.trip)
+    var packingItems: [PackingItem] = []
 
     init(
         id: UUID = UUID(),
@@ -28,6 +34,7 @@ final class Trip {
         startDate: Date,
         endDate: Date,
         isPrimary: Bool = false,
+        notes: String = "",
         createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
@@ -38,6 +45,7 @@ final class Trip {
         self.startDate = startDate
         self.endDate = endDate
         self.isPrimary = isPrimary
+        self.notes = notes
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -90,6 +98,11 @@ final class Trip {
         Calendar.current.startOfDay(for: Date()) > Calendar.current.startOfDay(for: endDate)
     }
 
+    /// Calendar days since the trip ended. Returns 0 on the end day, positive after.
+    var daysSinceEnd: Int {
+        endDate.daysSince
+    }
+
     /// Duration of the trip in days.
     var durationDays: Int {
         max(1, Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 1)
@@ -122,6 +135,17 @@ extension Trip {
             parks: [.tokyoDisneyland, .tokyoDisneySea],
             startDate: Date(),
             endDate: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date(),
+            isPrimary: false
+        )
+    }
+
+    static var previewPast: Trip {
+        Trip(
+            name: "Disneyland Summer 2024",
+            resort: .disneylandResort,
+            parks: [.disneyland, .californiaAdventure],
+            startDate: Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date(),
+            endDate: Calendar.current.date(byAdding: .day, value: -23, to: Date()) ?? Date(),
             isPrimary: false
         )
     }

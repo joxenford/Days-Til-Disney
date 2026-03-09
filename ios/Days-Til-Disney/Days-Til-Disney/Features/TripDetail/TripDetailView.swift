@@ -11,6 +11,7 @@ struct TripDetailView: View {
     @State private var showCelebration = false
     @State private var isInitialLoad = true
     @State private var showShareSheet = false
+    @State private var isNotesExpanded = false
 
     var body: some View {
         ZStack {
@@ -124,6 +125,12 @@ struct TripDetailView: View {
                     // Trip metadata.
                     tripMetadata(trip: trip)
 
+                    // Packing list shortcut.
+                    packingListButton(trip: trip)
+
+                    // Notes / journal section.
+                    notesSection(trip: trip, vm: vm)
+
                     // Content feed.
                     if !content.isEmpty {
                         contentFeed(content: content)
@@ -172,6 +179,155 @@ struct TripDetailView: View {
                 .accessibilityLabel("Parks: \(trip.parks.map(\.displayName).joined(separator: ", "))")
             }
         }
+        .padding(.horizontal, 20)
+    }
+
+    // MARK: - Packing list button
+
+    @ViewBuilder
+    private func packingListButton(trip: Trip) -> some View {
+        Button {
+            router.navigate(to: .packingList(tripID: trip.id))
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "bag.fill")
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(Color.disneyGold)
+                    .frame(width: 22)
+                    .accessibilityHidden(true)
+
+                Text("Packing List")
+                    .font(DTDFont.titleSecondary)
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                // Progress badge if items exist.
+                let checkedCount = trip.packingItems.filter(\.isChecked).count
+                let totalCount = trip.packingItems.count
+                if totalCount > 0 {
+                    Text("\(checkedCount)/\(totalCount)")
+                        .font(DTDFont.captionBold)
+                        .foregroundStyle(.white.opacity(0.6))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule().fill(.white.opacity(0.12))
+                        )
+                }
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(.white.opacity(0.07))
+        )
+        .padding(.horizontal, 20)
+        .accessibilityLabel("Packing List\(trip.packingItems.isEmpty ? "" : ", \(trip.packingItems.filter(\.isChecked).count) of \(trip.packingItems.count) packed")")
+        .accessibilityHint("Navigate to packing checklist")
+    }
+
+    // MARK: - Notes section
+
+    @ViewBuilder
+    private func notesSection(trip: Trip, vm: TripDetailViewModel) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header row — always visible, tapping expands/collapses.
+            Button {
+                withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
+                    isNotesExpanded.toggle()
+                }
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "note.text")
+                        .font(.body.weight(.medium))
+                        .foregroundStyle(Color.disneyGold)
+                        .accessibilityHidden(true)
+
+                    Text("Trip Notes")
+                        .font(DTDFont.titleSecondary)
+                        .foregroundStyle(.white)
+
+                    Spacer()
+
+                    // Badge showing notes are present when collapsed.
+                    if !trip.notes.isEmpty && !isNotesExpanded {
+                        Circle()
+                            .fill(Color.disneyGold)
+                            .frame(width: 8, height: 8)
+                            .accessibilityHidden(true)
+                    }
+
+                    Image(systemName: isNotesExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 14)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(isNotesExpanded ? "Trip Notes, collapse" : "Trip Notes, \(trip.notes.isEmpty ? "empty" : "has content"), expand")
+
+            if isNotesExpanded {
+                VStack(alignment: .leading, spacing: 8) {
+                    // Editable text area.
+                    ZStack(alignment: .topLeading) {
+                        // Placeholder text shown when notes are empty.
+                        if trip.notes.isEmpty {
+                            Text("Jot down reservation numbers, packing lists, dining bookings, or anything you don't want to forget...")
+                                .font(DTDFont.body)
+                                .foregroundStyle(.white.opacity(0.35))
+                                .padding(.horizontal, 12)
+                                .padding(.top, 10)
+                                .allowsHitTesting(false)
+                        }
+
+                        TextEditor(text: Binding(
+                            get: { trip.notes },
+                            set: { vm.updateNotes($0) }
+                        ))
+                        .font(DTDFont.body)
+                        .foregroundStyle(.white)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
+                        .frame(minHeight: 120, alignment: .topLeading)
+                    }
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(.white.opacity(0.08))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .strokeBorder(.white.opacity(0.15), lineWidth: 1)
+                            )
+                    )
+                    .padding(.horizontal, 20)
+
+                    if !trip.notes.isEmpty {
+                        Text("\(trip.notes.count) characters")
+                            .font(DTDFont.caption)
+                            .foregroundStyle(.white.opacity(0.35))
+                            .padding(.horizontal, 20)
+                            .accessibilityHidden(true)
+                    }
+                }
+                .padding(.bottom, 16)
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(.white.opacity(0.07))
+        )
         .padding(.horizontal, 20)
     }
 
