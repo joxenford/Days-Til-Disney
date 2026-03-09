@@ -61,82 +61,78 @@ struct CastleSilhouetteView: View {
 
 // MARK: - Fallback shape
 
-/// A programmatic castle silhouette with a Cinderella-style profile:
-/// three towers with pointed spires, a grand arched gate, and crenellations on the walls.
+/// Cinderella Castle–inspired silhouette optimized for clean readability.
+/// Kept in sync with `WidgetFallbackCastleShape` in DaysTilDisneyWidget.swift.
 private struct FallbackCastleShape: Shape {
     func path(in rect: CGRect) -> Path {
-        var path = Path()
         let w = rect.width
         let h = rect.height
+        var path = Path()
 
-        // ── Main walls ──────────────────────────────────────────────────────
-        path.addRect(CGRect(x: w * 0.18, y: h * 0.44, width: w * 0.64, height: h * 0.56))
+        // Left wall.
+        path.move(to: CGPoint(x: w * 0.13, y: h))
+        path.addLine(to: CGPoint(x: w * 0.13, y: h * 0.65))
 
-        // Crenellations across the wall top (left section).
-        for col in 0..<3 {
-            let x = w * 0.18 + CGFloat(col) * w * 0.095
-            path.addRect(CGRect(x: x, y: h * 0.38, width: w * 0.055, height: h * 0.07))
-        }
-        // Crenellations (right section).
-        for col in 0..<3 {
-            let x = w * 0.605 + CGFloat(col) * w * 0.095
-            path.addRect(CGRect(x: x, y: h * 0.38, width: w * 0.055, height: h * 0.07))
-        }
+        // Left outer turret.
+        path.addLine(to: CGPoint(x: w * 0.16, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.16, y: h * 0.40))
+        path.addLine(to: CGPoint(x: w * 0.20, y: h * 0.20))
+        path.addLine(to: CGPoint(x: w * 0.24, y: h * 0.40))
+        path.addLine(to: CGPoint(x: w * 0.24, y: h * 0.65))
 
-        // ── Gate arch ───────────────────────────────────────────────────────
-        // Semi-circular arch
-        path.addArc(
-            center: CGPoint(x: w * 0.5, y: h * 0.71),
-            radius: w * 0.115,
-            startAngle: .degrees(180),
-            endAngle: .degrees(0),
-            clockwise: false
+        // Left peaked roofline.
+        path.addLine(to: CGPoint(x: w * 0.29, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.31, y: h * 0.57))
+        path.addLine(to: CGPoint(x: w * 0.33, y: h * 0.65))
+
+        // Left secondary spire.
+        path.addLine(to: CGPoint(x: w * 0.36, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.36, y: h * 0.34))
+        path.addLine(to: CGPoint(x: w * 0.40, y: h * 0.13))
+        path.addLine(to: CGPoint(x: w * 0.44, y: h * 0.34))
+        path.addLine(to: CGPoint(x: w * 0.44, y: h * 0.65))
+
+        // Central spire.
+        path.addLine(to: CGPoint(x: w * 0.45, y: h * 0.30))
+        path.addLine(to: CGPoint(x: w * 0.50, y: h * 0.0))
+        path.addLine(to: CGPoint(x: w * 0.55, y: h * 0.30))
+
+        // Right secondary spire — slightly taller for asymmetry.
+        path.addLine(to: CGPoint(x: w * 0.56, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.56, y: h * 0.32))
+        path.addLine(to: CGPoint(x: w * 0.60, y: h * 0.11))
+        path.addLine(to: CGPoint(x: w * 0.64, y: h * 0.32))
+        path.addLine(to: CGPoint(x: w * 0.64, y: h * 0.65))
+
+        // Right peaked roofline.
+        path.addLine(to: CGPoint(x: w * 0.67, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.69, y: h * 0.58))
+        path.addLine(to: CGPoint(x: w * 0.71, y: h * 0.65))
+
+        // Right outer turret — slightly wider for asymmetry.
+        path.addLine(to: CGPoint(x: w * 0.75, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.75, y: h * 0.38))
+        path.addLine(to: CGPoint(x: w * 0.80, y: h * 0.17))
+        path.addLine(to: CGPoint(x: w * 0.85, y: h * 0.38))
+        path.addLine(to: CGPoint(x: w * 0.85, y: h * 0.65))
+
+        // Right wall.
+        path.addLine(to: CGPoint(x: w * 0.87, y: h * 0.65))
+        path.addLine(to: CGPoint(x: w * 0.87, y: h))
+
+        // Gothic pointed arch gate.
+        path.addLine(to: CGPoint(x: w * 0.60, y: h))
+        path.addQuadCurve(
+            to: CGPoint(x: w * 0.50, y: h * 0.75),
+            control: CGPoint(x: w * 0.57, y: h * 0.80)
         )
-        // Rectangular base of gate passage
-        path.addRect(CGRect(x: w * 0.385, y: h * 0.71, width: w * 0.23, height: h * 0.29))
+        path.addQuadCurve(
+            to: CGPoint(x: w * 0.40, y: h),
+            control: CGPoint(x: w * 0.43, y: h * 0.80)
+        )
+        path.addLine(to: CGPoint(x: w * 0.13, y: h))
 
-        // ── Center tower ────────────────────────────────────────────────────
-        path.addRect(CGRect(x: w * 0.365, y: h * 0.24, width: w * 0.27, height: h * 0.22))
-        // Center spire (tall, elegant)
-        path.move(to: CGPoint(x: w * 0.365, y: h * 0.24))
-        path.addLine(to: CGPoint(x: w * 0.5, y: 0))
-        path.addLine(to: CGPoint(x: w * 0.635, y: h * 0.24))
         path.closeSubpath()
-        // Crenellations on center tower top
-        for col in 0..<4 {
-            let x = w * 0.365 + CGFloat(col) * w * 0.065
-            path.addRect(CGRect(x: x, y: h * 0.19, width: w * 0.04, height: h * 0.06))
-        }
-
-        // ── Left tower ──────────────────────────────────────────────────────
-        path.addRect(CGRect(x: w * 0.10, y: h * 0.34, width: w * 0.17, height: h * 0.12))
-        path.move(to: CGPoint(x: w * 0.10, y: h * 0.34))
-        path.addLine(to: CGPoint(x: w * 0.185, y: h * 0.10))
-        path.addLine(to: CGPoint(x: w * 0.27, y: h * 0.34))
-        path.closeSubpath()
-
-        // ── Right tower ─────────────────────────────────────────────────────
-        path.addRect(CGRect(x: w * 0.73, y: h * 0.34, width: w * 0.17, height: h * 0.12))
-        path.move(to: CGPoint(x: w * 0.73, y: h * 0.34))
-        path.addLine(to: CGPoint(x: w * 0.815, y: h * 0.10))
-        path.addLine(to: CGPoint(x: w * 0.90, y: h * 0.34))
-        path.closeSubpath()
-
-        // ── Small flanking turrets ───────────────────────────────────────────
-        // Left turret (between left tower and main walls)
-        path.addRect(CGRect(x: w * 0.24, y: h * 0.40, width: w * 0.10, height: h * 0.06))
-        path.move(to: CGPoint(x: w * 0.24, y: h * 0.40))
-        path.addLine(to: CGPoint(x: w * 0.29, y: h * 0.28))
-        path.addLine(to: CGPoint(x: w * 0.34, y: h * 0.40))
-        path.closeSubpath()
-
-        // Right turret
-        path.addRect(CGRect(x: w * 0.66, y: h * 0.40, width: w * 0.10, height: h * 0.06))
-        path.move(to: CGPoint(x: w * 0.66, y: h * 0.40))
-        path.addLine(to: CGPoint(x: w * 0.71, y: h * 0.28))
-        path.addLine(to: CGPoint(x: w * 0.76, y: h * 0.40))
-        path.closeSubpath()
-
         return path
     }
 }
