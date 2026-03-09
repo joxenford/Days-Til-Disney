@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 import UserNotifications
+import WidgetKit
 
 // MARK: - Mode
 
@@ -169,6 +170,8 @@ final class AddEditTripViewModel {
             }
 
             didSaveSuccessfully = true
+            // Reload widget timelines so the home screen countdown reflects the save immediately.
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             saveError = error.localizedDescription
         }

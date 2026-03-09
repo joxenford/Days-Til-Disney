@@ -32,6 +32,7 @@ extension Color {
         self.init(red: r, green: g, blue: b, opacity: a)
     }
 
+    #if canImport(UIKit)
     /// Returns a hex string representation of this color.
     /// Note: Only reliable for colors created from hex or with known RGB components.
     var hexString: String {
@@ -65,6 +66,7 @@ extension Color {
         let a = ba + (oa - ba) * CGFloat(t)
         return Color(red: Double(r), green: Double(g), blue: Double(b), opacity: Double(a))
     }
+    #endif
 
     // MARK: - Semantic Disney colors
 

@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import WidgetKit
 
 // MARK: - View State
 
@@ -121,6 +122,8 @@ final class HomeViewModel {
         do {
             try await tripRepository.setPrimaryTrip(id: id)
             await loadData()
+            // Widget shows the primary trip by default — reload so it switches instantly.
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             // Surface error to user in a future iteration; silently recover for MVP.
         }
@@ -134,6 +137,8 @@ final class HomeViewModel {
         do {
             try await tripRepository.deleteTrip(id: id)
             await loadData()
+            // A deleted trip may have been showing in the widget — reload to reflect the change.
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             // Persist failure — log or surface in v1.1.
         }
