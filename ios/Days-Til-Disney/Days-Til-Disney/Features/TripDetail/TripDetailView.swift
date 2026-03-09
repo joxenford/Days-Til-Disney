@@ -28,6 +28,9 @@ struct TripDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(false)
+        // C-1: Prevent the system from inserting a translucent material bar over the gradient.
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             let vm = TripDetailViewModel.make(tripID: tripID, from: appContainer)
@@ -117,10 +120,13 @@ struct TripDetailView: View {
                         .padding(.horizontal, 24)
 
                     // Full countdown display.
+                    // C-2: Disable hit-testing so the hero's button tap target is dead on
+                    // this screen — the user is already on the detail, there's nowhere to navigate.
                     CountdownHeroView(
                         trip: trip,
                         onTap: {}   // No-op — already on detail screen.
                     )
+                    .allowsHitTesting(false)
 
                     // Trip metadata.
                     tripMetadata(trip: trip)

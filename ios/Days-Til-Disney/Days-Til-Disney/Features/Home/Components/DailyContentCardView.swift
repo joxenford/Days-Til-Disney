@@ -18,9 +18,12 @@ struct DailyContentCardView: View {
                     .clipShape(Circle())
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(content.type.displayName.uppercased())
+                    // H-3: Use .textCase(.uppercase) instead of .uppercased() so VoiceOver
+                    // reads the natural word rather than spelling individual letters.
+                    Text(content.type.displayName)
                         .font(DTDFont.captionBold)
                         .foregroundStyle(Color.disneyGold)
+                        .textCase(.uppercase)
                         .tracking(1.5)
 
                     Text(content.title)

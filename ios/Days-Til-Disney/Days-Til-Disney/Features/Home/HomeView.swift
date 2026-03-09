@@ -31,6 +31,9 @@ struct HomeView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        // C-1: Prevent the system from inserting a translucent material bar over the gradient.
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             // Create the VM once on first appearance and load data.
@@ -201,8 +204,9 @@ struct HomeView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
+            // H-1: Use DTDFont.headline — rounds, semibold, Dynamic Type aware.
             Text("Days 'Til Disney")
-                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .font(DTDFont.headline)
                 .foregroundStyle(.white)
                 .fixedSize()
                 .accessibilityHidden(true)

@@ -19,6 +19,9 @@ struct AddEditTripView: View {
         .navigationTitle(mode.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(false)
+        // C-3: Match the dark gradient theme of the rest of the app so navigation
+        // from Home/Detail doesn't feel like a jarring light-mode flash.
+        .preferredColorScheme(.dark)
         .task {
             let vm = AddEditTripViewModel.make(mode: mode, from: appContainer)
             viewModel = vm

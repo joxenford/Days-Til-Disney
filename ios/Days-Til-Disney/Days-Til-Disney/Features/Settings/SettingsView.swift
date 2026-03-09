@@ -14,6 +14,8 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
+        // C-3: Match the dark gradient theme of the rest of the app.
+        .preferredColorScheme(.dark)
         .task {
             let vm = SettingsViewModel.make(from: appContainer)
             viewModel = vm

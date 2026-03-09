@@ -180,11 +180,14 @@ struct PackingListView: View {
                 .padding(.horizontal, 20)
 
             // Items.
+            // H-6: .swipeActions() only works inside List rows. These rows live inside a
+            // ScrollView/ForEach, so swipe actions are silently ignored. Replace with a
+            // .contextMenu delete action that works in any container.
             ForEach(section.items) { item in
                 PackingItemRow(item: item) {
                     vm.toggleItem(item)
                 }
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                .contextMenu {
                     Button(role: .destructive) {
                         withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.25)) {
                             vm.deleteItem(item)

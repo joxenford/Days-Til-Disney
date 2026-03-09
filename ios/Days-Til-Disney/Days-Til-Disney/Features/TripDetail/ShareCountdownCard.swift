@@ -17,9 +17,10 @@ struct ShareCountdownCard: View {
     let accentColor: Color
     let park: DisneyPark
 
-    // Fixed card dimensions — social-share friendly (roughly 4:5).
-    static let width: CGFloat = 390
-    static let height: CGFloat = 490
+    // H-4: Exactly 4:5 ratio at 3x scale — 1080×1350px on device = 360×450pt.
+    // Instagram and most social platforms crop to 4:5 portrait, so this renders pixel-perfect.
+    static let width: CGFloat = 360
+    static let height: CGFloat = 450
 
     var body: some View {
         ZStack {

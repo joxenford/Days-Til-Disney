@@ -93,10 +93,17 @@ struct WelcomeView: View {
                     .accessibilityLabel("Create your first Disney trip")
                     .padding(.horizontal, 32)
 
+                    // H-2: Minimum 44×44pt tap target + capsule background for visual affordance.
                     Button(action: onSkip) {
                         Text("I'll do this later")
                             .font(DTDFont.body)
-                            .foregroundStyle(.white.opacity(0.55))
+                            .foregroundStyle(.white.opacity(0.7))
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(
+                                Capsule()
+                                    .fill(.white.opacity(0.10))
+                            )
                     }
                     .accessibilityLabel("Skip onboarding and go to home screen")
                 }

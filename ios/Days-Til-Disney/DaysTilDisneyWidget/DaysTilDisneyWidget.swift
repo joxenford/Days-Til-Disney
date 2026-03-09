@@ -316,15 +316,20 @@ private func widgetAccessibilityLabel(trip: WidgetTripEntry) -> String {
 
 // MARK: - Empty State
 
+// H-5: Improved visual hierarchy — app name as primary label, action text below.
 struct EmptyWidgetView: View {
     var body: some View {
-        VStack(spacing: 8) {
-            WidgetCastleSilhouette(size: 60)
-                .opacity(0.4)
+        VStack(spacing: 6) {
+            Text("Days 'Til Disney")
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+            WidgetCastleSilhouette(size: 44)
+                .opacity(0.5)
                 .accessibilityHidden(true)
             Text("Add a trip!")
-                .font(.system(size: 14, weight: .semibold, design: .rounded))
-                .foregroundStyle(.white.opacity(0.7))
+                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white.opacity(0.65))
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Days Til Disney. Add a trip to start your countdown.")
