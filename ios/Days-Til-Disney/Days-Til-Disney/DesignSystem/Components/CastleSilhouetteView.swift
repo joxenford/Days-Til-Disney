@@ -62,7 +62,12 @@ struct CastleSilhouetteView: View {
 // MARK: - Fallback shape
 
 /// Cinderella Castle–inspired silhouette optimized for clean readability.
-/// Kept in sync with `WidgetFallbackCastleShape` in DaysTilDisneyWidget.swift.
+///
+/// SYNC NOTE: This shape is intentionally duplicated in `WidgetFallbackCastleShape` inside
+/// `DaysTilDisneyWidget/DaysTilDisneyWidget.swift`.
+/// The widget extension cannot import from the main app target, so both shapes
+/// must be maintained independently. If you change the path coordinates here,
+/// update `WidgetFallbackCastleShape` in DaysTilDisneyWidget.swift as well.
 private struct FallbackCastleShape: Shape {
     func path(in rect: CGRect) -> Path {
         let w = rect.width

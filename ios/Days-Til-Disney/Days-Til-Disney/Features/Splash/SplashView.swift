@@ -15,13 +15,9 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            // Background gradient — use Magic Kingdom as the "cold start" theme.
+            // Background gradient — use Magic Kingdom palette as the "cold start" theme.
             LinearGradient(
-                colors: [
-                    Color(hex: "#0D2545"),
-                    Color(hex: "#1A3A6B"),
-                    Color(hex: "#2B5BA0")
-                ],
+                colors: DisneyPark.magicKingdom.colorPalette.gradientStops,
                 startPoint: .top,
                 endPoint: .bottom
             )

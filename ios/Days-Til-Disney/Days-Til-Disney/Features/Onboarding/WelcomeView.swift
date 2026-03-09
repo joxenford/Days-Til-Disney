@@ -17,14 +17,9 @@ struct WelcomeView: View {
 
     var body: some View {
         ZStack {
-            // Gradient background — Magic Kingdom blue palette matches the splash.
+            // Gradient background — Magic Kingdom palette matches the splash screen.
             LinearGradient(
-                colors: [
-                    Color(hex: "#0D2545"),
-                    Color(hex: "#1A3A6B"),
-                    Color(hex: "#2B5BA0"),
-                    Color(hex: "#3A72C8")
-                ],
+                colors: DisneyPark.magicKingdom.colorPalette.gradientStops,
                 startPoint: .top,
                 endPoint: .bottom
             )

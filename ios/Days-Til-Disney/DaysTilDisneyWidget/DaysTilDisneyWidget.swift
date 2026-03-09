@@ -234,10 +234,16 @@ struct AccessoryCircularWidgetView: View {
                         .font(.caption)
                     Text("NOW")
                         .font(.system(size: 12, weight: .bold, design: .rounded))
+                } else if trip.isPast {
+                    // Show a checkmark instead of "0" — "0" is meaningless for a completed trip.
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 22, weight: .semibold))
+                    Text("Done")
+                        .font(.system(size: 10, weight: .bold, design: .rounded))
                 } else {
                     Text(trip.primaryPark.emoji)
                         .font(.caption)
-                    Text("\(trip.isPast ? 0 : trip.daysUntilStart)")
+                    Text("\(trip.daysUntilStart)")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                     Text("days")
                         .font(.system(size: 8, weight: .medium, design: .rounded))
@@ -350,7 +356,12 @@ struct WidgetCastleSilhouette: View {
 
 /// Cinderella Castle–inspired silhouette optimized for small widget sizes.
 /// Clean lines, no fine details that become noise at 60-70pt.
-/// Kept in sync with `FallbackCastleShape` in CastleSilhouetteView.swift.
+///
+/// SYNC NOTE: This shape is intentionally duplicated from `FallbackCastleShape` in
+/// `Days-Til-Disney/DesignSystem/Components/CastleSilhouetteView.swift`.
+/// The widget extension cannot import from the main app target, so both shapes
+/// must be maintained independently. If you change the path coordinates here,
+/// update the corresponding shape in CastleSilhouetteView.swift as well.
 struct WidgetFallbackCastleShape: Shape {
     func path(in rect: CGRect) -> Path {
         let w = rect.width

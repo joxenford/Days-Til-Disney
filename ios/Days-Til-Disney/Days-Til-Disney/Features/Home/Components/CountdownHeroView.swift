@@ -228,17 +228,25 @@ struct CountdownHeroView: View {
 
     private var pastDisplay: some View {
         VStack(spacing: 12) {
-            Image(systemName: "photo.on.rectangle")
-                .font(.system(size: 40))
-                .foregroundStyle(.white.opacity(0.6))
+            // Warm golden icon with a soft glow to evoke fond memories, not an error state.
+            ZStack {
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 40))
+                    .foregroundStyle(accentColor)
+                    .blur(radius: 10)
+                    .opacity(0.5)
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 40))
+                    .foregroundStyle(accentColor.opacity(0.9))
+            }
 
             Text("Trip Complete")
                 .font(DTDFont.headline)
-                .foregroundStyle(.white.opacity(0.75))
+                .foregroundStyle(.white.opacity(0.85))
 
             Text("The memories live on forever.")
                 .font(DTDFont.caption)
-                .foregroundStyle(.white.opacity(0.55))
+                .foregroundStyle(.white.opacity(0.65))
 
             if onAddTrip != nil {
                 Label("Plan your next adventure!", systemImage: "plus.circle.fill")

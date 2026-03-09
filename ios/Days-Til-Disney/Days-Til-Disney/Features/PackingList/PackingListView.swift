@@ -256,18 +256,25 @@ struct PackingListView: View {
             .submitLabel(.done)
             .onSubmit { vm.addCustomItem() }
 
-            // Category picker.
-            Picker("Category", selection: Binding(
-                get: { vm.newItemCategory },
-                set: { vm.newItemCategory = $0 }
-            )) {
-                ForEach(PackingCategory.allCases) { category in
-                    Text(category.displayName).tag(category)
+            // Category picker — .menu style avoids the fragile UISegmentedControl
+            // color override that .segmented requires on dark backgrounds.
+            HStack {
+                Text("Category")
+                    .font(DTDFont.body)
+                    .foregroundStyle(.white.opacity(0.75))
+                Spacer()
+                Picker("Category", selection: Binding(
+                    get: { vm.newItemCategory },
+                    set: { vm.newItemCategory = $0 }
+                )) {
+                    ForEach(PackingCategory.allCases) { category in
+                        Text(category.displayName).tag(category)
+                    }
                 }
+                .pickerStyle(.menu)
+                .tint(Color.disneyGold)
             }
-            .pickerStyle(.segmented)
             .padding(.horizontal, 20)
-            .colorMultiply(Color.white.opacity(0.9))
 
             // Action buttons.
             HStack(spacing: 12) {
@@ -366,7 +373,10 @@ private struct PackingItemRow: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        Button(action: onToggle) {
+        Button {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            onToggle()
+        } label: {
             HStack(spacing: 14) {
                 // Checkmark circle.
                 ZStack {

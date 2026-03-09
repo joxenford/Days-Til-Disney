@@ -95,6 +95,7 @@ struct TripCardView: View {
             // "Set as Primary" is only meaningful for upcoming/ongoing trips.
             if !isPast {
                 Button {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
                     onSetPrimary()
                 } label: {
                     Label("Set as Primary", systemImage: "star.fill")

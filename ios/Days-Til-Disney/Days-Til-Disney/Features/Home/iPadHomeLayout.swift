@@ -160,6 +160,13 @@ struct iPadHomeLayout: View {
 /// The scrollable content shown in the right column of the iPad layout.
 /// Mirrors the trip-list + daily content + past-trips content from `HomeView.loadedView`
 /// but without the `CountdownHeroView` (which lives in the left column).
+///
+/// DUPLICATION NOTE: The `.empty`, `.error`, and `pastTripsSection` implementations here
+/// are intentionally kept in sync with the corresponding sections in `HomeView.swift`.
+/// They cannot share code through a common view because `HomeView` uses `router.navigate`
+/// while this panel uses `onNavigate` closures that target the right-column NavigationStack.
+/// If you update the empty state, error state, or past-trips section in `HomeView.swift`,
+/// make the matching change here as well.
 private struct HomeRightPanelView: View {
     let viewModel: HomeViewModel?
     let isInitialLoad: Bool

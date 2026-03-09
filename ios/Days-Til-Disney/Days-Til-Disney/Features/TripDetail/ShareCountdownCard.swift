@@ -163,11 +163,11 @@ struct ShareCountdownCard: View {
     private var footer: some View {
         HStack(spacing: 4) {
             Image(systemName: "wand.and.stars")
-                .font(.caption2)
-                .foregroundStyle(accentColor.opacity(0.7))
+                .font(.caption)
+                .foregroundStyle(accentColor.opacity(0.9))
             Text("Days Til Disney")
-                .font(.system(.caption2, design: .rounded, weight: .medium))
-                .foregroundStyle(.white.opacity(0.45))
+                .font(.system(.caption, design: .rounded, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.70))
         }
         .padding(.bottom, 18)
     }

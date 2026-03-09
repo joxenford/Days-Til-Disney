@@ -78,7 +78,14 @@ struct TripDetailView: View {
     private func contentView(vm: TripDetailViewModel) -> some View {
         switch vm.viewState {
         case .loading:
-            ProgressView().tint(.white)
+            VStack(spacing: 16) {
+                ProgressView()
+                    .tint(.white)
+                    .scaleEffect(1.4)
+                Text("Loading your magic...")
+                    .font(DTDFont.body)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
 
         case .notFound:
             VStack(spacing: 16) {
@@ -402,7 +409,7 @@ struct TripDetailView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            HStack(spacing: 4) {
+            HStack(spacing: 16) {
                 // Share button — visible only when the trip is loaded.
                 if case .loaded(let trip, _) = viewModel?.viewState {
                     Button {
