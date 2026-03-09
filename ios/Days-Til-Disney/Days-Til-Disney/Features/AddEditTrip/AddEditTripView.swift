@@ -55,7 +55,7 @@ struct AddEditTripView: View {
                         get: { vm.form.startDate },
                         set: { vm.form.startDate = $0 }
                     ),
-                    in: Date()...,
+                    in: mode.isEditing ? vm.form.startDate... : Date()...,
                     displayedComponents: .date
                 )
                 .font(DTDFont.body)
