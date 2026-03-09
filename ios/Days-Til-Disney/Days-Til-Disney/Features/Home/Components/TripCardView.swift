@@ -10,48 +10,63 @@ struct TripCardView: View {
 
     @State private var showDeleteAlert = false
 
+    private var isPast: Bool { trip.isPast }
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 16) {
-                // Park color indicator strip.
+                // Park color indicator strip — dimmed for past trips.
                 RoundedRectangle(cornerRadius: 4)
-                    .fill(trip.colorPalette.primary)
+                    .fill(trip.colorPalette.primary.opacity(isPast ? 0.45 : 1.0))
                     .frame(width: 5)
 
                 // Trip info.
                 VStack(alignment: .leading, spacing: 4) {
                     Text(trip.name)
                         .font(DTDFont.bodyMedium)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.white.opacity(isPast ? 0.55 : 1.0))
                         .lineLimit(1)
 
                     Text(trip.primaryPark.displayName)
                         .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.65))
+                        .foregroundStyle(.white.opacity(isPast ? 0.4 : 0.65))
 
                     Text(trip.startDate.dayMonthDateString)
                         .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.5))
+                        .foregroundStyle(.white.opacity(isPast ? 0.3 : 0.5))
                 }
 
                 Spacer()
 
-                // Days countdown badge.
-                VStack(spacing: 2) {
-                    Text("\(trip.daysUntilStart)")
-                        .font(.system(size: 28, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
+                // Countdown badge — shows "Trip Complete" for past trips.
+                if isPast {
+                    VStack(spacing: 2) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 22))
+                            .foregroundStyle(.white.opacity(0.4))
 
-                    Text(trip.daysUntilStart == 1 ? "day" : "days")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.6))
+                        Text("Complete")
+                            .font(DTDFont.caption)
+                            .foregroundStyle(.white.opacity(0.35))
+                    }
+                    .frame(width: 64)
+                } else {
+                    VStack(spacing: 2) {
+                        Text("\(trip.daysUntilStart)")
+                            .font(.system(size: 28, weight: .black, design: .rounded))
+                            .foregroundStyle(.white)
+
+                        Text(trip.daysUntilStart == 1 ? "day" : "days")
+                            .font(DTDFont.caption)
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
+                    .frame(width: 52)
                 }
-                .frame(width: 52)
 
                 // Context menu chevron.
                 Image(systemName: "chevron.right")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.4))
+                    .foregroundStyle(.white.opacity(isPast ? 0.2 : 0.4))
             }
             .padding(.vertical, 16)
             .padding(.horizontal, 16)
@@ -60,16 +75,22 @@ struct TripCardView: View {
                     .fill(.ultraThinMaterial)
                     .overlay {
                         RoundedRectangle(cornerRadius: 16)
-                            .fill(trip.colorPalette.primary.opacity(0.08))
+                            .fill(trip.colorPalette.primary.opacity(isPast ? 0.03 : 0.08))
                     }
             }
+            // Dim the whole card when the trip is in the past.
+            .opacity(isPast ? 0.75 : 1.0)
+            .saturation(isPast ? 0.6 : 1.0)
         }
         .buttonStyle(.plain)
         .contextMenu {
-            Button {
-                onSetPrimary()
-            } label: {
-                Label("Set as Primary", systemImage: "star.fill")
+            // "Set as Primary" is only meaningful for upcoming/ongoing trips.
+            if !isPast {
+                Button {
+                    onSetPrimary()
+                } label: {
+                    Label("Set as Primary", systemImage: "star.fill")
+                }
             }
 
             Button {
@@ -88,12 +109,16 @@ struct TripCardView: View {
         }
         .alert("Delete Trip?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
-            Button("Delete", role: .destructive) { onDelete() }
+            Button("Delete", role: .destructive) {
+                let haptic = UIImpactFeedbackGenerator(style: .heavy)
+                haptic.impactOccurred()
+                onDelete()
+            }
         } message: {
             Text("This will permanently remove \"\(trip.name)\" and cannot be undone.")
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(trip.name), \(trip.daysUntilStart) days away")
+        .accessibilityLabel(isPast ? "\(trip.name), trip complete" : "\(trip.name), \(trip.daysUntilStart) days away")
         .accessibilityHint("Tap to view details. Long press for options.")
     }
 }

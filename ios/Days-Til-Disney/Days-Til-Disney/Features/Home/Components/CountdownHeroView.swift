@@ -7,6 +7,8 @@ import Combine
 struct CountdownHeroView: View {
     let trip: Trip
     let onTap: () -> Void
+    /// Called when the user taps "Plan your next adventure" on a past primary trip.
+    var onAddTrip: (() -> Void)? = nil
 
     @Environment(\.parkTheme) private var themeProvider
 
@@ -193,7 +195,7 @@ struct CountdownHeroView: View {
     }
 
     private var pastDisplay: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 12) {
             Image(systemName: "photo.on.rectangle")
                 .font(.system(size: 40))
                 .foregroundStyle(.white.opacity(0.6))
@@ -205,6 +207,22 @@ struct CountdownHeroView: View {
             Text("The memories live on forever.")
                 .font(DTDFont.caption)
                 .foregroundStyle(.white.opacity(0.55))
+
+            if let onAddTrip {
+                Button(action: onAddTrip) {
+                    Label("Plan your next adventure!", systemImage: "plus.circle.fill")
+                        .font(DTDFont.bodyMedium)
+                        .foregroundStyle(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.white.opacity(0.9))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.horizontal, 8)
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 4)
+                .accessibilityLabel("Plan your next adventure")
+            }
         }
     }
 

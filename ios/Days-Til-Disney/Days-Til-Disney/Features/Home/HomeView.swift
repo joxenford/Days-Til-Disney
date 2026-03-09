@@ -5,6 +5,7 @@ struct HomeView: View {
     @Environment(\.parkTheme) private var themeProvider
     @State private var viewModel: HomeViewModel?
     @State private var showCelebration = false
+    @State private var pastTripsExpanded = false
 
     let router: AppNavigationRouter
 
@@ -70,8 +71,8 @@ struct HomeView: View {
                 router.navigate(to: .addTrip)
             }
 
-        case .loaded(let primary, let secondary):
-            loadedView(vm: vm, primary: primary, secondary: secondary)
+        case .loaded(let primary, let secondary, let past):
+            loadedView(vm: vm, primary: primary, secondary: secondary, past: past)
 
         case .error(let message):
             ErrorStateView(message: message) {
@@ -92,14 +93,15 @@ struct HomeView: View {
     }
 
     @ViewBuilder
-    private func loadedView(vm: HomeViewModel, primary: Trip?, secondary: [Trip]) -> some View {
+    private func loadedView(vm: HomeViewModel, primary: Trip?, secondary: [Trip], past: [Trip]) -> some View {
         ScrollView {
             LazyVStack(spacing: 20) {
                 // Hero countdown for primary trip.
                 if let primary {
                     CountdownHeroView(
                         trip: primary,
-                        onTap: { router.navigate(to: .tripDetail(tripID: primary.id)) }
+                        onTap: { router.navigate(to: .tripDetail(tripID: primary.id)) },
+                        onAddTrip: { router.navigate(to: .addTrip) }
                     )
                 }
 
@@ -109,7 +111,7 @@ struct HomeView: View {
                         .padding(.horizontal, 20)
                 }
 
-                // Secondary trip cards.
+                // Secondary trip cards (upcoming and ongoing).
                 if !secondary.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Other Trips")
@@ -130,12 +132,62 @@ struct HomeView: View {
                     }
                 }
 
+                // Collapsible past trips section.
+                if !past.isEmpty {
+                    pastTripsSection(vm: vm, past: past)
+                }
+
                 // Bottom padding for tab bar / home indicator.
                 Spacer().frame(height: 40)
             }
             .padding(.top, 16)
         }
         .refreshable { await vm.onRefresh() }
+    }
+
+    @ViewBuilder
+    private func pastTripsSection(vm: HomeViewModel, past: [Trip]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Disclosure header.
+            Button {
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                    pastTripsExpanded.toggle()
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Text("Past Trips (\(past.count))")
+                        .font(DTDFont.titleSecondary)
+                        .foregroundStyle(.white.opacity(0.7))
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.5))
+                        .rotationEffect(.degrees(pastTripsExpanded ? 90 : 0))
+                }
+                .padding(.horizontal, 20)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Past Trips, \(past.count) trip\(past.count == 1 ? "" : "s")")
+            .accessibilityHint(pastTripsExpanded ? "Tap to collapse" : "Tap to expand")
+            .accessibilityAddTraits(.isButton)
+
+            // Expandable trip cards.
+            if pastTripsExpanded {
+                ForEach(past) { trip in
+                    TripCardView(
+                        trip: trip,
+                        onTap: { router.navigate(to: .tripDetail(tripID: trip.id)) },
+                        onSetPrimary: { Task { await vm.setPrimaryTrip(id: trip.id) } },
+                        onEdit: { router.navigate(to: .editTrip(tripID: trip.id)) },
+                        onDelete: { Task { await vm.deleteTrip(id: trip.id) } }
+                    )
+                    .padding(.horizontal, 20)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+            }
+        }
     }
 
     // MARK: - Toolbar

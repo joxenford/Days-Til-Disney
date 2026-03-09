@@ -6,7 +6,7 @@ import Observation
 enum HomeViewState {
     case loading
     case empty                          // No trips created yet.
-    case loaded(primary: Trip?, secondary: [Trip])
+    case loaded(primary: Trip?, secondary: [Trip], past: [Trip])
     case error(String)
 }
 
@@ -70,9 +70,12 @@ final class HomeViewModel {
             }
 
             let primary = allTrips.first { $0.isPrimary } ?? allTrips.first
-            let secondary = allTrips.filter { $0.id != primary?.id }
+            // Separate past trips from upcoming/ongoing secondary trips.
+            let otherTrips = allTrips.filter { $0.id != primary?.id }
+            let secondary = otherTrips.filter { !$0.isPast }
+            let past = otherTrips.filter { $0.isPast }
 
-            viewState = .loaded(primary: primary, secondary: secondary)
+            viewState = .loaded(primary: primary, secondary: secondary, past: past)
 
             // Update theme to match primary trip.
             if let primary {
