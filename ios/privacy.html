@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Days Til Disney</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0D2545 0%, #1A1147 50%, #0D2545 100%);
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Star field background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255, 231, 128, 0.4), transparent),
+                radial-gradient(1px 1px at 25% 45%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1.5px 1.5px at 40% 15%, rgba(255, 231, 128, 0.5), transparent),
+                radial-gradient(1px 1px at 55% 60%, rgba(255, 255, 255, 0.25), transparent),
+                radial-gradient(1px 1px at 70% 30%, rgba(255, 231, 128, 0.35), transparent),
+                radial-gradient(1.5px 1.5px at 85% 50%, rgba(255, 255, 255, 0.3), transparent),
+                radial-gradient(1px 1px at 15% 70%, rgba(255, 255, 255, 0.2), transparent),
+                radial-gradient(1px 1px at 50% 85%, rgba(255, 231, 128, 0.3), transparent),
+                radial-gradient(1px 1px at 90% 75%, rgba(255, 255, 255, 0.25), transparent),
+                radial-gradient(1.5px 1.5px at 35% 90%, rgba(255, 231, 128, 0.4), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header .castle {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #C9A84C;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .header .subtitle {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 8px;
+        }
+
+        .header .effective-date {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 600;
+        }
+
+        /* Summary card */
+        .summary {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .summary p {
+            font-size: 17px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .summary .highlight {
+            color: #C9A84C;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 36px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #C9A84C;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 12px;
+        }
+
+        a {
+            color: #FFE780;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 231, 128, 0.3);
+            transition: border-color 0.2s ease;
+        }
+
+        a:hover {
+            border-bottom-color: #FFE780;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.3), transparent);
+            margin: 40px 0;
+        }
+
+        /* Contact card */
+        .contact {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .contact .company {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 4px;
+        }
+
+        .contact .email {
+            font-size: 16px;
+            color: #FFE780;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        footer p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 20px 60px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .header .subtitle {
+                font-size: 18px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            p, .summary p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="castle">&#x1F3F0;</div>
+            <h1>Days Til Disney</h1>
+            <div class="subtitle">Privacy Policy</div>
+            <div class="effective-date">Effective Date: March 11, 2026</div>
+        </header>
+
+        <div class="summary">
+            <p>The short version: we <span class="highlight">do not collect, store, or share</span> any of your personal data. Your information stays on your device and under your control.</p>
+        </div>
+
+        <section>
+            <h2>Information We Collect</h2>
+            <p>We do not collect any personal information. Days Til Disney does not require an account, login, email address, or any identifying information to use.</p>
+            <p>We do not use analytics services, advertising frameworks, or any third-party tracking tools. The app makes no network requests to our servers because we do not operate any servers that receive user data.</p>
+        </section>
+
+        <section>
+            <h2>On-Device Data</h2>
+            <p>All data you create in Days Til Disney &mdash; including trips, packing lists, journal entries, and notes &mdash; is stored locally on your device. This data never leaves your device except through iCloud sync, described below.</p>
+        </section>
+
+        <section>
+            <h2>iCloud Sync</h2>
+            <p>If you are signed in to iCloud on your Apple device, Days Til Disney uses Apple's CloudKit service to sync your trip data across your own Apple devices. This sync happens entirely through Apple's iCloud infrastructure. We do not have access to your iCloud account or any data stored in it.</p>
+            <p>Apple's handling of iCloud data is governed by <a href="https://www.apple.com/privacy/" target="_blank" rel="noopener">Apple's Privacy Policy</a>.</p>
+            <p>You can disable iCloud sync at any time through your device's Settings under your iCloud account preferences.</p>
+        </section>
+
+        <section>
+            <h2>Notifications</h2>
+            <p>Days Til Disney may request your permission to send local notifications for trip milestone alerts (such as countdown milestones and reminders). These notifications are generated entirely on your device. No notification data is sent to us or any third party.</p>
+            <p>You can enable or disable notifications at any time in your device's Settings.</p>
+        </section>
+
+        <section>
+            <h2>Children's Privacy</h2>
+            <p>Days Til Disney is rated for ages 4 and up. Because we do not collect any personal information from any user, we do not collect personal information from children. Our app complies with the Children's Online Privacy Protection Act (COPPA) and similar regulations by design &mdash; there is simply no data collection to protect against.</p>
+        </section>
+
+        <section>
+            <h2>Third-Party Services</h2>
+            <p>Days Til Disney does not integrate with any third-party services that collect user data. There are no third-party analytics, advertising networks, or data brokers embedded in the app.</p>
+        </section>
+
+        <section>
+            <h2>Data Sharing and Selling</h2>
+            <p>We do not share, sell, rent, or trade any user data to anyone, for any reason. There is no user data in our possession to share.</p>
+        </section>
+
+        <section>
+            <h2>Data Retention and Deletion</h2>
+            <p>Since all your data is stored on your device (and optionally in your personal iCloud account), you have full control over it. You can delete your data at any time by deleting trips within the app or by uninstalling the app. To remove iCloud-synced data, you can manage your iCloud storage through your device's Settings.</p>
+        </section>
+
+        <section>
+            <h2>Changes to This Policy</h2>
+            <p>We may update this Privacy Policy from time to time. Any changes will be reflected by updating the effective date at the top of this page. We encourage you to review this page periodically. Your continued use of the app after changes are posted constitutes your acceptance of the updated policy.</p>
+        </section>
+
+        <div class="divider"></div>
+
+        <section>
+            <h2>Contact Us</h2>
+            <div class="contact">
+                <p class="company">ThinkUp LLC</p>
+                <p class="email"><a href="mailto:support@thinkupllc.com">support@thinkupllc.com</a></p>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 ThinkUp LLC. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

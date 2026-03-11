@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Days Til Disney — Disney Trip Countdown App for iPhone</title>
+  <meta name="description" content="Count down to your Disney vacation with daily magic. Live countdown for all 12 Disney parks, 365 days of tips and trivia, widgets, packing lists, and more. Free on the App Store.">
+  <meta name="keywords" content="Disney countdown app, Disney trip planner, Disney vacation countdown, Disney parks app, iPhone Disney app">
+  <link rel="canonical" href="https://daystildisney.app/">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://daystildisney.app/">
+  <meta property="og:title"       content="Days Til Disney — Disney Trip Countdown App">
+  <meta property="og:description" content="Count down to your Disney vacation with daily magic. Live countdown, widgets, daily tips, packing lists, and more — free on iPhone.">
+  <meta property="og:image"       content="https://daystildisney.app/og-image.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Days Til Disney — Disney Trip Countdown App">
+  <meta name="twitter:description" content="Count down to your Disney vacation with daily magic.">
+  <meta name="twitter:image"       content="https://daystildisney.app/og-image.png">
+
+  <!-- Theme / App -->
+  <meta name="theme-color" content="#0D2545">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Fonts + Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <!-- Fixed background layers -->
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="star-field" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="Days Til Disney home">
+        <span class="nav__logo-icon" aria-hidden="true">&#x1F3F0;</span>
+        <span class="nav__logo-text">
+          <span class="logo-main">Days Til Disney</span>
+          <span class="logo-sub">by ThinkUp LLC</span>
+        </span>
+      </a>
+
+      <div class="nav__links" role="list">
+        <a href="#features" class="nav__link" role="listitem">Features</a>
+        <a href="#daily-magic" class="nav__link" role="listitem">Daily Magic</a>
+        <a href="#parks" class="nav__link" role="listitem">Parks</a>
+        <a href="privacy.html" class="nav__link" role="listitem">Privacy</a>
+        <a href="https://apps.apple.com/app/days-til-disney/id0000000000"
+           class="btn btn--primary nav__cta"
+           target="_blank" rel="noopener"
+           aria-label="Download Days Til Disney on the App Store">
+          Download Free
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- =====================
+         HERO SECTION
+    ===================== -->
+    <section class="hero section--lg" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero__layout">
+
+          <!-- Hero copy -->
+          <div class="hero__copy">
+            <div class="badge reveal">
+              <span aria-hidden="true">&#x2728;</span> Free on the App Store
+            </div>
+
+            <h1 id="hero-heading" class="heading-xl hero__heading reveal reveal-delay-1">
+              Your Disney magic<br>
+              <span class="text-gold">starts today.</span>
+            </h1>
+
+            <p class="body-lg hero__subheading reveal reveal-delay-2">
+              The countdown to the most magical place on Earth begins the moment you book. Days Til Disney keeps the excitement alive every single day — with live countdowns, daily tips, and surprises that make the wait as fun as the trip.
+            </p>
+
+            <div class="hero__actions reveal reveal-delay-3">
+              <a href="https://apps.apple.com/app/days-til-disney/id0000000000"
+                 class="btn btn--appstore"
+                 target="_blank" rel="noopener"
+                 aria-label="Download on the App Store">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                <span class="btn-label">
+                  <span>Download on the</span>
+                  <span>App Store</span>
+                </span>
+              </a>
+
+              <a href="#features" class="btn btn--ghost hero__learn-more reveal reveal-delay-4">
+                See All Features
+              </a>
+            </div>
+
+            <div class="hero__trust reveal reveal-delay-4">
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x1F512;</span>
+                <span>No ads, ever</span>
+              </div>
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x1F6AB;</span>
+                <span>Zero data collection</span>
+              </div>
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x1F46A;</span>
+                <span>Made for families</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero phone mockup -->
+          <div class="hero__mockup reveal reveal-delay-2" aria-hidden="true">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <div class="phone-ui">
+                  <div class="phone-ui__header">
+                    <div class="phone-ui__greeting">Next Stop</div>
+                    <div class="phone-ui__trip-name">Walt Disney World</div>
+                  </div>
+                  <div class="phone-ui__castle">&#x1F3F0;</div>
+                  <div class="phone-ui__countdown">
+                    <div class="phone-ui__countdown-block">
+                      <span class="phone-ui__countdown-num">47</span>
+                      <span class="phone-ui__countdown-label">Days</span>
+                    </div>
+                    <div class="phone-ui__countdown-sep">:</div>
+                    <div class="phone-ui__countdown-block">
+                      <span class="phone-ui__countdown-num">14</span>
+                      <span class="phone-ui__countdown-label">Hours</span>
+                    </div>
+                    <div class="phone-ui__countdown-sep">:</div>
+                    <div class="phone-ui__countdown-block">
+                      <span class="phone-ui__countdown-num">32</span>
+                      <span class="phone-ui__countdown-label">Mins</span>
+                    </div>
+                  </div>
+                  <div class="phone-ui__card glass-card">
+                    <div class="phone-ui__card-eyebrow">&#x2728; Today's Tip</div>
+                    <div class="phone-ui__card-text">Book your Enchanted Storybook Castle dining at exactly 60 days out — it sells out in minutes.</div>
+                  </div>
+                  <div class="phone-ui__widgets">
+                    <div class="phone-ui__widget phone-ui__widget--sm glass-card">
+                      <span>&#x1F4CB;</span>
+                      <span>Packing</span>
+                    </div>
+                    <div class="phone-ui__widget phone-ui__widget--sm glass-card">
+                      <span>&#x1F4D3;</span>
+                      <span>Journal</span>
+                    </div>
+                    <div class="phone-ui__widget phone-ui__widget--sm glass-card">
+                      <span>&#x1F4F1;</span>
+                      <span>Widget</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-notch"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="hero__scroll-hint reveal reveal-delay-6" aria-hidden="true">
+        <div class="hero__scroll-dot"></div>
+      </div>
+    </section>
+
+    <!-- =====================
+         SOCIAL PROOF STRIP
+    ===================== -->
+    <div class="proof-strip" aria-label="App highlights">
+      <div class="gold-divider"></div>
+      <div class="container">
+        <div class="proof-strip__inner">
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">12</span>
+            <span class="proof-strip__label">Disney Parks</span>
+          </div>
+          <div class="proof-strip__divider" aria-hidden="true"></div>
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">365</span>
+            <span class="proof-strip__label">Days of Content</span>
+          </div>
+          <div class="proof-strip__divider" aria-hidden="true"></div>
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">6</span>
+            <span class="proof-strip__label">Disney Resorts</span>
+          </div>
+          <div class="proof-strip__divider" aria-hidden="true"></div>
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">0</span>
+            <span class="proof-strip__label">Ads or Tracking</span>
+          </div>
+        </div>
+      </div>
+      <div class="gold-divider"></div>
+    </div>
+
+    <!-- =====================
+         FEATURES SECTION
+    ===================== -->
+    <section class="section features" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow reveal">Everything you need</span>
+          <h2 id="features-heading" class="heading-lg reveal reveal-delay-1">
+            Built for the <span class="text-gold">whole family</span>
+          </h2>
+          <p class="body-lg reveal reveal-delay-2">
+            Every feature was crafted with one goal: making your Disney trip feel magical before you even pack your bags.
+          </p>
+        </header>
+
+        <!-- Feature cards grid -->
+        <div class="features__grid">
+
+          <!-- Feature 1: Countdown -->
+          <div class="feature-card feature-card--hero glass-card reveal" aria-label="Live countdown feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x23F3;</div>
+            <h3 class="heading-md feature-card__title">Live Countdown</h3>
+            <p class="body-md feature-card__desc">
+              Watch your trip get closer in real time. Days, hours, and minutes to every park at every resort — always accurate, always magical.
+            </p>
+            <div class="feature-card__detail">
+              <div class="countdown-demo" aria-label="Countdown example: 47 days, 14 hours, 32 minutes">
+                <div class="countdown-demo__block">
+                  <span class="countdown-demo__num">47</span>
+                  <span class="countdown-demo__label">Days</span>
+                </div>
+                <span class="countdown-demo__sep" aria-hidden="true">:</span>
+                <div class="countdown-demo__block">
+                  <span class="countdown-demo__num">14</span>
+                  <span class="countdown-demo__label">Hrs</span>
+                </div>
+                <span class="countdown-demo__sep" aria-hidden="true">:</span>
+                <div class="countdown-demo__block">
+                  <span class="countdown-demo__num">32</span>
+                  <span class="countdown-demo__label">Min</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 2: Daily content -->
+          <div class="feature-card glass-card reveal reveal-delay-1" aria-label="Daily magic feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x2728;</div>
+            <h3 class="heading-sm feature-card__title">Daily Magic</h3>
+            <p class="body-md feature-card__desc">
+              A fresh tip, trivia question, fun fact, or ride spotlight every single day for 365 days.
+            </p>
+          </div>
+
+          <!-- Feature 3: Milestones -->
+          <div class="feature-card glass-card reveal reveal-delay-2" aria-label="Milestone celebrations feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F38A;</div>
+            <h3 class="heading-sm feature-card__title">Milestone Celebrations</h3>
+            <p class="body-md feature-card__desc">
+              Confetti and fireworks explode when you hit big milestones — 100 days, 30 days, 1 week, tomorrow!
+            </p>
+          </div>
+
+          <!-- Feature 4: Widgets -->
+          <div class="feature-card glass-card reveal reveal-delay-3" aria-label="Home screen widgets feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F4F1;</div>
+            <h3 class="heading-sm feature-card__title">Home & Lock Screen Widgets</h3>
+            <p class="body-md feature-card__desc">
+              Glance at your countdown without opening the app. Beautiful widgets in every size for your home and lock screen.
+            </p>
+          </div>
+
+          <!-- Feature 5: Packing -->
+          <div class="feature-card glass-card reveal reveal-delay-1" aria-label="Packing checklist feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F9F3;</div>
+            <h3 class="heading-sm feature-card__title">Smart Packing Lists</h3>
+            <p class="body-md feature-card__desc">
+              Resort-specific packing defaults so you never forget the essentials. Fully customizable to your family's style.
+            </p>
+          </div>
+
+          <!-- Feature 6: Journal -->
+          <div class="feature-card glass-card reveal reveal-delay-2" aria-label="Trip notes and journal feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F4D3;</div>
+            <h3 class="heading-sm feature-card__title">Trip Notes & Journal</h3>
+            <p class="body-md feature-card__desc">
+              Capture plans, dreams, and memories. Before and after. A keepsake of every magical adventure.
+            </p>
+          </div>
+
+          <!-- Feature 7: Share card -->
+          <div class="feature-card glass-card reveal reveal-delay-3" aria-label="Share countdown feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F5BC;&#xFE0F;</div>
+            <h3 class="heading-sm feature-card__title">Share the Countdown</h3>
+            <p class="body-md feature-card__desc">
+              Generate a gorgeous countdown image card and share the excitement with friends and family.
+            </p>
+          </div>
+
+          <!-- Feature 8: iCloud -->
+          <div class="feature-card glass-card reveal reveal-delay-4" aria-label="iCloud sync feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x2601;&#xFE0F;</div>
+            <h3 class="heading-sm feature-card__title">iCloud Sync</h3>
+            <p class="body-md feature-card__desc">
+              Your trips stay in sync across all your Apple devices automatically. iPhone, iPad — always up to date.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         DAILY MAGIC SECTION
+    ===================== -->
+    <section class="section daily-magic" id="daily-magic" aria-labelledby="daily-magic-heading">
+      <div class="container">
+        <div class="daily-magic__layout">
+          <div class="daily-magic__copy">
+            <span class="eyebrow reveal">365 days of wonder</span>
+            <h2 id="daily-magic-heading" class="heading-lg reveal reveal-delay-1">
+              Something magical<br><span class="text-gold">every single day</span>
+            </h2>
+            <p class="body-lg reveal reveal-delay-2">
+              The countdown is just the beginning. Open the app each day to discover hand-curated content that makes the anticipation as exciting as the trip itself.
+            </p>
+            <ul class="daily-magic__list reveal reveal-delay-3" aria-label="Types of daily content">
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F4A1;</span>
+                <div>
+                  <strong>Fun Facts</strong> — Surprising Disney stories, secrets, and history
+                </div>
+              </li>
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F3AF;</span>
+                <div>
+                  <strong>Insider Tips</strong> — Crowd-beating strategies, must-do experiences
+                </div>
+              </li>
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F3A2;</span>
+                <div>
+                  <strong>Ride Spotlights</strong> — Deep dives on the attractions you'll love
+                </div>
+              </li>
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F9E0;</span>
+                <div>
+                  <strong>Trivia Challenges</strong> — Test your Disney knowledge as you count down
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="daily-magic__cards reveal reveal-delay-2" aria-label="Sample daily content cards">
+            <div class="dm-card glass-card glass-card--bright">
+              <div class="dm-card__type">
+                <span aria-hidden="true">&#x1F4A1;</span> Fun Fact
+              </div>
+              <p class="dm-card__text">
+                Cinderella Castle at Magic Kingdom has a secret apartment suite inside — and Walt Disney never got to stay in it. It's now offered as a prize to lucky guests.
+              </p>
+              <div class="dm-card__meta">Day 47 of your countdown</div>
+            </div>
+
+            <div class="dm-card dm-card--offset glass-card">
+              <div class="dm-card__type">
+                <span aria-hidden="true">&#x1F3AF;</span> Insider Tip
+              </div>
+              <p class="dm-card__text">
+                Arrive at Tomorrowland 30 minutes before park opening. The first hour has dramatically shorter wait times on Tron Lightcycle Run.
+              </p>
+              <div class="dm-card__meta">Day 23 of your countdown</div>
+            </div>
+
+            <div class="dm-card dm-card--offset-2 glass-card">
+              <div class="dm-card__type">
+                <span aria-hidden="true">&#x1F3A2;</span> Ride Spotlight
+              </div>
+              <p class="dm-card__text">
+                Guardians of the Galaxy: Cosmic Rewind is Disney's first reverse launch coaster — and it plays a different song on every single ride.
+              </p>
+              <div class="dm-card__meta">Day 12 of your countdown</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         PARKS SECTION
+    ===================== -->
+    <section class="section parks" id="parks" aria-labelledby="parks-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow reveal">All resorts. All parks.</span>
+          <h2 id="parks-heading" class="heading-lg reveal reveal-delay-1">
+            Every Disney destination,<br><span class="text-gold">covered</span>
+          </h2>
+          <p class="body-lg reveal reveal-delay-2">
+            Whether you're headed to Orlando or Tokyo, Days Til Disney has a live countdown for every park at every resort.
+          </p>
+        </header>
+
+        <div class="parks__grid reveal reveal-delay-1">
+
+          <article class="resort-card glass-card" aria-label="Walt Disney World Resort">
+            <div class="resort-card__flag" aria-label="United States flag">&#x1F1FA;&#x1F1F8;</div>
+            <h3 class="resort-card__name">Walt Disney World</h3>
+            <p class="resort-card__location text-tertiary">Orlando, Florida</p>
+            <ul class="resort-card__parks" aria-label="Parks at Walt Disney World">
+              <li>Magic Kingdom</li>
+              <li>EPCOT</li>
+              <li>Hollywood Studios</li>
+              <li>Animal Kingdom</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Disneyland Resort">
+            <div class="resort-card__flag" aria-label="United States flag">&#x1F1FA;&#x1F1F8;</div>
+            <h3 class="resort-card__name">Disneyland Resort</h3>
+            <p class="resort-card__location text-tertiary">Anaheim, California</p>
+            <ul class="resort-card__parks" aria-label="Parks at Disneyland Resort">
+              <li>Disneyland Park</li>
+              <li>Disney California Adventure</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Tokyo Disney Resort">
+            <div class="resort-card__flag" aria-label="Japan flag">&#x1F1EF;&#x1F1F5;</div>
+            <h3 class="resort-card__name">Tokyo Disney Resort</h3>
+            <p class="resort-card__location text-tertiary">Urayasu, Japan</p>
+            <ul class="resort-card__parks" aria-label="Parks at Tokyo Disney Resort">
+              <li>Tokyo Disneyland</li>
+              <li>Tokyo DisneySea</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Disneyland Paris">
+            <div class="resort-card__flag" aria-label="France flag">&#x1F1EB;&#x1F1F7;</div>
+            <h3 class="resort-card__name">Disneyland Paris</h3>
+            <p class="resort-card__location text-tertiary">Marne-la-Vallée, France</p>
+            <ul class="resort-card__parks" aria-label="Parks at Disneyland Paris">
+              <li>Disneyland Park</li>
+              <li>Walt Disney Studios Park</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Hong Kong Disneyland">
+            <div class="resort-card__flag" aria-label="Hong Kong flag">&#x1F1ED;&#x1F1F0;</div>
+            <h3 class="resort-card__name">Hong Kong Disneyland</h3>
+            <p class="resort-card__location text-tertiary">Lantau Island, Hong Kong</p>
+            <ul class="resort-card__parks" aria-label="Parks at Hong Kong Disneyland">
+              <li>Hong Kong Disneyland Park</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Shanghai Disney Resort">
+            <div class="resort-card__flag" aria-label="China flag">&#x1F1E8;&#x1F1F3;</div>
+            <h3 class="resort-card__name">Shanghai Disney Resort</h3>
+            <p class="resort-card__location text-tertiary">Pudong, Shanghai, China</p>
+            <ul class="resort-card__parks" aria-label="Parks at Shanghai Disney Resort">
+              <li>Shanghai Disneyland</li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         PRIVACY/TRUST SECTION
+    ===================== -->
+    <section class="section trust" id="privacy-trust" aria-labelledby="trust-heading">
+      <div class="container container--narrow">
+        <div class="trust__card glass-card">
+          <div class="trust__top">
+            <span class="trust__shield" aria-hidden="true">&#x1F6E1;&#xFE0F;</span>
+            <span class="eyebrow">Privacy first</span>
+          </div>
+          <h2 id="trust-heading" class="heading-md text-center reveal">
+            Your data stays <span class="text-gold">yours</span>. Always.
+          </h2>
+          <p class="body-lg text-center reveal reveal-delay-1">
+            Days Til Disney collects absolutely nothing. No account required. No analytics. No ads. No servers receiving your personal data. Everything lives on your device.
+          </p>
+          <div class="trust__grid reveal reveal-delay-2">
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F6AB;</span>
+              <span>No ads, ever</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F511;</span>
+              <span>No account needed</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F4F5;</span>
+              <span>No analytics tracking</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F5A5;&#xFE0F;</span>
+              <span>No servers with your data</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x2601;&#xFE0F;</span>
+              <span>iCloud sync via Apple only</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F476;</span>
+              <span>COPPA compliant by design</span>
+            </div>
+          </div>
+          <div class="trust__cta reveal reveal-delay-3">
+            <a href="privacy.html" class="btn btn--ghost">Read Full Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         MORE FEATURES GRID
+    ===================== -->
+    <section class="section extras" aria-labelledby="extras-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow reveal">The full picture</span>
+          <h2 id="extras-heading" class="heading-lg reveal reveal-delay-1">
+            A few more things<br><span class="text-gold">you'll love</span>
+          </h2>
+        </header>
+
+        <div class="extras__grid">
+          <div class="extra-item reveal">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F4F1;</span>
+            <div>
+              <h3 class="heading-sm">iPad Two-Column Layout</h3>
+              <p class="body-md">Beautifully optimized for the big screen with a dedicated iPad interface.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-1">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F4DA;</span>
+            <div>
+              <h3 class="heading-sm">Past Trip Archive</h3>
+              <p class="body-md">Relive past trips with your countdown history, notes, and journal entries.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-2">
+            <span class="extra-item__icon" aria-hidden="true">&#x267F;</span>
+            <div>
+              <h3 class="heading-sm">Full Accessibility Support</h3>
+              <p class="body-md">VoiceOver, Dynamic Type, Reduce Motion — designed for everyone in the family.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-3">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F30E;</span>
+            <div>
+              <h3 class="heading-sm">Multiple Trips at Once</h3>
+              <p class="body-md">Planning more than one trip? Track them all. Each with its own countdown and content.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-1">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F7E1;</span>
+            <div>
+              <h3 class="heading-sm">Milestone Notifications</h3>
+              <p class="body-md">Get notified when you hit exciting countdown milestones — all generated on-device.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-2">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F4B0;</span>
+            <div>
+              <h3 class="heading-sm">Completely Free</h3>
+              <p class="body-md">No subscription, no in-app purchases, no hidden costs. Just download and count down.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         FINAL CTA
+    ===================== -->
+    <section class="section cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-card glass-card glass-card--bright">
+          <div class="cta-card__castle" aria-hidden="true">&#x1F3F0;</div>
+          <h2 id="cta-heading" class="heading-lg text-center reveal">
+            Your Disney adventure<br>
+            <span class="text-gold">starts right now.</span>
+          </h2>
+          <p class="body-lg text-center reveal reveal-delay-1">
+            Download Days Til Disney for free and make every day leading up to your trip a little bit magical.
+          </p>
+          <div class="cta-card__actions reveal reveal-delay-2">
+            <a href="https://apps.apple.com/app/days-til-disney/id0000000000"
+               class="btn btn--primary"
+               target="_blank" rel="noopener"
+               aria-label="Download Days Til Disney free on the App Store">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              Download Free on the App Store
+            </a>
+          </div>
+          <p class="cta-card__note text-tertiary reveal reveal-delay-3">
+            iPhone &amp; iPad &nbsp;·&nbsp; iOS 17+ &nbsp;·&nbsp; Free
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <span class="footer__logo-icon" aria-hidden="true">&#x1F3F0;</span>
+          <span>Days Til Disney</span>
+        </div>
+        <nav class="footer__links" aria-label="Footer navigation">
+          <a href="index.html">Home</a>
+          <a href="#features">Features</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="mailto:support@thinkupllc.com">Contact</a>
+        </nav>
+        <p class="footer__copy">&copy; 2026 ThinkUp LLC. All rights reserved.</p>
+        <p class="footer__copy" style="font-size:0.72rem; margin-top: -8px;">
+          Days Til Disney is an independent app and is not affiliated with, endorsed by, or sponsored by The Walt Disney Company.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

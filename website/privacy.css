@@ -1,0 +1,248 @@
+/* ============================================
+   Days Til Disney — Privacy Page Styles
+   privacy.css (imports after styles.css)
+   ============================================ */
+
+/* ---- Page Layout ---- */
+.privacy-page {
+  position: relative;
+  z-index: 1;
+  padding: 110px 0 80px;
+}
+
+/* ---- Page Header ---- */
+.privacy-header {
+  text-align: center;
+  margin-bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.privacy-header__icon {
+  font-size: 3rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.35));
+  margin-bottom: 4px;
+}
+
+.privacy-header__title {
+  letter-spacing: -0.03em;
+}
+
+.privacy-header__app {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.privacy-header__date {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* ---- Summary Callout ---- */
+.privacy-summary {
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+}
+
+.privacy-summary p {
+  font-size: clamp(1rem, 2vw, 1.1rem);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.65;
+}
+
+/* ---- Trust Badges Row ---- */
+.privacy-badges {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.privacy-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.privacy-badge span:first-child {
+  font-size: 0.9rem;
+}
+
+/* ---- Intro Paragraph ---- */
+.privacy-intro {
+  margin-bottom: 44px;
+}
+
+.privacy-intro p {
+  font-size: 0.975rem;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+
+/* ---- Policy Sections ---- */
+.privacy-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.policy-section {
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.policy-section:last-child {
+  border-bottom: none;
+}
+
+.policy-section__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.policy-section__num {
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.policy-section__body p {
+  font-size: 0.975rem;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.policy-section__body p:last-child {
+  margin-bottom: 0;
+}
+
+.policy-section__body a {
+  color: var(--color-sparkle);
+  border-bottom: 1px solid rgba(255, 231, 128, 0.3);
+  transition: border-color var(--transition-base), color var(--transition-base);
+  font-weight: 700;
+}
+
+.policy-section__body a:hover {
+  border-bottom-color: var(--color-sparkle);
+  color: #fff;
+}
+
+/* ---- Contact Section ---- */
+.privacy-contact {
+  padding: 36px 32px;
+  text-align: center;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.privacy-contact__heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-gold);
+}
+
+.privacy-contact__text {
+  font-size: 0.925rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  max-width: 420px;
+}
+
+.privacy-contact__details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.privacy-contact__company {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.privacy-contact__email {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-sparkle);
+  border-bottom: 1px solid rgba(255, 231, 128, 0.3);
+  transition: border-color var(--transition-base);
+  text-decoration: none;
+}
+
+.privacy-contact__email:hover {
+  border-bottom-color: var(--color-sparkle);
+}
+
+/* ---- Back to Home ---- */
+.privacy-back {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 48px;
+}
+
+/* =====================================================
+   RESPONSIVE BREAKPOINTS
+   ===================================================== */
+
+@media (max-width: 600px) {
+  .privacy-page {
+    padding-top: 88px;
+    padding-bottom: 60px;
+  }
+
+  .privacy-header__icon {
+    font-size: 2.4rem;
+  }
+
+  .privacy-summary {
+    padding: 20px;
+  }
+
+  .privacy-badges {
+    gap: 8px;
+  }
+
+  .privacy-badge {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+  }
+
+  .policy-section__heading {
+    font-size: 1rem;
+  }
+
+  .privacy-contact {
+    padding: 28px 20px;
+  }
+}
