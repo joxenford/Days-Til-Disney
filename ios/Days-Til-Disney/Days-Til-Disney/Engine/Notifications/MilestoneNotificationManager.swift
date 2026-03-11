@@ -1,6 +1,32 @@
 import Foundation
 import UserNotifications
 
+// MARK: - Trip snapshot
+
+/// A Sendable snapshot of the Trip fields needed for notification scheduling.
+/// Created on the MainActor before any async boundary is crossed, so the
+/// non-Sendable Trip model is never passed between actors.
+struct TripNotificationSnapshot: Sendable {
+    let id: UUID
+    let name: String
+    let startDate: Date
+    let primaryParkEmoji: String
+    let primaryParkDisplayName: String
+}
+
+extension Trip {
+    /// Captures the fields required for notification scheduling into a Sendable value type.
+    var notificationSnapshot: TripNotificationSnapshot {
+        TripNotificationSnapshot(
+            id: id,
+            name: name,
+            startDate: startDate,
+            primaryParkEmoji: primaryPark.emoji,
+            primaryParkDisplayName: primaryPark.displayName
+        )
+    }
+}
+
 // MARK: - Protocol
 
 /// Manages scheduling and cancellation of local milestone notifications for trips.
@@ -14,10 +40,10 @@ protocol MilestoneNotificationManager {
     /// Schedules (or reschedules) milestone notifications for a single trip.
     /// Only future milestones are scheduled; past ones are silently skipped.
     /// Existing notifications for this trip are replaced.
-    func scheduleNotifications(for trip: Trip) async
+    func scheduleNotifications(for snapshot: TripNotificationSnapshot) async
 
     /// Schedules milestone notifications for every trip in the collection.
-    func scheduleNotifications(forAll trips: [Trip]) async
+    func scheduleNotifications(forAll snapshots: [TripNotificationSnapshot]) async
 
     /// Cancels all pending milestone notifications for a trip.
     func cancelNotifications(for tripID: UUID)
@@ -57,22 +83,22 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
 
     // MARK: - Scheduling
 
-    func scheduleNotifications(for trip: Trip) async {
+    func scheduleNotifications(for snapshot: TripNotificationSnapshot) async {
         // Remove any previously scheduled notifications for this trip first.
-        cancelNotifications(for: trip.id)
+        cancelNotifications(for: snapshot.id)
 
         let status = await authorizationStatus()
         guard status == .authorized || status == .provisional else { return }
 
-        let requests = buildRequests(for: trip)
+        let requests = buildRequests(for: snapshot)
         for request in requests {
             try? await notificationCenter.add(request)
         }
     }
 
-    func scheduleNotifications(forAll trips: [Trip]) async {
-        for trip in trips {
-            await scheduleNotifications(for: trip)
+    func scheduleNotifications(forAll snapshots: [TripNotificationSnapshot]) async {
+        for snapshot in snapshots {
+            await scheduleNotifications(for: snapshot)
         }
     }
 
@@ -106,10 +132,10 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
     }
 
     /// Builds UNNotificationRequest objects for each future milestone.
-    private func buildRequests(for trip: Trip) -> [UNNotificationRequest] {
+    private func buildRequests(for snapshot: TripNotificationSnapshot) -> [UNNotificationRequest] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let tripStart = calendar.startOfDay(for: trip.startDate)
+        let tripStart = calendar.startOfDay(for: snapshot.startDate)
 
         return Milestone.all.compactMap { milestone in
             // Calculate the date on which this milestone fires (startDate - daysOut).
@@ -124,12 +150,12 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
             guard fireDate > today else { return nil }
 
             let content = UNMutableNotificationContent()
-            content.title = notificationTitle(for: milestone, trip: trip)
-            content.body = notificationBody(for: milestone, trip: trip)
+            content.title = notificationTitle(for: milestone, snapshot: snapshot)
+            content.body = notificationBody(for: milestone, snapshot: snapshot)
             content.sound = .default
             // Store the trip ID so the app can navigate on tap in the future.
             content.userInfo = [
-                "tripID": trip.id.uuidString,
+                "tripID": snapshot.id.uuidString,
                 "daysOut": milestone.daysOut
             ]
 
@@ -147,7 +173,7 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
             )
 
             return UNNotificationRequest(
-                identifier: notificationID(tripID: trip.id, daysOut: milestone.daysOut),
+                identifier: notificationID(tripID: snapshot.id, daysOut: milestone.daysOut),
                 content: content,
                 trigger: trigger
             )
@@ -156,8 +182,8 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
 
     // MARK: - Message copy
 
-    private func notificationTitle(for milestone: Milestone, trip: Trip) -> String {
-        let emoji = trip.primaryPark.emoji
+    private func notificationTitle(for milestone: Milestone, snapshot: TripNotificationSnapshot) -> String {
+        let emoji = snapshot.primaryParkEmoji
         switch milestone.daysOut {
         case 100: return "\(emoji) 100 Days of Magic!"
         case 50:  return "\(emoji) 50 Days to Go!"
@@ -170,17 +196,17 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
         }
     }
 
-    private func notificationBody(for milestone: Milestone, trip: Trip) -> String {
-        let parkName = trip.primaryPark.displayName
+    private func notificationBody(for milestone: Milestone, snapshot: TripNotificationSnapshot) -> String {
+        let parkName = snapshot.primaryParkDisplayName
         switch milestone.daysOut {
         case 100:
-            return "Your \(trip.name) adventure starts in 100 days. Time to start dreaming!"
+            return "Your \(snapshot.name) adventure starts in 100 days. Time to start dreaming!"
         case 50:
             return "Halfway to \(parkName)! Now's a great time to start planning dining and Lightning Lane."
         case 30:
             return "\(parkName) is just one month away. Start those packing lists!"
         case 14:
-            return "Two weeks until \(trip.name)! The excitement is real. Check your reservations."
+            return "Two weeks until \(snapshot.name)! The excitement is real. Check your reservations."
         case 7:
             return "Seven sleeps until \(parkName)! Time to start packing and charging the camera."
         case 3:
@@ -188,7 +214,7 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
         case 1:
             return "One sleep left! Tomorrow you'll be at \(parkName). Sweet Disney dreams tonight!"
         default:
-            return "\(milestone.daysOut) days until \(trip.name) at \(parkName). The magic is coming!"
+            return "\(milestone.daysOut) days until \(snapshot.name) at \(parkName). The magic is coming!"
         }
     }
 }

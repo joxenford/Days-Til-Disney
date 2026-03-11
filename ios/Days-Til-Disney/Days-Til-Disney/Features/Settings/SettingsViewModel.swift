@@ -124,7 +124,7 @@ final class SettingsViewModel {
 
     private func scheduleNotificationsForAllTrips() async {
         let trips = (try? await tripRepository.fetchAllTrips()) ?? []
-        await notificationManager.scheduleNotifications(forAll: trips)
+        await notificationManager.scheduleNotifications(forAll: trips.map(\.notificationSnapshot))
     }
 
     /// Checks whether the user is signed in to iCloud by inspecting the

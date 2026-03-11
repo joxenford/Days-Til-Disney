@@ -3,10 +3,7 @@ import SwiftUI
 // MARK: - Environment Key
 
 private struct ParkThemeProviderKey: EnvironmentKey {
-    // EnvironmentKey.defaultValue is a static requirement that cannot be @MainActor.
-    // Using nonisolated(unsafe) is safe here because EnvironmentKey defaultValue is read
-    // once at static-init time before any concurrent access can occur.
-    nonisolated(unsafe) static let defaultValue: ParkThemeProvider = ParkThemeProvider()
+    static let defaultValue: ParkThemeProvider = ParkThemeProvider()
 }
 
 extension EnvironmentValues {
