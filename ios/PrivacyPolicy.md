@@ -4,7 +4,7 @@
 
 **Effective Date: March 11, 2026**
 
-ThinkUp LLC ("we," "us," or "our") built Days Til Disney as a free mobile application. This Privacy Policy explains how we handle information when you use our app.
+ThinkUp LLC ("we," "us," or "our") built Days Til Disney as a mobile application. This Privacy Policy explains how we handle information when you use our app.
 
 The short version: we do not collect, store, or share any of your personal data. Your information stays on your device and under your control.
 
