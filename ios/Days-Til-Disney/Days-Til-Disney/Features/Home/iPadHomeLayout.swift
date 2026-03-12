@@ -150,6 +150,9 @@ struct iPadHomeLayout: View {
 
         case .packingList(let tripID):
             PackingListView(tripID: tripID)
+
+        case .parkDashboard(let tripID, let park, let allParks):
+            ParkDashboardView(tripID: tripID, parks: allParks, initialPark: park)
         }
     }
 

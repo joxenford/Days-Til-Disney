@@ -87,6 +87,12 @@ final class Trip {
 
     /// True when today falls within the trip dates (inclusive).
     var isOngoing: Bool {
+        #if DEBUG
+        // Key string must match DebugSettings.forceOngoingTripKey (Engine/DebugSettings.swift).
+        // A direct reference cannot be used here because Trip.swift is also compiled into the
+        // Widget extension target, which does not include DebugSettings.swift.
+        if UserDefaults.standard.bool(forKey: "debug_forceOngoingTrip") { return true }
+        #endif
         let today = Calendar.current.startOfDay(for: Date())
         let start = Calendar.current.startOfDay(for: startDate)
         let end = Calendar.current.startOfDay(for: endDate)

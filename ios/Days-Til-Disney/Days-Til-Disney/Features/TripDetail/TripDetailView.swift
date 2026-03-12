@@ -158,8 +158,25 @@ struct TripDetailView: View {
                     // Trip metadata.
                     tripMetadata(trip: trip)
 
-                    // Packing list shortcut.
-                    packingListButton(trip: trip)
+                    // Packing list shortcut — hidden during the trip (not useful in the park).
+                    if !trip.isOngoing {
+                        packingListButton(trip: trip)
+                    }
+
+                    // Live park data card — only shown while the trip is in progress.
+                    if trip.isOngoing {
+                        LiveParkCard(
+                            trip: trip,
+                            onViewAll: {
+                                router.navigate(to: .parkDashboard(
+                                    tripID: trip.id,
+                                    park: trip.primaryPark,
+                                    allParks: trip.parks
+                                ))
+                            }
+                        )
+                        .padding(.horizontal, 20)
+                    }
 
                     // Notes / journal section.
                     notesSection(trip: trip, vm: vm)

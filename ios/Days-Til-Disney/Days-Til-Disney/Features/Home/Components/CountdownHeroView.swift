@@ -11,8 +11,12 @@ struct CountdownHeroView: View {
 
     @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(AppContainer.self) private var appContainer
 
     @State private var countdownScale: Double = 1.0
+    /// Shortest standby wait fetched for the live teaser. nil while loading or if unavailable.
+    @State private var shortestWait: Int? = nil
+    @State private var liveFetchAttempted = false
 
     /// Accent color used for glows — prefer the theme's accent, fall back to park palette.
     private var accentColor: Color {
@@ -208,22 +212,79 @@ struct CountdownHeroView: View {
 
     private var ongoingDisplay: some View {
         VStack(spacing: 8) {
-            Text("TODAY!")
-                .font(.system(size: 56, weight: .black, design: .rounded))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [Color.magicSparkle, accentColor],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+            // "Day X of Y" counter.
+            let dayNumber = ongoingDayNumber
+            let totalDays = trip.durationDays
+
+            HStack(alignment: .lastTextBaseline, spacing: 4) {
+                Text("Day")
+                    .font(DTDFont.titleSecondary)
+                    .foregroundStyle(.white.opacity(0.75))
+                Text("\(dayNumber)")
+                    .font(.system(size: 56, weight: .black, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [Color.magicSparkle, accentColor],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
                     )
-                )
-                // Sparkle glow behind the text.
-                .shadow(color: Color.magicSparkle.opacity(0.7), radius: 12)
+                    .shadow(color: Color.magicSparkle.opacity(0.6), radius: 10)
+                Text("of \(totalDays)")
+                    .font(DTDFont.titleSecondary)
+                    .foregroundStyle(.white.opacity(0.75))
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Day \(dayNumber) of \(totalDays)")
 
             Text("You're at Disney!")
                 .font(DTDFont.headline)
                 .foregroundStyle(.white.opacity(0.85))
+
+            // Live wait teaser — only shown after a successful fetch.
+            if let wait = shortestWait {
+                HStack(spacing: 6) {
+                    Image(systemName: "clock.fill")
+                        .font(.caption)
+                        .foregroundStyle(Color(hex: "#4CAF50"))
+                        .accessibilityHidden(true)
+                    Text("Shortest wait: \(wait) min")
+                        .font(DTDFont.captionBold)
+                        .foregroundStyle(Color(hex: "#4CAF50"))
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule()
+                        .fill(Color(hex: "#4CAF50").opacity(0.15))
+                        .overlay(Capsule().strokeBorder(Color(hex: "#4CAF50").opacity(0.35), lineWidth: 1))
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                .accessibilityLabel("Shortest current wait: \(wait) minutes")
+            }
         }
+        .task(id: trip.id) {
+            // Only fetch once per view instance; cache handles freshness.
+            guard !liveFetchAttempted, trip.isOngoing else { return }
+            liveFetchAttempted = true
+            if let data = try? await appContainer.liveParkDataService.fetchLiveData(for: trip.primaryPark) {
+                let minWait = data.operatingAttractions
+                    .compactMap(\.standbyWaitMinutes)
+                    .min()
+                withAnimation(.easeIn(duration: 0.3)) {
+                    shortestWait = minWait
+                }
+            }
+        }
+    }
+
+    /// 1-based day number within the trip (1 on start day, durationDays on end day).
+    private var ongoingDayNumber: Int {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: trip.startDate)
+        let today = calendar.startOfDay(for: Date())
+        let elapsed = calendar.dateComponents([.day], from: start, to: today).day ?? 0
+        return max(1, elapsed + 1)
     }
 
     private var pastDisplay: some View {
@@ -270,6 +331,7 @@ struct CountdownHeroView: View {
         Color(hex: "#0D2545").ignoresSafeArea()
         CountdownHeroView(trip: Trip.preview, onTap: {})
             .environment(\.parkThemeProvider, ParkThemeProvider.preview())
+            .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
     }
 }
 
@@ -278,5 +340,6 @@ struct CountdownHeroView: View {
         Color(hex: "#880E4F").ignoresSafeArea()
         CountdownHeroView(trip: Trip.previewToday, onTap: {})
             .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .tokyoDisneyland))
+            .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
     }
 }

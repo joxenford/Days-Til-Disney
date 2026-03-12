@@ -31,6 +31,10 @@ final class AppContainer {
     let milestoneNotificationManager: any MilestoneNotificationManager
     let themeProvider: ParkThemeProvider
 
+    // MARK: - Live park data
+
+    let liveParkDataService: any LiveParkDataService
+
     // MARK: - Deep linking
 
     /// Receives UNUserNotificationCenter delegate callbacks and exposes the tapped
@@ -63,6 +67,7 @@ final class AppContainer {
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
         notificationDeepLinkHandler = NotificationDeepLinkHandler()
         themeProvider = ParkThemeProvider(timeOfDayProvider: LiveTimeOfDayProvider())
+        liveParkDataService = DefaultLiveParkDataService()
     }
 
     // MARK: - Preview / test init
@@ -86,5 +91,6 @@ final class AppContainer {
             park: .magicKingdom,
             timeOfDayProvider: FixedTimeOfDayProvider.day
         )
+        liveParkDataService = DefaultLiveParkDataService()
     }
 }

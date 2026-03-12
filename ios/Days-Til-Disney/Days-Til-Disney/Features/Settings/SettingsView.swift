@@ -3,6 +3,10 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppContainer.self) private var appContainer
     @State private var viewModel: SettingsViewModel?
+    #if DEBUG
+    @State private var showDebugSection = false
+    @AppStorage("debug_forceOngoingTrip") private var forceOngoingTrip = false
+    #endif
 
     var body: some View {
         Group {
@@ -83,6 +87,11 @@ struct SettingsView: View {
                         .font(DTDFont.body)
                         .foregroundStyle(.secondary)
                 }
+                #if DEBUG
+                .onTapGesture(count: 3) {
+                    withAnimation { showDebugSection = true }
+                }
+                #endif
 
                 if let privacyURL = URL(string: "https://thinkupllc.com/privacy") {
                     Link("Privacy Policy", destination: privacyURL)
@@ -94,6 +103,35 @@ struct SettingsView: View {
                         .font(DTDFont.body)
                 }
             }
+
+            #if DEBUG
+            if showDebugSection {
+                Section {
+                    Toggle(isOn: $forceOngoingTrip) {
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Force \"In Park\" Mode")
+                                    .font(DTDFont.body)
+                                Text("Treats all trips as ongoing to test live park data.")
+                                    .font(DTDFont.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "ant.fill")
+                                .foregroundStyle(.orange)
+                                .font(.title3)
+                                .frame(width: 28)
+                        }
+                    }
+                    .tint(.orange)
+                } header: {
+                    Text("Debug")
+                } footer: {
+                    Text("Debug options are only available in development builds.")
+                        .font(DTDFont.caption)
+                }
+            }
+            #endif
         }
     }
 
