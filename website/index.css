@@ -270,6 +270,98 @@
   margin-top: -10px;
 }
 
+/* ---- Live Wait Times Hero Card ---- */
+.feature-card--live {
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card--live::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.feature-card__new-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  background: linear-gradient(135deg, #C9A84C, #FFE780);
+  color: #0D2545;
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 100px;
+  margin-bottom: 4px;
+  width: fit-content;
+}
+
+.badge--new {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.2), rgba(255, 231, 128, 0.15));
+  border-color: rgba(201, 168, 76, 0.5);
+}
+
+/* Wait time demo rows */
+.wait-time-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wait-time-demo__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+}
+
+.wait-time-demo__ride {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.wait-time-demo__time {
+  font-size: 0.82rem;
+  font-weight: 900;
+  padding: 2px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+
+.wait-time-demo__time--low {
+  background: rgba(76, 175, 80, 0.15);
+  color: #81C784;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.wait-time-demo__time--med {
+  background: rgba(255, 193, 7, 0.12);
+  color: #FFD54F;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.wait-time-demo__time--high {
+  background: rgba(244, 67, 54, 0.12);
+  color: #EF9A9A;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Proof strip accent for LIVE label */
+.proof-strip__num--accent {
+  color: var(--color-gold);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 0.08em;
+}
+
 /* ---- Daily Magic Section ---- */
 .daily-magic {
   background: linear-gradient(180deg, transparent 0%, rgba(26,17,71,0.4) 50%, transparent 100%);

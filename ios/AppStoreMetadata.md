@@ -1,10 +1,10 @@
-# App Store Metadata — Days Til Disney v1.1
+# App Store Metadata — Days Til Disney v1.2
 
 ## App Name (17/30 chars)
 Days Til Disney
 
-## Subtitle (25/30 chars)
-Countdown to Park Magic
+## Subtitle (30/30 chars)
+Countdown + Live Wait Times
 
 ## Categories
 - Primary: Travel
@@ -13,18 +13,21 @@ Countdown to Park Magic
 ## Age Rating
 4+
 
-## Keywords (97/100 chars)
-disney,countdown,trip,vacation,planner,widget,theme park,family,travel,walt,timer,packing,ipad,list
+## Keywords (100/100 chars)
+disney,countdown,wait times,ride times,trip,vacation,planner,widget,theme park,family,travel,packing
 
-## Promotional Text (168/170 chars)
-Count down to your Disney trip with daily tips, packing checklists, milestone celebrations, home screen widgets, and iCloud sync. All 12 Disney parks. iPad supported.
+## Promotional Text (170/170 chars)
+NEW: Live ride wait times at all 12 Disney parks! Count down to your trip, then check real-time waits, show times, and a live park dashboard. The countdown becomes your guide.
 
-## Description (~3,200/4,000 chars)
+## Description (~3,900/4,000 chars)
 
-The moment you book a Disney trip, the magic begins. Days Til Disney turns that electric anticipation into a beautiful daily experience for your whole family.
+The moment you book a Disney trip, the magic begins. Days Til Disney turns that electric anticipation into a beautiful daily experience — and now, it goes to the park with you.
 
-WATCH THE MAGIC APPROACH
-Set your trip date, choose your Disney resort and park, and watch a stunning themed countdown track every day, hour, and minute until you walk through those gates. Whether you are heading to Magic Kingdom, EPCOT, Tokyo DisneySea, Disneyland Paris, or any of the 12 Disney parks worldwide, your countdown screen transforms with colors, castle silhouettes, and starlit skies unique to your destination.
+THE ONLY COUNTDOWN APP THAT BECOMES YOUR PARK COMPANION
+Before your trip: a beautiful countdown with daily tips and packing lists. At the park: real-time ride wait times, show schedules, and a live dashboard for every attraction. Days Til Disney is with you before, during, and after the magic.
+
+LIVE RIDE WAIT TIMES — NEW IN v1.2
+See real-time wait times for every ride at every Disney park worldwide. The "Today at the Park" card shows your top 3 shortest waits, top 2 longest lines to avoid, and the next show time — right on your trip screen. Tap into the full Park Dashboard for a sortable list of every attraction with wait times, status badges, Lightning Lane return windows, and live show schedules. When your countdown hits zero, the app transforms into a "Day 1 of 5" trip tracker with live park data front and center.
 
 ALL 6 DISNEY RESORTS, ALL 12 PARKS
 - Walt Disney World (Magic Kingdom, EPCOT, Hollywood Studios, Animal Kingdom)
@@ -34,41 +37,52 @@ ALL 6 DISNEY RESORTS, ALL 12 PARKS
 - Hong Kong Disneyland
 - Shanghai Disneyland
 
-Each park has its own color palette, icon, and visual identity in the app. Your countdown feels like it belongs to your trip.
+Each park has its own color palette, icon, and visual identity in the app — and now, its own live wait times dashboard.
+
+WATCH THE MAGIC APPROACH
+Set your trip date, choose your Disney resort and park, and watch a stunning themed countdown track every day, hour, and minute until you walk through those gates. Park-themed gradients, castle silhouettes, and starlit skies make every glance at the countdown a moment of joy.
 
 DAILY INSPIRATION AS YOUR TRIP APPROACHES
 Every day brings something new: a fun fact about your park, a planning tip to help you prepare, ride spotlights for must-do attractions, or trivia to get the family excited. With 365 unique entries, your countdown stays fresh for an entire year without repeats.
 
 PLAN YOUR PACKING
-Never forget the essentials. Each trip comes with a smart packing checklist pre-loaded with items tailored to your destination — sunscreen and ponchos for Florida, warm layers for Paris, travel adapters for Tokyo. Add your own items, organize by category, and check things off as you pack. A progress tracker shows exactly how ready you are.
+Never forget the essentials. Each trip comes with a smart packing checklist pre-loaded with items tailored to your destination — sunscreen and ponchos for Florida, warm layers for Paris, travel adapters for Tokyo. Add your own items, organize by category, and check things off as you pack.
 
 KEEP A TRIP JOURNAL
 Jot down reservation numbers, restaurant bookings, must-do lists, or memories as your trip approaches. Each trip has its own notes section that stays with you through iCloud sync.
 
 CELEBRATE THE MILESTONES
-Hit 100 days out and confetti fills your screen. Reach the one-week mark and fireworks light up. From 50 days to "Tomorrow's the Day!" the app celebrates key moments with animations and notifications so you never miss a milestone.
+Hit 100 days out and confetti fills your screen. Reach the one-week mark and fireworks light up. From 50 days to "Tomorrow's the Day!" the app celebrates key moments with animations and notifications.
 
 HOME SCREEN WIDGETS
-Keep the countdown front and center with beautiful home screen widgets. Choose from small or medium sizes, or add a countdown to your Lock Screen. Select which trip to display and watch the days tick down every time you glance at your phone.
+Keep the countdown front and center with beautiful home screen widgets. Choose from small or medium sizes, or add a countdown to your Lock Screen.
 
 SHARE THE EXCITEMENT
 Create a gorgeous countdown card and share it with family and friends. Let everyone know how close you are to the magic.
 
 PLAN MULTIPLE TRIPS
-Counting down to Walt Disney World in the spring and Tokyo Disney Resort in the fall? Track as many Disney trips as you like, set a primary trip for your home screen and widgets, and keep every adventure organized in one place. When a trip ends, it moves gracefully to your Past Trips archive so you can look back on the memories.
+Track as many Disney trips as you like. Set a primary trip for your home screen and widgets and keep every adventure organized. When a trip ends, it moves to your Past Trips archive.
 
 SYNC ACROSS DEVICES
-Your trips, notes, and packing lists sync automatically across all your Apple devices with iCloud. Start planning on your iPhone and pick up right where you left off on your iPad.
+Your trips, notes, and packing lists sync automatically across all your Apple devices with iCloud.
 
 DESIGNED FOR FAMILIES
-Days Til Disney is built for everyone in the family, from grandparents joining the group chat to kids checking the countdown before school. The interface is clean, joyful, and accessible to all — with full VoiceOver support, Dynamic Type scaling, and Reduce Motion options. Beautiful on both iPhone and iPad. No ads. No clutter. Just anticipation and happiness.
-
-PARK-THEMED BEAUTY
-Every screen is designed with care. Gradient backgrounds shift with your park's colors. Castle silhouettes anchor the horizon. A gentle star field twinkles overhead. The app feels like a little piece of Disney in your pocket.
+Days Til Disney is built for everyone in the family. The interface is clean, joyful, and accessible to all — with full VoiceOver support, Dynamic Type scaling, and Reduce Motion options. Beautiful on both iPhone and iPad. No ads. No clutter. No tracking. Just anticipation and happiness.
 
 Start your countdown today. The magic is already happening.
 
-## What's New (v1.1)
+## What's New (v1.2)
+
+Live ride wait times are here! Days Til Disney now goes to the park with you.
+
+- Real-time ride wait times for all 12 Disney parks worldwide
+- "Today at the Park" card with shortest waits, longest lines, and next show times
+- Full Park Dashboard with sortable attractions, status badges, Lightning Lane windows, and show schedules
+- "Day X of Y" trip tracker — your countdown transforms when you arrive
+- Live show times for every entertainment offering
+- Performance and stability improvements
+
+## What's New (v1.1 — previous)
 
 - Packing checklist with resort-specific defaults, categories, and progress tracking
 - Trip notes for reservations, bookings, and packing reminders
@@ -82,7 +96,8 @@ Start your countdown today. The magic is already happening.
 Data Not Collected
 
 Note: iCloud sync of user-generated content for the user's own benefit
-does not count as data collection under Apple's definitions.
+does not count as data collection under Apple's definitions. Wait time
+data is fetched from a public API and is not linked to the user.
 
 ## Privacy Policy URL
 https://thinkupllc.com/privacy (must be live before submission)
@@ -92,18 +107,25 @@ Privacy policy must:
 - Mention the app by name ("Days Til Disney")
 - State that trip data syncs across the user's own devices via iCloud
   and is never accessed by the developer
+- Note that wait time data is fetched from a public third-party source
+  and no user data is sent in the process
 - Address notification permissions
-- Note that no data is collected, shared, or sold
+- Note that no personal data is collected, shared, or sold
 
 ## Screenshot Recommendations (in order)
-1. Hero countdown — Main countdown screen, Magic Kingdom, large day count, castle silhouette, starfield
-2. Daily content card — Fun fact or tip card on home screen (demonstrates ongoing value)
-3. Milestone celebration — Confetti/fireworks at "100 Days of Magic!" (emotional impact)
-4. Widgets — Device mock showing home screen + lock screen widgets in context
+1. Live wait times dashboard — Park Dashboard showing ride list with color-coded wait times (the new hero shot)
+2. Hero countdown — Main countdown screen, Magic Kingdom, large day count, castle silhouette, starfield
+3. "Today at the Park" card — Trip detail screen showing shortest waits, longest waits, next show time
+4. Daily content card — Fun fact or tip card on home screen (demonstrates ongoing value)
 5. Packing checklist — Progress bar, category sections, checkmarks (utility sells)
 
+Alternative/additional shots:
+- Milestone celebration — Confetti/fireworks at "100 Days of Magic!" (emotional impact)
+- "Day 2 of 5" trip tracker — showing the in-trip transformation
+- Widgets — Device mock showing home screen + lock screen widgets in context
+
 Required sizes: 6.7-inch (iPhone 15/16 Pro Max) and 6.1-inch (iPhone 15/16 Pro)
-iPad screenshots recommended: 12.9-inch showing two-column layout
+iPad screenshots recommended: 12.9-inch showing two-column layout with wait times
 
 ## Optional: App Preview Video
-15-30 second video showing: adding a trip, countdown animating, milestone celebration, packing checklist, widget on home screen.
+15-30 second video showing: countdown ticking down, trip starting and transforming to "Day 1 of 5", tapping into live wait times dashboard, scrolling through ride list with wait times, "Today at the Park" card. End with: "Before, during, and after your trip."
