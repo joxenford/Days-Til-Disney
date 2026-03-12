@@ -102,10 +102,10 @@
 
 .phone-frame {
   position: relative;
-  width: 260px;
+  width: 280px;
   background: linear-gradient(160deg, #1e2a3a 0%, #0d1825 100%);
-  border-radius: 40px;
-  padding: 16px;
+  border-radius: 44px;
+  padding: 10px;
   box-shadow:
     0 0 0 1.5px rgba(255,255,255,0.12),
     0 0 0 3px rgba(13,37,69,0.8),
@@ -119,164 +119,11 @@
   50%       { transform: translateY(-10px); }
 }
 
-.phone-notch {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 24px;
-  background: #0d1825;
-  border-radius: 0 0 16px 16px;
-  z-index: 10;
-}
-
-.phone-screen {
-  background: linear-gradient(180deg, #1A1147 0%, #0D2545 100%);
-  border-radius: 28px;
-  overflow: hidden;
-  min-height: 480px;
-  position: relative;
-}
-
-/* Mini star field on the phone screen */
-.phone-screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 15% 20%, rgba(255,231,128,0.5), transparent),
-    radial-gradient(1px 1px at 40% 8%,  rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 70% 15%, rgba(255,231,128,0.4), transparent),
-    radial-gradient(1px 1px at 85% 35%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 25% 50%, rgba(255,231,128,0.3), transparent),
-    radial-gradient(1px 1px at 60% 55%, rgba(255,255,255,0.2), transparent),
-    radial-gradient(1px 1px at 90% 65%, rgba(255,231,128,0.35), transparent);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.phone-ui {
-  position: relative;
-  z-index: 1;
-  padding: 40px 16px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-
-.phone-ui__header {
-  text-align: center;
-}
-
-.phone-ui__greeting {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-}
-
-.phone-ui__trip-name {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--color-text-primary);
-  margin-top: 2px;
-}
-
-.phone-ui__castle {
-  font-size: 2.4rem;
-  line-height: 1;
-  filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.4));
-}
-
-.phone-ui__countdown {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.phone-ui__countdown-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 10px;
-  padding: 6px 10px;
-  min-width: 52px;
-}
-
-.phone-ui__countdown-num {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: var(--color-sparkle);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.phone-ui__countdown-label {
-  font-size: 0.55rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-tertiary);
-  margin-top: 2px;
-}
-
-.phone-ui__countdown-sep {
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: var(--color-gold);
-  line-height: 1;
-  margin-top: -8px;
-}
-
-.phone-ui__card {
+.phone-screenshot {
   width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-}
-
-.phone-ui__card-eyebrow {
-  font-size: 0.62rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--color-gold);
-  margin-bottom: 5px;
-}
-
-.phone-ui__card-text {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-}
-
-.phone-ui__widgets {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  width: 100%;
-}
-
-.phone-ui__widget {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 6px;
-  border-radius: 10px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: var(--color-text-tertiary);
-  text-align: center;
-}
-
-.phone-ui__widget span:first-child {
-  font-size: 1.1rem;
+  height: auto;
+  display: block;
+  border-radius: 36px;
 }
 
 /* ---- Stats Strip ---- */

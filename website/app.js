@@ -88,14 +88,6 @@
     var hours        = Math.floor((totalSeconds % 86400) / 3600);
     var minutes      = Math.floor((totalSeconds % 3600) / 60);
 
-    // Phone mockup
-    var phoneNums = document.querySelectorAll('.phone-ui__countdown-num');
-    if (phoneNums.length >= 3) {
-      phoneNums[0].textContent = pad(days);
-      phoneNums[1].textContent = pad(hours);
-      phoneNums[2].textContent = pad(minutes);
-    }
-
     // Feature card countdown demo
     var demoNums = document.querySelectorAll('.countdown-demo__num');
     if (demoNums.length >= 3) {
