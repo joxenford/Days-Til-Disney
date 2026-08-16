@@ -28,6 +28,11 @@ extension Date {
         Calendar.current.startOfDay(for: self) < Calendar.current.startOfDay(for: Date())
     }
 
+    /// Number of calendar days since this date. Returns 0 for today, positive for past dates.
+    var daysSince: Int {
+        max(0, -Calendar.current.daysUntil(self))
+    }
+
     // MARK: - Countdown components
 
     struct CountdownComponents {
@@ -44,11 +49,11 @@ extension Date {
 
         var accessibilityDescription: String {
             if isArrival {
-                return "Today is the day! Enjoy your Disney trip!"
+                return "Today is the day! Enjoy your trip!"
             } else if isFinalDay {
-                return "\(hours) hours and \(minutes) minutes until your Disney trip"
+                return "\(hours) hours and \(minutes) minutes until your trip"
             } else {
-                return "\(days) days until your Disney trip"
+                return "\(days) days until your trip"
             }
         }
     }

@@ -6,6 +6,8 @@ struct CelebrationOverlay: View {
     let event: MilestoneEvent
     @Binding var isPresented: Bool
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     @State private var particles: [ParticleState] = []
     @State private var showContent: Bool = false
 
@@ -17,28 +19,39 @@ struct CelebrationOverlay: View {
                     .ignoresSafeArea()
                     .onTapGesture { dismiss() }
 
-                // Particle field.
+                // Particle field — mix of circles and stars for Disney magic.
                 ForEach(particles) { particle in
-                    Circle()
-                        .fill(particle.color)
-                        .frame(width: particle.size, height: particle.size)
-                        .position(x: particle.x, y: particle.y)
-                        .opacity(particle.opacity)
-                        .scaleEffect(particle.scale)
+                    Group {
+                        if particle.isStar {
+                            Image(systemName: "star.fill")
+                                .font(.system(size: particle.size))
+                                .foregroundStyle(particle.color)
+                                .rotationEffect(.degrees(particle.rotation))
+                        } else {
+                            Circle()
+                                .fill(particle.color)
+                                .frame(width: particle.size, height: particle.size)
+                        }
+                    }
+                    .position(x: particle.x, y: particle.y)
+                    .opacity(particle.opacity)
+                    .scaleEffect(particle.scale)
                 }
                 .allowsHitTesting(false)
 
                 // Milestone card.
                 if showContent {
                     MilestoneCelebrationCard(event: event, onDismiss: dismiss)
-                        .transition(.scale(scale: 0.7).combined(with: .opacity))
+                        .transition(reduceMotion ? .opacity : .scale(scale: 0.7).combined(with: .opacity))
                         .padding(.horizontal, 32)
                 }
             }
             .onAppear {
                 triggerHaptic()
-                spawnParticles(in: geo.size)
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.75).delay(0.2)) {
+                if !reduceMotion {
+                    spawnParticles(in: geo.size)
+                }
+                withAnimation(reduceMotion ? .none : .spring(response: 0.5, dampingFraction: 0.75).delay(0.2)) {
                     showContent = true
                 }
             }
@@ -54,7 +67,7 @@ struct CelebrationOverlay: View {
     // MARK: - Private
 
     private func dismiss() {
-        withAnimation(.easeInOut(duration: 0.3)) {
+        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
             showContent = false
             isPresented = false
         }
@@ -71,16 +84,19 @@ struct CelebrationOverlay: View {
     }
 
     private func spawnParticles(in size: CGSize) {
-        let colors: [Color] = [.yellow, .red, .blue, .green, .orange, .pink, .purple, .white]
-        particles = (0..<60).map { i in
+        let colors: [Color] = [Color.disneyGold, Color.magicSparkle, .red, .blue, .green, .orange, .pink, .purple, .white]
+        particles = (0..<70).map { i in
             ParticleState(
                 id: i,
                 x: Double.random(in: 0...size.width),
                 y: Double.random(in: 0...size.height * 0.5),
-                size: Double.random(in: 6...14),
+                // Stars are slightly larger than circles for visual pop.
+                size: Double.random(in: i % 3 == 0 ? 10...22 : 6...12),
                 color: colors.randomElement() ?? .yellow,
                 opacity: Double.random(in: 0.7...1.0),
-                scale: Double.random(in: 0.5...1.5)
+                scale: Double.random(in: 0.5...1.5),
+                isStar: i % 3 == 0,
+                rotation: Double.random(in: 0...360)
             )
         }
 
@@ -103,6 +119,8 @@ private struct ParticleState: Identifiable {
     var color: Color
     var opacity: Double
     var scale: Double
+    var isStar: Bool = false
+    var rotation: Double = 0
 }
 
 // MARK: - Milestone card
@@ -129,9 +147,10 @@ private struct MilestoneCelebrationCard: View {
                     .foregroundStyle(.black)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(Color.white)
+                    .background(Color.disneyGold)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
+            .accessibilityLabel("Let's Go")
             .accessibilityHint("Dismisses the celebration")
         }
         .padding(28)

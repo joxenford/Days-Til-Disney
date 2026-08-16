@@ -38,14 +38,15 @@ struct TripCardView: View {
 
                 Spacer()
 
-                // Countdown badge — shows "Trip Complete" for past trips.
+                // Countdown badge — shows days-ago for past trips.
                 if isPast {
+                    let daysAgo = trip.daysSinceEnd
                     VStack(spacing: 2) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .font(.system(size: 22))
+                        Text(daysAgo == 0 ? "—" : "\(daysAgo)")
+                            .font(.system(size: daysAgo == 0 ? 22 : 28, weight: .black, design: .rounded))
                             .foregroundStyle(.white.opacity(0.4))
 
-                        Text("Complete")
+                        Text(daysAgo == 0 ? "Complete" : daysAgo == 1 ? "day ago" : "days ago")
                             .font(DTDFont.caption)
                             .foregroundStyle(.white.opacity(0.35))
                     }
@@ -78,15 +79,23 @@ struct TripCardView: View {
                             .fill(trip.colorPalette.primary.opacity(isPast ? 0.03 : 0.08))
                     }
             }
-            // Dim the whole card when the trip is in the past.
-            .opacity(isPast ? 0.75 : 1.0)
-            .saturation(isPast ? 0.6 : 1.0)
+            // Soften past cards to evoke nostalgia — full saturation so colors read as warm memories,
+            // not errors. A gentle warm overlay reinforces the "fond memory" feeling.
+            .opacity(isPast ? 0.85 : 1.0)
+            .overlay {
+                if isPast {
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color(red: 1.0, green: 0.85, blue: 0.6).opacity(0.06))
+                        .allowsHitTesting(false)
+                }
+            }
         }
         .buttonStyle(.plain)
         .contextMenu {
             // "Set as Primary" is only meaningful for upcoming/ongoing trips.
             if !isPast {
                 Button {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
                     onSetPrimary()
                 } label: {
                     Label("Set as Primary", systemImage: "star.fill")
@@ -118,7 +127,17 @@ struct TripCardView: View {
             Text("This will permanently remove \"\(trip.name)\" and cannot be undone.")
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(isPast ? "\(trip.name), trip complete" : "\(trip.name), \(trip.daysUntilStart) days away")
+        .accessibilityLabel({
+            if isPast {
+                let d = trip.daysSinceEnd
+                return d == 0
+                    ? "\(trip.name), trip complete"
+                    : "\(trip.name), \(d) \(d == 1 ? "day" : "days") ago"
+            } else {
+                let d = trip.daysUntilStart
+                return "\(trip.name), \(d) \(d == 1 ? "day" : "days") away"
+            }
+        }())
         .accessibilityHint("Tap to view details. Long press for options.")
     }
 }
@@ -138,6 +157,13 @@ struct TripCardView: View {
             )
             TripCardView(
                 trip: Trip.previewToday,
+                onTap: {},
+                onSetPrimary: {},
+                onEdit: {},
+                onDelete: {}
+            )
+            TripCardView(
+                trip: Trip.previewPast,
                 onTap: {},
                 onSetPrimary: {},
                 onEdit: {},

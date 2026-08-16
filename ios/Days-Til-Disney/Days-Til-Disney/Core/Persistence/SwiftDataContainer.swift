@@ -9,6 +9,20 @@ import Foundation
 /// can read the same data. On the very first launch after this update the store
 /// is copied from the old default location (inside the app sandbox) to the new
 /// App Group URL, preserving all existing trips for TestFlight / release users.
+///
+/// ## iCloud Sync (v1.2+)
+/// The production container uses CloudKit-backed persistence
+/// (`cloudKitDatabase: .automatic`) so trips sync across the user's devices.
+/// The widget extension container keeps `.none` — widgets cannot use CloudKit
+/// directly and read from the local App Group store instead.
+///
+/// ### Xcode setup required (one-time, cannot be done in code)
+/// 1. Select the **Days-Til-Disney** target → Signing & Capabilities.
+/// 2. Click "+" and add the **iCloud** capability.
+/// 3. Under "Services", check **CloudKit**.
+/// 4. Set the container to `iCloud.com.thinkupllc.Days-Til-Disney`
+///    (or let Xcode create it). This must match `cloudKitContainerIdentifier`.
+/// 5. Do NOT add CloudKit to the widget extension target.
 enum SwiftDataContainer {
 
     // MARK: - Constants
@@ -16,6 +30,11 @@ enum SwiftDataContainer {
     /// The App Group identifier. Must match the entitlement in both the main app
     /// target and the widget extension target.
     static let appGroupIdentifier = "group.com.thinkupllc.Days-Til-Disney"
+
+    /// The CloudKit container identifier used for iCloud sync.
+    /// Must match the container registered in the iCloud capability for the
+    /// main app target. The widget extension does NOT use this container.
+    static let cloudKitContainerIdentifier = "iCloud.com.thinkupllc.Days-Til-Disney"
 
     /// File name for the SQLite store.
     static let storeFileName = "Days-Til-Disney.sqlite"
@@ -25,7 +44,8 @@ enum SwiftDataContainer {
     /// The complete schema for the app. Add new models here as the app grows.
     static var schema: Schema {
         Schema([
-            Trip.self
+            Trip.self,
+            PackingItem.self
         ])
     }
 
@@ -49,7 +69,8 @@ enum SwiftDataContainer {
 
     // MARK: - Production container
 
-    /// Creates the production ModelContainer backed by the App Group SQLite store.
+    /// Creates the production ModelContainer backed by the App Group SQLite store
+    /// with CloudKit sync enabled.
     ///
     /// If a store already exists at the legacy (sandbox) path but not yet at the
     /// App Group path, the legacy store is copied over first so existing user data
@@ -57,8 +78,9 @@ enum SwiftDataContainer {
     static func makeProductionContainer() throws -> ModelContainer {
         guard let groupURL = appGroupStoreURL else {
             // App Group not configured — this is a misconfiguration. Fall back to
-            // the default location so the app doesn't crash in a broken state, but
+            // a local-only store so the app doesn't crash in a broken state, but
             // log loudly so it's caught during development.
+            // CloudKit requires a valid store URL, so `.none` is used here.
             assertionFailure(
                 "[SwiftDataContainer] App Group '\(appGroupIdentifier)' is not available. " +
                 "Make sure the App Group capability is added to the main app target."
@@ -77,7 +99,7 @@ enum SwiftDataContainer {
         let config = ModelConfiguration(
             schema: schema,
             url: groupURL,
-            cloudKitDatabase: .none   // CloudKit deferred to v1.2
+            cloudKitDatabase: .automatic
         )
         return try ModelContainer(for: schema, configurations: [config])
     }
@@ -86,6 +108,9 @@ enum SwiftDataContainer {
 
     /// Creates a ModelContainer pointing at the shared App Group store.
     /// Throws if the App Group is not available (widget mis-configuration).
+    ///
+    /// Widgets cannot use CloudKit directly, so this container always uses `.none`.
+    /// It reads whatever the main app has synced locally.
     static func makeAppGroupContainer() throws -> ModelContainer {
         guard let groupURL = appGroupStoreURL else {
             throw StoreError.appGroupUnavailable

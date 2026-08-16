@@ -15,6 +15,38 @@ final class SettingsViewModel {
     /// which means we should surface a link to Settings instead of a simple toggle.
     private(set) var notificationPermissionDenied: Bool = false
 
+    // MARK: - iCloud sync state
+
+    /// The current iCloud account status, used to render the sync indicator in Settings.
+    private(set) var iCloudSyncStatus: ICloudSyncStatus = .unknown
+
+    enum ICloudSyncStatus {
+        /// Not yet checked.
+        case unknown
+        /// The user is signed in to iCloud — sync is active.
+        case active
+        /// The user is not signed in to iCloud — sync is unavailable.
+        case notSignedIn
+
+        var displayTitle: String {
+            switch self {
+            case .unknown:    return "Checking..."
+            case .active:     return "On"
+            case .notSignedIn: return "Sign in to iCloud to sync"
+            }
+        }
+
+        var systemImage: String {
+            switch self {
+            case .unknown:    return "icloud"
+            case .active:     return "icloud.fill"
+            case .notSignedIn: return "icloud.slash"
+            }
+        }
+
+        var isActive: Bool { self == .active }
+    }
+
     init(
         userPreferences: UserPreferences,
         notificationManager: any MilestoneNotificationManager,
@@ -29,6 +61,7 @@ final class SettingsViewModel {
 
     func onAppear() async {
         await refreshNotificationStatus()
+        refreshICloudStatus()
     }
 
     // MARK: - Proxied preference bindings
@@ -91,7 +124,14 @@ final class SettingsViewModel {
 
     private func scheduleNotificationsForAllTrips() async {
         let trips = (try? await tripRepository.fetchAllTrips()) ?? []
-        await notificationManager.scheduleNotifications(forAll: trips)
+        await notificationManager.scheduleNotifications(forAll: trips.map(\.notificationSnapshot))
+    }
+
+    /// Checks whether the user is signed in to iCloud by inspecting the
+    /// ubiquity identity token. This is synchronous and cheap — no network call.
+    private func refreshICloudStatus() {
+        let token = FileManager.default.ubiquityIdentityToken
+        iCloudSyncStatus = token != nil ? .active : .notSignedIn
     }
 
     // MARK: - Factory

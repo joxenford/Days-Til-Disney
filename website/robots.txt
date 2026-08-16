@@ -1,0 +1,5 @@
+# TODO(domain): daystildisney.com carries the old Disney-branded name and must move to a new domain before relaunch.
+User-agent: *
+Allow: /
+
+Sitemap: https://daystildisney.com/sitemap.xml

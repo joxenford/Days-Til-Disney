@@ -3,6 +3,10 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppContainer.self) private var appContainer
     @State private var viewModel: SettingsViewModel?
+    #if DEBUG
+    @State private var showDebugSection = false
+    @AppStorage("debug_forceOngoingTrip") private var forceOngoingTrip = false
+    #endif
 
     var body: some View {
         Group {
@@ -14,6 +18,8 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
+        // C-3: Match the dark gradient theme of the rest of the app.
+        .preferredColorScheme(.dark)
         .task {
             let vm = SettingsViewModel.make(from: appContainer)
             viewModel = vm
@@ -38,6 +44,18 @@ struct SettingsView: View {
                 .pickerStyle(.menu)
             }
 
+            // iCloud Sync.
+            Section {
+                iCloudSyncRow(vm: vm)
+            } header: {
+                Text("iCloud")
+            } footer: {
+                if vm.iCloudSyncStatus == .notSignedIn {
+                    Text("Sign in to iCloud in iOS Settings to sync your trips across iPhone and iPad.")
+                        .font(DTDFont.caption)
+                }
+            }
+
             // Notifications.
             Section {
                 notificationsRow(vm: vm)
@@ -50,28 +68,15 @@ struct SettingsView: View {
                 }
             }
 
-            // Future features (v1.1).
-            Section("Coming Soon") {
-                featureComingSoon(
-                    icon: "square.and.arrow.up",
-                    title: "Share Countdown",
-                    detail: "Share your countdown as a beautiful image."
-                )
-                featureComingSoon(
-                    icon: "rectangle.on.rectangle",
-                    title: "Home Screen Widget",
-                    detail: "See your countdown without opening the app."
-                )
-            }
-
             // About.
-            Section("About") {
+            Section {
                 HStack {
-                    Text("Days Til Disney")
+                    Text("Countdown to Magic")
                         .font(DTDFont.body)
                     Spacer()
-                    Image(systemName: "castle.fill")
+                    Image(systemName: "sparkles")
                         .foregroundStyle(Color.disneyGold)
+                        .accessibilityHidden(true)
                 }
 
                 HStack {
@@ -82,6 +87,11 @@ struct SettingsView: View {
                         .font(DTDFont.body)
                         .foregroundStyle(.secondary)
                 }
+                #if DEBUG
+                .onTapGesture(count: 3) {
+                    withAnimation { showDebugSection = true }
+                }
+                #endif
 
                 if let privacyURL = URL(string: "https://thinkupllc.com/privacy") {
                     Link("Privacy Policy", destination: privacyURL)
@@ -92,8 +102,79 @@ struct SettingsView: View {
                     Link("Support", destination: supportURL)
                         .font(DTDFont.body)
                 }
+            } header: {
+                Text("About")
+            } footer: {
+                Text("Countdown to Magic is an unofficial app. Not affiliated with, endorsed by, or sponsored by The Walt Disney Company.")
+                    .font(DTDFont.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("about.disclaimer")
+            }
+
+            #if DEBUG
+            if showDebugSection {
+                Section {
+                    Toggle(isOn: $forceOngoingTrip) {
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Force \"In Park\" Mode")
+                                    .font(DTDFont.body)
+                                Text("Treats all trips as ongoing to test live park data.")
+                                    .font(DTDFont.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "ant.fill")
+                                .foregroundStyle(.orange)
+                                .font(.title3)
+                                .frame(width: 28)
+                        }
+                    }
+                    .tint(.orange)
+                } header: {
+                    Text("Debug")
+                } footer: {
+                    Text("Debug options are only available in development builds.")
+                        .font(DTDFont.caption)
+                }
+            }
+            #endif
+        }
+    }
+
+    @ViewBuilder
+    private func iCloudSyncRow(vm: SettingsViewModel) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: vm.iCloudSyncStatus.systemImage)
+                .foregroundStyle(vm.iCloudSyncStatus.isActive ? Color.disneyGold : Color.secondary)
+                .font(.title3)
+                .frame(width: 28)
+                .animation(.easeInOut(duration: 0.2), value: vm.iCloudSyncStatus.isActive)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Sync Trips")
+                    .font(DTDFont.body)
+                Text(vm.iCloudSyncStatus.displayTitle)
+                    .font(DTDFont.caption)
+                    .foregroundStyle(vm.iCloudSyncStatus.isActive ? .primary : .secondary)
+            }
+
+            Spacer()
+
+            if !vm.iCloudSyncStatus.isActive && vm.iCloudSyncStatus != .unknown {
+                Button("Open Settings") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                .font(DTDFont.captionBold)
+                .buttonStyle(.borderedProminent)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("iCloud Sync, \(vm.iCloudSyncStatus.displayTitle)")
     }
 
     @ViewBuilder
@@ -155,32 +236,6 @@ struct SettingsView: View {
         }
     }
 
-    private func featureComingSoon(icon: String, title: String, detail: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .foregroundStyle(Color.secondary)
-                .font(.title3)
-                .frame(width: 28)
-
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text(title)
-                        .font(DTDFont.body)
-                    Text("v1.1")
-                        .font(DTDFont.captionBold)
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.secondary.opacity(0.5))
-                        .clipShape(Capsule())
-                }
-                Text(detail)
-                    .font(DTDFont.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .opacity(0.6)
-    }
 }
 
 // MARK: - Preview

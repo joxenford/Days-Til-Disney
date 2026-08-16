@@ -7,7 +7,7 @@ import Foundation
 /// Only carries the fields the widget configuration UI needs.
 struct TripAppEntity: AppEntity {
 
-    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Disney Trip"
+    static var typeDisplayRepresentation: TypeDisplayRepresentation = "Trip"
 
     static var defaultQuery = TripAppEntityQuery()
 
@@ -39,7 +39,7 @@ struct TripAppEntityQuery: EntityQuery {
 /// Lets users pick which trip to display in the widget configuration sheet.
 struct SelectTripIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Select Trip"
-    static var description = IntentDescription("Choose which Disney trip to count down to.")
+    static var description = IntentDescription("Choose which trip to count down to.")
 
     @Parameter(title: "Trip", optionsProvider: TripOptionsProvider())
     var trip: TripAppEntity?

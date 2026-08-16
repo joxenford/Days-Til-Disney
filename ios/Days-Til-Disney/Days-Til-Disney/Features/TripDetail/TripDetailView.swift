@@ -6,9 +6,12 @@ struct TripDetailView: View {
 
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: TripDetailViewModel?
     @State private var showCelebration = false
     @State private var isInitialLoad = true
+    @State private var showShareSheet = false
+    @State private var isNotesExpanded = false
 
     var body: some View {
         ZStack {
@@ -25,6 +28,9 @@ struct TripDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(false)
+        // C-1: Prevent the system from inserting a translucent material bar over the gradient.
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             let vm = TripDetailViewModel.make(tripID: tripID, from: appContainer)
@@ -37,13 +43,25 @@ struct TripDetailView: View {
             Task { await vm.onAppear() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
                 showCelebration = newValue != nil
             }
         }
         .onChange(of: showCelebration) { _, isShown in
             // When the overlay is dismissed (by tapping or the button), clear the VM's state.
             if !isShown { viewModel?.dismissMilestone() }
+        }
+        // When a share image is ready, present the share sheet.
+        .onChange(of: viewModel?.shareImage) { _, image in
+            if image != nil { showShareSheet = true }
+        }
+        .sheet(isPresented: $showShareSheet, onDismiss: {
+            viewModel?.clearShareImage()
+        }) {
+            if let image = viewModel?.shareImage {
+                ShareSheet(image: image)
+                    .ignoresSafeArea()
+            }
         }
         .overlay {
             if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
@@ -60,7 +78,14 @@ struct TripDetailView: View {
     private func contentView(vm: TripDetailViewModel) -> some View {
         switch vm.viewState {
         case .loading:
-            ProgressView().tint(.white)
+            VStack(spacing: 16) {
+                ProgressView()
+                    .tint(.white)
+                    .scaleEffect(1.4)
+                Text("Loading your magic...")
+                    .font(DTDFont.body)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
 
         case .notFound:
             VStack(spacing: 16) {
@@ -72,21 +97,41 @@ struct TripDetailView: View {
             }
 
         case .error(let message):
-            VStack(spacing: 16) {
-                Text("Error: \(message)")
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-                Button("Go Back") { router.navigateBack() }
-                    .foregroundStyle(Color.disneyGold)
+            VStack(spacing: 24) {
+                HeroMarkView(
+                    park: .magicKingdom,
+                    size: 120,
+                    color: .white,
+                    opacity: 0.55
+                )
+                VStack(spacing: 12) {
+                    Text("Something went wrong")
+                        .font(DTDFont.titlePrimary)
+                        .foregroundStyle(.white)
+                    Text(message)
+                        .font(DTDFont.body)
+                        .foregroundStyle(.white.opacity(0.75))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                }
+                Button {
+                    router.navigateBack()
+                } label: {
+                    Text("Go Back")
+                        .font(DTDFont.headline)
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 12)
+                        .background(Color.disneyGold)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
             }
 
         case .loaded(let trip, let content):
             ScrollView {
                 VStack(spacing: 24) {
-                    // Large castle hero.
-                    CastleSilhouetteView(
+                    // Large hero mark.
+                    HeroMarkView(
                         park: trip.primaryPark,
                         size: 180,
                         color: .white,
@@ -102,13 +147,39 @@ struct TripDetailView: View {
                         .padding(.horizontal, 24)
 
                     // Full countdown display.
+                    // C-2: Disable hit-testing so the hero's button tap target is dead on
+                    // this screen — the user is already on the detail, there's nowhere to navigate.
                     CountdownHeroView(
                         trip: trip,
                         onTap: {}   // No-op — already on detail screen.
                     )
+                    .allowsHitTesting(false)
 
                     // Trip metadata.
                     tripMetadata(trip: trip)
+
+                    // Packing list shortcut — hidden during the trip (not useful in the park).
+                    if !trip.isOngoing {
+                        packingListButton(trip: trip)
+                    }
+
+                    // Live park data card — only shown while the trip is in progress.
+                    if trip.isOngoing {
+                        LiveParkCard(
+                            trip: trip,
+                            onViewAll: {
+                                router.navigate(to: .parkDashboard(
+                                    tripID: trip.id,
+                                    park: trip.primaryPark,
+                                    allParks: trip.parks
+                                ))
+                            }
+                        )
+                        .padding(.horizontal, 20)
+                    }
+
+                    // Notes / journal section.
+                    notesSection(trip: trip, vm: vm)
 
                     // Content feed.
                     if !content.isEmpty {
@@ -141,6 +212,13 @@ struct TripDetailView: View {
                     value: "\(trip.durationDays)"
                 )
             }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 16)
+            .padding(.horizontal, 20)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(.white.opacity(0.07))
+            )
 
             if trip.parks.count > 1 {
                 HStack(spacing: 8) {
@@ -161,11 +239,162 @@ struct TripDetailView: View {
         .padding(.horizontal, 20)
     }
 
+    // MARK: - Packing list button
+
+    @ViewBuilder
+    private func packingListButton(trip: Trip) -> some View {
+        Button {
+            router.navigate(to: .packingList(tripID: trip.id))
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "bag.fill")
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(Color.disneyGold)
+                    .frame(width: 22)
+                    .accessibilityHidden(true)
+
+                Text("Packing List")
+                    .font(DTDFont.titleSecondary)
+                    .foregroundStyle(.white)
+
+                Spacer()
+
+                // Progress badge if items exist.
+                let items = trip.packingItems ?? []
+                let checkedCount = items.filter(\.isChecked).count
+                let totalCount = items.count
+                if totalCount > 0 {
+                    Text("\(checkedCount)/\(totalCount)")
+                        .font(DTDFont.captionBold)
+                        .foregroundStyle(.white.opacity(0.6))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule().fill(.white.opacity(0.12))
+                        )
+                }
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.4))
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(.white.opacity(0.07))
+        )
+        .padding(.horizontal, 20)
+        .accessibilityLabel("Packing List\((trip.packingItems ?? []).isEmpty ? "" : ", \((trip.packingItems ?? []).filter(\.isChecked).count) of \((trip.packingItems ?? []).count) packed")")
+        .accessibilityHint("Navigate to packing checklist")
+    }
+
+    // MARK: - Notes section
+
+    @ViewBuilder
+    private func notesSection(trip: Trip, vm: TripDetailViewModel) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header row — always visible, tapping expands/collapses.
+            Button {
+                withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
+                    isNotesExpanded.toggle()
+                }
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "note.text")
+                        .font(.body.weight(.medium))
+                        .foregroundStyle(Color.disneyGold)
+                        .accessibilityHidden(true)
+
+                    Text("Trip Notes")
+                        .font(DTDFont.titleSecondary)
+                        .foregroundStyle(.white)
+
+                    Spacer()
+
+                    // Badge showing notes are present when collapsed.
+                    if !trip.notes.isEmpty && !isNotesExpanded {
+                        Circle()
+                            .fill(Color.disneyGold)
+                            .frame(width: 8, height: 8)
+                            .accessibilityHidden(true)
+                    }
+
+                    Image(systemName: isNotesExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 14)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(isNotesExpanded ? "Trip Notes, collapse" : "Trip Notes, \(trip.notes.isEmpty ? "empty" : "has content"), expand")
+
+            if isNotesExpanded {
+                VStack(alignment: .leading, spacing: 8) {
+                    // Editable text area.
+                    ZStack(alignment: .topLeading) {
+                        // Placeholder text shown when notes are empty.
+                        if trip.notes.isEmpty {
+                            Text("Jot down reservation numbers, packing lists, dining bookings, or anything you don't want to forget...")
+                                .font(DTDFont.body)
+                                .foregroundStyle(.white.opacity(0.40))
+                                .padding(.horizontal, 12)
+                                .padding(.top, 10)
+                                .allowsHitTesting(false)
+                        }
+
+                        TextEditor(text: Binding(
+                            get: { trip.notes },
+                            set: { vm.updateNotes($0) }
+                        ))
+                        .font(DTDFont.body)
+                        .foregroundStyle(.white.opacity(0.9))
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
+                        .frame(minHeight: 140, alignment: .topLeading)
+                    }
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(.white.opacity(0.08))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .strokeBorder(.white.opacity(0.15), lineWidth: 1)
+                            )
+                    )
+                    .padding(.horizontal, 20)
+
+                    if !trip.notes.isEmpty {
+                        Text("\(trip.notes.count) characters")
+                            .font(DTDFont.caption)
+                            .foregroundStyle(.white.opacity(0.35))
+                            .padding(.horizontal, 20)
+                            .accessibilityHidden(true)
+                    }
+                }
+                .padding(.bottom, 16)
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(.white.opacity(0.07))
+        )
+        .padding(.horizontal, 20)
+    }
+
     private func metadataPill(icon: String, label: String, value: String) -> some View {
         VStack(spacing: 4) {
             Image(systemName: icon)
                 .foregroundStyle(Color.disneyGold)
                 .font(.title3)
+                .accessibilityHidden(true)
             Text(value)
                 .font(DTDFont.bodyMedium)
                 .foregroundStyle(.white)
@@ -173,12 +402,14 @@ struct TripDetailView: View {
                 .font(DTDFont.caption)
                 .foregroundStyle(.white.opacity(0.6))
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
     }
 
     @ViewBuilder
     private func contentFeed(content: [DailyContent]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Disney Tips for Your Trip")
+            Text("Tips for Your Trip")
                 .font(DTDFont.titleSecondary)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 20)
@@ -195,16 +426,56 @@ struct TripDetailView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            Button {
-                router.navigate(to: .editTrip(tripID: tripID))
-            } label: {
-                Image(systemName: "pencil.circle.fill")
-                    .foregroundStyle(.white)
-                    .font(.title3)
+            HStack(spacing: 16) {
+                // Share button — visible only when the trip is loaded.
+                if case .loaded(let trip, _) = viewModel?.viewState {
+                    Button {
+                        viewModel?.generateShareImage(for: trip)
+                    } label: {
+                        if viewModel?.isGeneratingShareImage == true {
+                            ProgressView()
+                                .tint(.white)
+                                .scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(.white)
+                                .font(.title3)
+                        }
+                    }
+                    .accessibilityLabel("Share countdown")
+                    .disabled(viewModel?.isGeneratingShareImage == true)
+                }
+
+                Button {
+                    router.navigate(to: .editTrip(tripID: tripID))
+                } label: {
+                    Image(systemName: "pencil.circle.fill")
+                        .foregroundStyle(.white)
+                        .font(.title3)
+                }
+                .accessibilityLabel("Edit trip")
             }
-            .accessibilityLabel("Edit trip")
         }
     }
+}
+
+// MARK: - UIActivityViewController wrapper
+
+/// A thin UIViewControllerRepresentable that presents UIActivityViewController
+/// for sharing a UIImage. We use UIKit here because UIActivityViewController
+/// gives full OS share sheet capability (AirDrop, Save to Photos, Messages, etc.)
+/// that ShareLink cannot replicate for arbitrary image data.
+private struct ShareSheet: UIViewControllerRepresentable {
+    let image: UIImage
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 // MARK: - Preview

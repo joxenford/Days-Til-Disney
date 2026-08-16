@@ -5,6 +5,7 @@ import SwiftUI
 /// and animates smoothly whenever the park or time of day changes.
 struct GradientBackgroundView: View {
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         LinearGradient(
@@ -13,8 +14,9 @@ struct GradientBackgroundView: View {
             endPoint: .bottom
         )
         .ignoresSafeArea()
-        .animation(.easeInOut(duration: 1.2), value: themeProvider.currentTheme.park)
-        .animation(.easeInOut(duration: 2.0), value: themeProvider.currentTheme.timeOfDay)
+        .animation(reduceMotion ? .none : .easeInOut(duration: 1.2), value: themeProvider.currentTheme.park)
+        .animation(reduceMotion ? .none : .easeInOut(duration: 2.0), value: themeProvider.currentTheme.timeOfDay)
+        .accessibilityHidden(true)
     }
 }
 
@@ -25,6 +27,7 @@ struct GradientBackgroundView: View {
 /// no manual timer management, no retain cycles.
 struct StarFieldView: View {
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     // Stars are deterministically generated so the layout is stable across re-renders.
     private struct Star: Identifiable {
@@ -57,7 +60,8 @@ struct StarFieldView: View {
 
         // TimelineView updates the body on every animation frame — the right tool
         // for per-star twinkling without manual timers or @State clocks.
-        TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: fieldOpacity == 0)) { timeline in
+        // When Reduce Motion is enabled, pause the twinkling animation entirely.
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: fieldOpacity == 0 || reduceMotion)) { timeline in
             // Derive a continuous phase from elapsed time since some epoch.
             let elapsed = timeline.date.timeIntervalSinceReferenceDate
 
@@ -79,8 +83,9 @@ struct StarFieldView: View {
                 }
             }
         }
-        .animation(.easeInOut(duration: 2.0), value: fieldOpacity)
+        .animation(reduceMotion ? .none : .easeInOut(duration: 2.0), value: fieldOpacity)
         .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 

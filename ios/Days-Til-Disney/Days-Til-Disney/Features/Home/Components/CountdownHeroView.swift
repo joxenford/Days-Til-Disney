@@ -10,8 +10,13 @@ struct CountdownHeroView: View {
     var onAddTrip: (() -> Void)? = nil
 
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(AppContainer.self) private var appContainer
 
     @State private var countdownScale: Double = 1.0
+    /// Shortest standby wait fetched for the live teaser. nil while loading or if unavailable.
+    @State private var shortestWait: Int? = nil
+    @State private var liveFetchAttempted = false
 
     /// Accent color used for glows — prefer the theme's accent, fall back to park palette.
     private var accentColor: Color {
@@ -60,8 +65,8 @@ struct CountdownHeroView: View {
                         }
 
                     VStack(spacing: 0) {
-                        // Castle silhouette header — glows with the park's accent color.
-                        CastleSilhouetteView(
+                        // Hero mark header — glows with the park's accent color.
+                        HeroMarkView(
                             park: trip.primaryPark,
                             size: 110,
                             color: .white,
@@ -71,10 +76,12 @@ struct CountdownHeroView: View {
                         )
                         .padding(.top, 28)
 
-                        // Park name.
-                        Text(trip.primaryPark.displayName.uppercased())
+                        // Park name — use .textCase(.uppercase) rather than .uppercased()
+                        // so VoiceOver reads the natural name instead of spelling letters.
+                        Text(trip.primaryPark.displayName)
                             .font(DTDFont.captionBold)
                             .foregroundStyle(.white.opacity(0.65))
+                            .textCase(.uppercase)
                             .tracking(2)
                             .padding(.top, 4)
 
@@ -121,6 +128,7 @@ struct CountdownHeroView: View {
             )
             .onChange(of: countdown.days) { _, _ in
                 // Animate the number change when the day flips.
+                guard !reduceMotion else { return }
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                     countdownScale = 1.08
                 }
@@ -155,13 +163,16 @@ struct CountdownHeroView: View {
     private func daysDisplay(countdown: Date.CountdownComponents) -> some View {
         VStack(spacing: 4) {
             Text("\(countdown.days)")
-                .font(.system(size: 88, weight: .black, design: .rounded))
+                .font(DTDFont.countdownLarge)
                 .foregroundStyle(.white)
+                .minimumScaleFactor(0.5)
                 .contentTransition(.numericText())
 
-            Text(countdown.days == 1 ? "DAY" : "DAYS")
+            // Use .textCase(.uppercase) so VoiceOver reads "days" not "D-A-Y-S".
+            Text(countdown.days == 1 ? "day" : "days")
                 .font(DTDFont.countdownLabel())
                 .foregroundStyle(.white.opacity(0.75))
+                .textCase(.uppercase)
                 .tracking(3)
         }
     }
@@ -170,8 +181,9 @@ struct CountdownHeroView: View {
         VStack(spacing: 4) {
             HStack(alignment: .lastTextBaseline, spacing: 4) {
                 Text("\(countdown.hours)")
-                    .font(.system(size: 64, weight: .black, design: .rounded))
+                    .font(DTDFont.countdownSmall)
                     .foregroundStyle(.white)
+                    .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
 
                 Text("h")
@@ -179,8 +191,9 @@ struct CountdownHeroView: View {
                     .foregroundStyle(.white.opacity(0.75))
 
                 Text("\(countdown.minutes)")
-                    .font(.system(size: 64, weight: .black, design: .rounded))
+                    .font(DTDFont.countdownSmall)
                     .foregroundStyle(.white)
+                    .minimumScaleFactor(0.5)
                     .contentTransition(.numericText())
 
                 Text("m")
@@ -188,46 +201,113 @@ struct CountdownHeroView: View {
                     .foregroundStyle(.white.opacity(0.75))
             }
 
-            Text("UNTIL MAGIC")
+            // Use .textCase(.uppercase) so VoiceOver reads "until magic" not "U-N-T-I-L".
+            Text("until magic")
                 .font(DTDFont.countdownLabel())
                 .foregroundStyle(.white.opacity(0.75))
+                .textCase(.uppercase)
                 .tracking(2)
         }
     }
 
     private var ongoingDisplay: some View {
         VStack(spacing: 8) {
-            Text("TODAY!")
-                .font(.system(size: 56, weight: .black, design: .rounded))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [Color.magicSparkle, accentColor],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                // Sparkle glow behind the text.
-                .shadow(color: Color.magicSparkle.opacity(0.7), radius: 12)
+            // "Day X of Y" counter.
+            let dayNumber = ongoingDayNumber
+            let totalDays = trip.durationDays
 
-            Text("You're at Disney!")
+            HStack(alignment: .lastTextBaseline, spacing: 4) {
+                Text("Day")
+                    .font(DTDFont.titleSecondary)
+                    .foregroundStyle(.white.opacity(0.75))
+                Text("\(dayNumber)")
+                    .font(.system(size: 56, weight: .black, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [Color.magicSparkle, accentColor],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .shadow(color: Color.magicSparkle.opacity(0.6), radius: 10)
+                Text("of \(totalDays)")
+                    .font(DTDFont.titleSecondary)
+                    .foregroundStyle(.white.opacity(0.75))
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Day \(dayNumber) of \(totalDays)")
+
+            Text("You're at the parks!")
                 .font(DTDFont.headline)
                 .foregroundStyle(.white.opacity(0.85))
+
+            // Live wait teaser — only shown after a successful fetch.
+            if let wait = shortestWait {
+                HStack(spacing: 6) {
+                    Image(systemName: "clock.fill")
+                        .font(.caption)
+                        .foregroundStyle(Color(hex: "#4CAF50"))
+                        .accessibilityHidden(true)
+                    Text("Shortest wait: \(wait) min")
+                        .font(DTDFont.captionBold)
+                        .foregroundStyle(Color(hex: "#4CAF50"))
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule()
+                        .fill(Color(hex: "#4CAF50").opacity(0.15))
+                        .overlay(Capsule().strokeBorder(Color(hex: "#4CAF50").opacity(0.35), lineWidth: 1))
+                )
+                .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                .accessibilityLabel("Shortest current wait: \(wait) minutes")
+            }
         }
+        .task(id: trip.id) {
+            // Only fetch once per view instance; cache handles freshness.
+            guard !liveFetchAttempted, trip.isOngoing else { return }
+            liveFetchAttempted = true
+            if let data = try? await appContainer.liveParkDataService.fetchLiveData(for: trip.primaryPark) {
+                let minWait = data.operatingAttractions
+                    .compactMap(\.standbyWaitMinutes)
+                    .min()
+                withAnimation(.easeIn(duration: 0.3)) {
+                    shortestWait = minWait
+                }
+            }
+        }
+    }
+
+    /// 1-based day number within the trip (1 on start day, durationDays on end day).
+    private var ongoingDayNumber: Int {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: trip.startDate)
+        let today = calendar.startOfDay(for: Date())
+        let elapsed = calendar.dateComponents([.day], from: start, to: today).day ?? 0
+        return max(1, elapsed + 1)
     }
 
     private var pastDisplay: some View {
         VStack(spacing: 12) {
-            Image(systemName: "photo.on.rectangle")
-                .font(.system(size: 40))
-                .foregroundStyle(.white.opacity(0.6))
+            // Warm golden icon with a soft glow to evoke fond memories, not an error state.
+            ZStack {
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 40))
+                    .foregroundStyle(accentColor)
+                    .blur(radius: 10)
+                    .opacity(0.5)
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 40))
+                    .foregroundStyle(accentColor.opacity(0.9))
+            }
 
             Text("Trip Complete")
                 .font(DTDFont.headline)
-                .foregroundStyle(.white.opacity(0.75))
+                .foregroundStyle(.white.opacity(0.85))
 
             Text("The memories live on forever.")
                 .font(DTDFont.caption)
-                .foregroundStyle(.white.opacity(0.55))
+                .foregroundStyle(.white.opacity(0.65))
 
             if onAddTrip != nil {
                 Label("Plan your next adventure!", systemImage: "plus.circle.fill")
@@ -251,6 +331,7 @@ struct CountdownHeroView: View {
         Color(hex: "#0D2545").ignoresSafeArea()
         CountdownHeroView(trip: Trip.preview, onTap: {})
             .environment(\.parkThemeProvider, ParkThemeProvider.preview())
+            .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
     }
 }
 
@@ -259,5 +340,6 @@ struct CountdownHeroView: View {
         Color(hex: "#880E4F").ignoresSafeArea()
         CountdownHeroView(trip: Trip.previewToday, onTap: {})
             .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .tokyoDisneyland))
+            .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
     }
 }

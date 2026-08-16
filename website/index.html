@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary SEO -->
+  <title>Countdown to Magic — Theme Park Trip Countdown App for iPhone</title>
+  <meta name="description" content="Count down to your theme park vacation, then check real-time ride wait times when you arrive. The only countdown app that becomes your park companion. Live wait times, daily tips, widgets, packing lists. Just $1.99 on the App Store.">
+  <meta name="keywords" content="theme park countdown app, vacation countdown app, ride wait times app, theme park trip planner, family vacation countdown, iPhone travel countdown app">
+  <!-- TODO(domain): daystildisney.com carries the old Disney-branded name and must move to a new domain before relaunch. URLs below are placeholders until the team confirms the new domain. -->
+  <link rel="canonical" href="https://daystildisney.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://daystildisney.com/">
+  <meta property="og:title"       content="Countdown to Magic — Theme Park Trip Countdown App">
+  <meta property="og:description" content="Count down to your theme park trip, then check real-time ride wait times when you arrive. The only countdown app that becomes your park companion. Just $1.99.">
+  <meta property="og:image"       content="https://daystildisney.com/og-image.png">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt"    content="Countdown to Magic app showing a trip countdown">
+  <meta property="og:site_name"    content="Countdown to Magic">
+  <meta property="og:locale"       content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@thinkupllc">
+  <meta name="twitter:title"       content="Countdown to Magic — Theme Park Trip Countdown App">
+  <meta name="twitter:description" content="Count down to your theme park trip, then check real-time ride wait times when you arrive. Just $1.99.">
+  <meta name="twitter:image"       content="https://daystildisney.com/og-image.png">
+  <meta name="twitter:image:alt"   content="Countdown to Magic app showing a trip countdown">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <!-- Theme / App -->
+  <meta name="theme-color" content="#0D2545">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Fonts + Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="index.css">
+
+  <!-- JSON-LD Structured Data: SoftwareApplication -->
+  <!-- TODO: "screenshot" field omitted — the old screenshot showed Disney-branded UI. Add back once a rebranded app screenshot exists. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Countdown to Magic",
+    "description": "Count down to your theme park vacation, then check real-time ride wait times when you arrive. The only countdown app that becomes your park companion. Live wait times, daily tips, widgets, and packing lists.",
+    "applicationCategory": "TravelApplication",
+    "applicationSubCategory": "Entertainment",
+    "operatingSystem": "iOS 17",
+    "offers": {
+      "@type": "Offer",
+      "price": "1.99",
+      "priceCurrency": "USD"
+    },
+    "url": "https://daystildisney.com/",
+    "downloadUrl": "https://apps.apple.com/app/countdown-to-magic/id6985241923",
+    "installUrl": "https://apps.apple.com/app/countdown-to-magic/id6985241923",
+    "softwareVersion": "1.2",
+    "author": {
+      "@type": "Organization",
+      "name": "ThinkUp LLC",
+      "url": "https://daystildisney.com/",
+      "email": "support@thinkupllc.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ThinkUp LLC"
+    },
+    "featureList": [
+      "Live ride wait times for top theme parks worldwide",
+      "Theme park trip countdown with days, hours, and minutes",
+      "Home screen and lock screen widgets",
+      "365 days of daily tips, trivia, and fun facts",
+      "Smart packing lists",
+      "Trip notes and journal",
+      "Shareable countdown cards",
+      "iCloud sync across Apple devices",
+      "No ads, no subscriptions, no tracking"
+    ],
+    "keywords": "theme park countdown, ride wait times, theme park trip planner, vacation countdown app"
+  }
+  </script>
+
+  <!-- JSON-LD Structured Data: WebSite (enables Sitelinks Searchbox eligibility) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Countdown to Magic",
+    "url": "https://daystildisney.com/"
+  }
+  </script>
+</head>
+
+<body>
+  <!-- Fixed background layers -->
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="star-field" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="/" class="nav__logo" aria-label="Countdown to Magic home">
+        <!-- TODO: new mark from design: wordmark/icon lockup for Countdown to Magic -->
+        <span class="nav__logo-icon" aria-hidden="true">&#x2728;</span>
+        <span class="nav__logo-text">
+          <span class="logo-main">Countdown to Magic</span>
+          <span class="logo-sub">by ThinkUp LLC</span>
+        </span>
+      </a>
+
+      <div class="nav__links">
+        <a href="#features" class="nav__link">Features</a>
+        <a href="#daily-magic" class="nav__link">Daily Magic</a>
+        <a href="#parks" class="nav__link">Destinations</a>
+        <a href="privacy.html" class="nav__link">Privacy</a>
+        <a href="https://apps.apple.com/app/countdown-to-magic/id6985241923"
+           class="btn btn--primary nav__cta"
+           target="_blank" rel="noopener"
+           aria-label="Download Countdown to Magic on the App Store">
+          Get the App — $1.99
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- =====================
+         HERO SECTION
+    ===================== -->
+    <section class="hero section--lg" aria-labelledby="hero-heading">
+      <div class="container">
+        <div class="hero__layout">
+
+          <!-- Hero copy -->
+          <div class="hero__copy">
+            <div class="badge badge--new reveal">
+              <span aria-hidden="true">&#x1F680;</span> NEW: Live ride wait times for top theme parks
+            </div>
+
+            <h1 id="hero-heading" class="heading-xl hero__heading reveal reveal-delay-1">
+              Your countdown to magic<br>
+              <span class="text-gold">starts today.</span>
+            </h1>
+
+            <p class="body-lg hero__subheading reveal reveal-delay-2">
+              The only countdown app that becomes your park companion. Before your trip: daily tips, packing lists, and a beautiful countdown. At the park: real-time ride wait times, show schedules, and a live dashboard for top theme parks worldwide.
+            </p>
+
+            <div class="hero__actions reveal reveal-delay-3">
+              <a href="https://apps.apple.com/app/countdown-to-magic/id6985241923"
+                 class="btn btn--appstore"
+                 target="_blank" rel="noopener"
+                 aria-label="Download on the App Store">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                <span class="btn-label">
+                  <span>Download on the</span>
+                  <span>App Store</span>
+                </span>
+              </a>
+
+              <a href="#features" class="btn btn--ghost hero__learn-more reveal reveal-delay-4">
+                See All Features
+              </a>
+            </div>
+
+            <div class="hero__trust reveal reveal-delay-4">
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x23F3;</span>
+                <span>Before your trip</span>
+              </div>
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x1F3A2;</span>
+                <span>During your trip</span>
+              </div>
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x1F4DA;</span>
+                <span>After your trip</span>
+              </div>
+              <div class="hero__trust-item">
+                <span class="hero__trust-icon" aria-hidden="true">&#x1F512;</span>
+                <span>No ads, ever</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero phone mockup — neutral placeholder pending rebranded app screenshot -->
+          <!-- TODO: new mark from design: replace with a real Countdown to Magic app screenshot once the rebuilt app ships. Do not reuse the old Disney-branded screenshot (app-screenshot.png). -->
+          <div class="hero__mockup reveal reveal-delay-2" aria-hidden="true">
+            <div class="phone-frame">
+              <div class="phone-placeholder">
+                <span class="phone-placeholder__eyebrow">YOUR TRIP</span>
+                <span class="phone-placeholder__num">30</span>
+                <span class="phone-placeholder__label">DAYS TO GO</span>
+                <span class="phone-placeholder__date">Fri, Apr 10 – Fri, Apr 17</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="hero__scroll-hint reveal reveal-delay-6" aria-hidden="true">
+        <div class="hero__scroll-dot"></div>
+      </div>
+    </section>
+
+    <!-- =====================
+         SOCIAL PROOF STRIP
+    ===================== -->
+    <div class="proof-strip" aria-label="App highlights">
+      <div class="gold-divider"></div>
+      <div class="container">
+        <div class="proof-strip__inner">
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">12</span>
+            <span class="proof-strip__label">Theme Parks</span>
+          </div>
+          <div class="proof-strip__divider" aria-hidden="true"></div>
+          <div class="proof-strip__item">
+            <span class="proof-strip__num proof-strip__num--accent">LIVE</span>
+            <span class="proof-strip__label">Wait Times</span>
+          </div>
+          <div class="proof-strip__divider" aria-hidden="true"></div>
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">365</span>
+            <span class="proof-strip__label">Days of Content</span>
+          </div>
+          <div class="proof-strip__divider" aria-hidden="true"></div>
+          <div class="proof-strip__item">
+            <span class="proof-strip__num">0</span>
+            <span class="proof-strip__label">Ads or Tracking</span>
+          </div>
+        </div>
+      </div>
+      <div class="gold-divider"></div>
+    </div>
+
+    <!-- =====================
+         FEATURES SECTION
+    ===================== -->
+    <section class="section features" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow reveal">Before, during &amp; after your trip</span>
+          <h2 id="features-heading" class="heading-lg reveal reveal-delay-1">
+            Countdown meets <span class="text-gold">park companion</span>
+          </h2>
+          <p class="body-lg reveal reveal-delay-2">
+            Every feature was crafted with one goal: making your trip feel magical — from the moment you book to the moment you walk through the gates and beyond.
+          </p>
+        </header>
+
+        <!-- Feature cards grid -->
+        <div class="features__grid">
+
+          <!-- Feature 1: Live Wait Times (NEW hero card) -->
+          <div class="feature-card feature-card--hero feature-card--live glass-card glass-card--bright reveal" aria-label="Live ride wait times feature">
+            <div class="feature-card__new-badge">NEW in v1.2</div>
+            <div class="feature-card__icon" aria-hidden="true">&#x1F3A2;</div>
+            <h3 class="heading-md feature-card__title">Live Ride Wait Times</h3>
+            <p class="body-md feature-card__desc">
+              Real-time wait times for every ride at every park worldwide. See what's short, what's long, and what's down — right from your trip screen. The countdown app that becomes your park companion.
+            </p>
+            <div class="feature-card__detail">
+              <div class="wait-time-demo" aria-label="Example wait times: Rocket Coaster 35 min, River Rapids 15 min, Sky Launch 65 min">
+                <div class="wait-time-demo__row">
+                  <span class="wait-time-demo__ride">Rocket Coaster</span>
+                  <span class="wait-time-demo__time wait-time-demo__time--med">35 min</span>
+                </div>
+                <div class="wait-time-demo__row">
+                  <span class="wait-time-demo__ride">River Rapids</span>
+                  <span class="wait-time-demo__time wait-time-demo__time--low">15 min</span>
+                </div>
+                <div class="wait-time-demo__row">
+                  <span class="wait-time-demo__ride">Sky Launch</span>
+                  <span class="wait-time-demo__time wait-time-demo__time--high">65 min</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature 2: Today at the Park -->
+          <div class="feature-card glass-card reveal reveal-delay-1" aria-label="Today at the Park feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F3D0;</div>
+            <h3 class="heading-sm feature-card__title">Today at the Park</h3>
+            <p class="body-md feature-card__desc">
+              When your trip starts, the countdown transforms into a live dashboard — top 3 shortest waits, longest lines to avoid, and next show times.
+            </p>
+          </div>
+
+          <!-- Feature 3: Live Countdown -->
+          <div class="feature-card glass-card reveal reveal-delay-2" aria-label="Live countdown feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x23F3;</div>
+            <h3 class="heading-sm feature-card__title">Live Countdown</h3>
+            <p class="body-md feature-card__desc">
+              Watch your trip get closer in real time. Days, hours, and minutes to every park — then "Day X of Y" when you arrive.
+            </p>
+          </div>
+
+          <!-- Feature 4: Daily content -->
+          <div class="feature-card glass-card reveal reveal-delay-3" aria-label="Daily magic feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x2728;</div>
+            <h3 class="heading-sm feature-card__title">Daily Magic</h3>
+            <p class="body-md feature-card__desc">
+              A fresh tip, trivia question, fun fact, or ride spotlight every single day for 365 days.
+            </p>
+          </div>
+
+          <!-- Feature 5: Milestones -->
+          <div class="feature-card glass-card reveal reveal-delay-1" aria-label="Milestone celebrations feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F38A;</div>
+            <h3 class="heading-sm feature-card__title">Milestone Celebrations</h3>
+            <p class="body-md feature-card__desc">
+              Confetti and fireworks explode when you hit big milestones — 100 days, 30 days, 1 week, tomorrow!
+            </p>
+          </div>
+
+          <!-- Feature 6: Widgets -->
+          <div class="feature-card glass-card reveal reveal-delay-2" aria-label="Home screen widgets feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F4F1;</div>
+            <h3 class="heading-sm feature-card__title">Home & Lock Screen Widgets</h3>
+            <p class="body-md feature-card__desc">
+              Glance at your countdown without opening the app. Beautiful widgets in every size for your home and lock screen.
+            </p>
+          </div>
+
+          <!-- Feature 7: Packing -->
+          <div class="feature-card glass-card reveal reveal-delay-3" aria-label="Packing checklist feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F9F3;</div>
+            <h3 class="heading-sm feature-card__title">Smart Packing Lists</h3>
+            <p class="body-md feature-card__desc">
+              Resort-specific packing defaults so you never forget the essentials. Fully customizable to your family's style.
+            </p>
+          </div>
+
+          <!-- Feature 8: Journal -->
+          <div class="feature-card glass-card reveal reveal-delay-4" aria-label="Trip notes and journal feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F4D3;</div>
+            <h3 class="heading-sm feature-card__title">Trip Notes & Journal</h3>
+            <p class="body-md feature-card__desc">
+              Capture plans, dreams, and memories. Before and after. A keepsake of every magical adventure.
+            </p>
+          </div>
+
+          <!-- Feature 9: Share card -->
+          <div class="feature-card glass-card reveal reveal-delay-1" aria-label="Share countdown feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x1F5BC;&#xFE0F;</div>
+            <h3 class="heading-sm feature-card__title">Share the Countdown</h3>
+            <p class="body-md feature-card__desc">
+              Generate a gorgeous countdown image card and share the excitement with friends and family.
+            </p>
+          </div>
+
+          <!-- Feature 10: iCloud -->
+          <div class="feature-card glass-card reveal reveal-delay-2" aria-label="iCloud sync feature">
+            <div class="feature-card__icon" aria-hidden="true">&#x2601;&#xFE0F;</div>
+            <h3 class="heading-sm feature-card__title">iCloud Sync</h3>
+            <p class="body-md feature-card__desc">
+              Your trips stay in sync across all your Apple devices automatically. iPhone, iPad — always up to date.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         DAILY MAGIC SECTION
+    ===================== -->
+    <section class="section daily-magic" id="daily-magic" aria-labelledby="daily-magic-heading">
+      <div class="container">
+        <div class="daily-magic__layout">
+          <div class="daily-magic__copy">
+            <span class="eyebrow reveal">365 days of wonder</span>
+            <h2 id="daily-magic-heading" class="heading-lg reveal reveal-delay-1">
+              Something magical<br><span class="text-gold">every single day</span>
+            </h2>
+            <p class="body-lg reveal reveal-delay-2">
+              The countdown is just the beginning. Open the app each day to discover hand-curated content that makes the anticipation as exciting as the trip itself.
+            </p>
+            <ul class="daily-magic__list reveal reveal-delay-3" aria-label="Types of daily content">
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F4A1;</span>
+                <div>
+                  <strong>Fun Facts</strong> — Surprising theme park stories, secrets, and history
+                </div>
+              </li>
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F3AF;</span>
+                <div>
+                  <strong>Insider Tips</strong> — Crowd-beating strategies, must-do experiences
+                </div>
+              </li>
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F3A2;</span>
+                <div>
+                  <strong>Ride Spotlights</strong> — Deep dives on the attractions you'll love
+                </div>
+              </li>
+              <li class="daily-magic__item">
+                <span class="daily-magic__bullet" aria-hidden="true">&#x1F9E0;</span>
+                <div>
+                  <strong>Trivia Challenges</strong> — Test your theme park knowledge as you count down
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="daily-magic__cards reveal reveal-delay-2" aria-label="Sample daily content cards">
+            <div class="dm-card glass-card glass-card--bright">
+              <div class="dm-card__type">
+                <span aria-hidden="true">&#x1F4A1;</span> Fun Fact
+              </div>
+              <p class="dm-card__text">
+                Many flagship theme park castles hide a secret apartment suite inside — built for VIP guests and, on rare occasions, offered as a prize to lucky visitors.
+              </p>
+              <div class="dm-card__meta">Day 47 of your countdown</div>
+            </div>
+
+            <div class="dm-card dm-card--offset glass-card">
+              <div class="dm-card__type">
+                <span aria-hidden="true">&#x1F3AF;</span> Insider Tip
+              </div>
+              <p class="dm-card__text">
+                Arrive 30 minutes before park opening. The first hour of the day almost always has the shortest wait times on the newest headline coaster.
+              </p>
+              <div class="dm-card__meta">Day 23 of your countdown</div>
+            </div>
+
+            <div class="dm-card dm-card--offset-2 glass-card">
+              <div class="dm-card__type">
+                <span aria-hidden="true">&#x1F3A2;</span> Ride Spotlight
+              </div>
+              <p class="dm-card__text">
+                Reverse-launch coasters are some of the rarest rides in the world — and the best ones play a different soundtrack on every single ride.
+              </p>
+              <div class="dm-card__meta">Day 12 of your countdown</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         DESTINATIONS SECTION
+    ===================== -->
+    <section class="section parks" id="parks" aria-labelledby="parks-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow reveal">Works with parks everywhere</span>
+          <h2 id="parks-heading" class="heading-lg reveal reveal-delay-1">
+            Built for any theme park<br><span class="text-gold">trip</span>
+          </h2>
+          <p class="body-lg reveal reveal-delay-2">
+            Wherever you're headed, Countdown to Magic has a live countdown and real-time ride wait times waiting for you. That includes trips to Walt Disney World or Disneyland — Countdown to Magic is an independent app and isn't affiliated with, endorsed by, or sponsored by The Walt Disney Company.
+          </p>
+        </header>
+
+        <div class="parks__grid reveal reveal-delay-1">
+
+          <article class="resort-card glass-card" aria-label="United States">
+            <div class="resort-card__flag" aria-label="United States flag">&#x1F1FA;&#x1F1F8;</div>
+            <h3 class="resort-card__name">United States</h3>
+            <p class="resort-card__location text-tertiary">Coast to coast</p>
+            <ul class="resort-card__parks" aria-label="Theme park coverage in the United States">
+              <li>Major resort parks</li>
+              <li>Coaster & thrill parks</li>
+              <li>Water parks</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Japan">
+            <div class="resort-card__flag" aria-label="Japan flag">&#x1F1EF;&#x1F1F5;</div>
+            <h3 class="resort-card__name">Japan</h3>
+            <p class="resort-card__location text-tertiary">Tokyo & Osaka</p>
+            <ul class="resort-card__parks" aria-label="Theme park coverage in Japan">
+              <li>Major resort parks</li>
+              <li>Pop-culture & anime parks</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="France">
+            <div class="resort-card__flag" aria-label="France flag">&#x1F1EB;&#x1F1F7;</div>
+            <h3 class="resort-card__name">France</h3>
+            <p class="resort-card__location text-tertiary">Paris & beyond</p>
+            <ul class="resort-card__parks" aria-label="Theme park coverage in France">
+              <li>Major resort parks</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="United Kingdom">
+            <div class="resort-card__flag" aria-label="United Kingdom flag">&#x1F1EC;&#x1F1E7;</div>
+            <h3 class="resort-card__name">United Kingdom</h3>
+            <p class="resort-card__location text-tertiary">England & beyond</p>
+            <ul class="resort-card__parks" aria-label="Theme park coverage in the United Kingdom">
+              <li>Coaster & thrill parks</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="Hong Kong">
+            <div class="resort-card__flag" aria-label="Hong Kong flag">&#x1F1ED;&#x1F1F0;</div>
+            <h3 class="resort-card__name">Hong Kong</h3>
+            <p class="resort-card__location text-tertiary">Lantau Island</p>
+            <ul class="resort-card__parks" aria-label="Theme park coverage in Hong Kong">
+              <li>Major resort parks</li>
+            </ul>
+          </article>
+
+          <article class="resort-card glass-card" aria-label="China">
+            <div class="resort-card__flag" aria-label="China flag">&#x1F1E8;&#x1F1F3;</div>
+            <h3 class="resort-card__name">China</h3>
+            <p class="resort-card__location text-tertiary">Shanghai & beyond</p>
+            <ul class="resort-card__parks" aria-label="Theme park coverage in China">
+              <li>Major resort parks</li>
+            </ul>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         PRIVACY/TRUST SECTION
+    ===================== -->
+    <section class="section trust" id="privacy-trust" aria-labelledby="trust-heading">
+      <div class="container container--narrow">
+        <div class="trust__card glass-card">
+          <div class="trust__top">
+            <span class="trust__shield" aria-hidden="true">&#x1F6E1;&#xFE0F;</span>
+            <span class="eyebrow">Privacy first</span>
+          </div>
+          <h2 id="trust-heading" class="heading-md text-center reveal">
+            Your data stays <span class="text-gold">yours</span>. Always.
+          </h2>
+          <p class="body-lg text-center reveal reveal-delay-1">
+            Countdown to Magic collects absolutely nothing. No account required. No analytics. No ads. No servers receiving your personal data. Everything lives on your device.
+          </p>
+          <div class="trust__grid reveal reveal-delay-2">
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F6AB;</span>
+              <span>No ads, ever</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F511;</span>
+              <span>No account needed</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F4F5;</span>
+              <span>No analytics tracking</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F5A5;&#xFE0F;</span>
+              <span>No servers with your data</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x2601;&#xFE0F;</span>
+              <span>iCloud sync via Apple only</span>
+            </div>
+            <div class="trust__item">
+              <span aria-hidden="true">&#x1F476;</span>
+              <span>COPPA compliant by design</span>
+            </div>
+          </div>
+          <div class="trust__cta reveal reveal-delay-3">
+            <a href="privacy.html" class="btn btn--ghost">Read Full Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         MORE FEATURES GRID
+    ===================== -->
+    <section class="section extras" aria-labelledby="extras-heading">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow reveal">The full picture</span>
+          <h2 id="extras-heading" class="heading-lg reveal reveal-delay-1">
+            A few more things<br><span class="text-gold">you'll love</span>
+          </h2>
+        </header>
+
+        <div class="extras__grid">
+          <div class="extra-item reveal">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F4F1;</span>
+            <div>
+              <h3 class="heading-sm">iPad Two-Column Layout</h3>
+              <p class="body-md">Beautifully optimized for the big screen with a dedicated iPad interface.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-1">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F4DA;</span>
+            <div>
+              <h3 class="heading-sm">Past Trip Archive</h3>
+              <p class="body-md">Relive past trips with your countdown history, notes, and journal entries.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-2">
+            <span class="extra-item__icon" aria-hidden="true">&#x267F;</span>
+            <div>
+              <h3 class="heading-sm">Full Accessibility Support</h3>
+              <p class="body-md">VoiceOver, Dynamic Type, Reduce Motion — designed for everyone in the family.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-3">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F30E;</span>
+            <div>
+              <h3 class="heading-sm">Multiple Trips at Once</h3>
+              <p class="body-md">Planning more than one trip? Track them all. Each with its own countdown and content.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-1">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F7E1;</span>
+            <div>
+              <h3 class="heading-sm">Milestone Notifications</h3>
+              <p class="body-md">Get notified when you hit exciting countdown milestones — all generated on-device.</p>
+            </div>
+          </div>
+
+          <div class="extra-item reveal reveal-delay-2">
+            <span class="extra-item__icon" aria-hidden="true">&#x1F4B0;</span>
+            <div>
+              <h3 class="heading-sm">One-Time Purchase</h3>
+              <p class="body-md">Just $1.99 — no subscriptions, no in-app purchases, no hidden costs. Pay once and count down forever.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================
+         FINAL CTA
+    ===================== -->
+    <section class="section cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-card glass-card glass-card--bright">
+          <!-- TODO: new mark from design: replace with a Countdown to Magic icon/illustration -->
+          <div class="cta-card__castle" aria-hidden="true">&#x2728;</div>
+          <h2 id="cta-heading" class="heading-lg text-center reveal">
+            Your next adventure<br>
+            <span class="text-gold">starts right now.</span>
+          </h2>
+          <p class="body-lg text-center reveal reveal-delay-1">
+            Countdown, daily tips, packing lists, and now live ride wait times — all for less than the price of a churro at the parks.
+          </p>
+          <div class="cta-card__actions reveal reveal-delay-2">
+            <a href="https://apps.apple.com/app/countdown-to-magic/id6985241923"
+               class="btn btn--primary"
+               target="_blank" rel="noopener"
+               aria-label="Get Countdown to Magic on the App Store for $1.99">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              Get It Now — $1.99 on the App Store
+            </a>
+          </div>
+          <p class="cta-card__note text-tertiary reveal reveal-delay-3">
+            iPhone &amp; iPad &nbsp;·&nbsp; iOS 17+ &nbsp;·&nbsp; $1.99 &nbsp;·&nbsp; No subscriptions, ever
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <!-- TODO: new mark from design: wordmark/icon lockup for Countdown to Magic -->
+        <div class="footer__logo">
+          <span class="footer__logo-icon" aria-hidden="true">&#x2728;</span>
+          <span>Countdown to Magic</span>
+        </div>
+        <nav class="footer__links" aria-label="Footer navigation">
+          <a href="/">Home</a>
+          <a href="#features">Features</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="mailto:support@thinkupllc.com">Contact</a>
+        </nav>
+        <p class="footer__copy">&copy; 2026 ThinkUp LLC. All rights reserved.</p>
+        <p class="footer__copy" style="font-size:0.72rem; margin-top: -8px;">
+          Countdown to Magic is an unofficial app. It is not affiliated with, endorsed by, or sponsored by The Walt Disney Company.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

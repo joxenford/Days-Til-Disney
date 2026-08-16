@@ -25,14 +25,14 @@ final class MockMilestoneNotificationManager: MilestoneNotificationManager {
         authStatus
     }
 
-    func scheduleNotifications(for trip: Trip) async {
+    func scheduleNotifications(for snapshot: TripNotificationSnapshot) async {
         scheduleForTripCallCount += 1
-        scheduledTripIDs.append(trip.id)
+        scheduledTripIDs.append(snapshot.id)
     }
 
-    func scheduleNotifications(forAll trips: [Trip]) async {
+    func scheduleNotifications(forAll snapshots: [TripNotificationSnapshot]) async {
         scheduleForAllCallCount += 1
-        scheduledTripIDs.append(contentsOf: trips.map(\.id))
+        scheduledTripIDs.append(contentsOf: snapshots.map(\.id))
     }
 
     func cancelNotifications(for tripID: UUID) {

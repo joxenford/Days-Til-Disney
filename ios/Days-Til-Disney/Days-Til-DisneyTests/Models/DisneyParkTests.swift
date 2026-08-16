@@ -56,12 +56,6 @@ final class DisneyParkTests: XCTestCase {
         }
     }
 
-    // MARK: - castleAssetName
-
-    func test_castleAssetName_delegatesToResort() {
-        XCTAssertEqual(DisneyPark.magicKingdom.castleAssetName, DisneyResort.waltDisneyWorld.castleAssetName)
-    }
-
     // MARK: - iconAssetName
 
     func test_iconAssetName_allNonEmpty() {

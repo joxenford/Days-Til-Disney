@@ -70,10 +70,22 @@ final class HomeViewModel {
                 return
             }
 
-            // Prefer the explicitly flagged primary, then a non-past trip, then any trip.
-            let primary = allTrips.first { $0.isPrimary }
-                ?? allTrips.first { !$0.isPast }
-                ?? allTrips.first
+            // Prefer the explicitly flagged primary among non-past trips first.
+            // If the explicitly flagged primary has since become past, fall back to the
+            // next upcoming/ongoing trip and persist the new primary so the DB stays clean.
+            let explicitPrimary = allTrips.first { $0.isPrimary && !$0.isPast }
+            let primary: Trip?
+            if let explicitPrimary {
+                primary = explicitPrimary
+            } else {
+                // The current flagged primary (if any) is past — find the next upcoming trip.
+                let promoted = allTrips.first { !$0.isPast }
+                if let promoted, promoted.isPrimary == false {
+                    // Persist the promotion so the flag is accurate in the DB.
+                    try? await tripRepository.setPrimaryTrip(id: promoted.id)
+                }
+                primary = promoted ?? allTrips.first
+            }
             // Separate past trips from upcoming/ongoing secondary trips.
             let otherTrips = allTrips.filter { $0.id != primary?.id }
             let secondary = otherTrips.filter { !$0.isPast }

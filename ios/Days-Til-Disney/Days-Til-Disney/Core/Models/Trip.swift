@@ -8,17 +8,23 @@ import SwiftData
 /// expose the typed enums for use throughout the app.
 @Model
 final class Trip {
-    var id: UUID
-    var name: String
+    var id: UUID = UUID()
+    var name: String = ""
     /// Backing store for the `resort` enum — stored as its rawValue String.
-    var resortRawValue: String
+    var resortRawValue: String = DisneyResort.waltDisneyWorld.rawValue
     /// Backing store for the `parks` array — stored as comma-separated rawValue Strings.
-    var parkRawValues: [String]
-    var startDate: Date
-    var endDate: Date
-    var isPrimary: Bool
-    var createdAt: Date
-    var updatedAt: Date
+    var parkRawValues: [String] = []
+    var startDate: Date = Date()
+    var endDate: Date = Date()
+    var isPrimary: Bool = false
+    var notes: String = ""
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
+
+    /// Packing checklist items for this trip.
+    /// cascade delete ensures items are removed when the trip is deleted.
+    @Relationship(deleteRule: .cascade, inverse: \PackingItem.trip)
+    var packingItems: [PackingItem]? = []
 
     init(
         id: UUID = UUID(),
@@ -28,6 +34,7 @@ final class Trip {
         startDate: Date,
         endDate: Date,
         isPrimary: Bool = false,
+        notes: String = "",
         createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
@@ -38,6 +45,7 @@ final class Trip {
         self.startDate = startDate
         self.endDate = endDate
         self.isPrimary = isPrimary
+        self.notes = notes
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -79,6 +87,12 @@ final class Trip {
 
     /// True when today falls within the trip dates (inclusive).
     var isOngoing: Bool {
+        #if DEBUG
+        // Key string must match DebugSettings.forceOngoingTripKey (Engine/DebugSettings.swift).
+        // A direct reference cannot be used here because Trip.swift is also compiled into the
+        // Widget extension target, which does not include DebugSettings.swift.
+        if UserDefaults.standard.bool(forKey: "debug_forceOngoingTrip") { return true }
+        #endif
         let today = Calendar.current.startOfDay(for: Date())
         let start = Calendar.current.startOfDay(for: startDate)
         let end = Calendar.current.startOfDay(for: endDate)
@@ -88,6 +102,11 @@ final class Trip {
     /// True when the trip's end date has passed.
     var isPast: Bool {
         Calendar.current.startOfDay(for: Date()) > Calendar.current.startOfDay(for: endDate)
+    }
+
+    /// Calendar days since the trip ended. Returns 0 on the end day, positive after.
+    var daysSinceEnd: Int {
+        endDate.daysSince
     }
 
     /// Duration of the trip in days.
@@ -122,6 +141,17 @@ extension Trip {
             parks: [.tokyoDisneyland, .tokyoDisneySea],
             startDate: Date(),
             endDate: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date(),
+            isPrimary: false
+        )
+    }
+
+    static var previewPast: Trip {
+        Trip(
+            name: "Disneyland Summer 2024",
+            resort: .disneylandResort,
+            parks: [.disneyland, .californiaAdventure],
+            startDate: Calendar.current.date(byAdding: .day, value: -30, to: Date()) ?? Date(),
+            endDate: Calendar.current.date(byAdding: .day, value: -23, to: Date()) ?? Date(),
             isPrimary: false
         )
     }

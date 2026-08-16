@@ -51,7 +51,7 @@ struct Milestone: Identifiable, Hashable {
         Milestone(
             daysOut: 1,
             title: "Tomorrow's the Day!",
-            subtitle: "One sleep until Disney magic. Rest up, adventurer!",
+            subtitle: "One sleep until the magic. Rest up, adventurer!",
             celebrationType: .fireworks
         ),
         Milestone(

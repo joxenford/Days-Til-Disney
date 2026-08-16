@@ -64,18 +64,6 @@ final class DisneyResortTests: XCTestCase {
         }
     }
 
-    // MARK: - castleAssetName
-
-    func test_castleAssetName_allNonEmpty() {
-        for resort in DisneyResort.allCases {
-            XCTAssertFalse(resort.castleAssetName.isEmpty)
-        }
-    }
-
-    func test_waltDisneyWorld_castleIsCinderella() {
-        XCTAssertEqual(DisneyResort.waltDisneyWorld.castleAssetName, "castle-cinderella")
-    }
-
     // MARK: - Identifiable
 
     func test_id_matchesRawValue() {

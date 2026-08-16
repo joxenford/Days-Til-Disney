@@ -22,6 +22,7 @@ final class AppContainer {
 
     let tripRepository: any TripRepository
     let contentRepository: any ContentRepository
+    let packingListRepository: any PackingListRepository
 
     // MARK: - Engines
 
@@ -29,6 +30,16 @@ final class AppContainer {
     let milestoneManager: any MilestoneManager
     let milestoneNotificationManager: any MilestoneNotificationManager
     let themeProvider: ParkThemeProvider
+
+    // MARK: - Live park data
+
+    let liveParkDataService: any LiveParkDataService
+
+    // MARK: - Deep linking
+
+    /// Receives UNUserNotificationCenter delegate callbacks and exposes the tapped
+    /// trip ID for `AppNavigationRouter` to consume.
+    let notificationDeepLinkHandler: NotificationDeepLinkHandler
 
     // MARK: - Preferences
 
@@ -50,10 +61,13 @@ final class AppContainer {
         contentRepository = localContent
 
         tripRepository = LocalTripRepository(modelContext: modelContainer.mainContext)
+        packingListRepository = LocalPackingListRepository(modelContext: modelContainer.mainContext)
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
+        notificationDeepLinkHandler = NotificationDeepLinkHandler()
         themeProvider = ParkThemeProvider(timeOfDayProvider: LiveTimeOfDayProvider())
+        liveParkDataService = DefaultLiveParkDataService()
     }
 
     // MARK: - Preview / test init
@@ -68,12 +82,15 @@ final class AppContainer {
         contentRepository = localContent
 
         tripRepository = LocalTripRepository(modelContext: modelContainer.mainContext)
+        packingListRepository = LocalPackingListRepository(modelContext: modelContainer.mainContext)
         contentEngine = LocalContentEngine(repository: contentRepository)
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
+        notificationDeepLinkHandler = NotificationDeepLinkHandler()
         themeProvider = ParkThemeProvider(
             park: .magicKingdom,
             timeOfDayProvider: FixedTimeOfDayProvider.day
         )
+        liveParkDataService = DefaultLiveParkDataService()
     }
 }

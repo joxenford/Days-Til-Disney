@@ -4,6 +4,7 @@ import SwiftUI
 struct DailyContentCardView: View {
     let content: DailyContent
     @State private var isExpanded = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -17,9 +18,12 @@ struct DailyContentCardView: View {
                     .clipShape(Circle())
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(content.type.displayName.uppercased())
+                    // H-3: Use .textCase(.uppercase) instead of .uppercased() so VoiceOver
+                    // reads the natural word rather than spelling individual letters.
+                    Text(content.type.displayName)
                         .font(DTDFont.captionBold)
                         .foregroundStyle(Color.disneyGold)
+                        .textCase(.uppercase)
                         .tracking(1.5)
 
                     Text(content.title)
@@ -76,7 +80,7 @@ struct DailyContentCardView: View {
                 }
         }
         .onTapGesture {
-            withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+            withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
                 isExpanded.toggle()
             }
         }
@@ -86,6 +90,7 @@ struct DailyContentCardView: View {
             : "\(content.type.accessibilityLabel): \(content.title)"
         )
         .accessibilityHint(isExpanded ? "Tap to collapse" : "Tap to expand")
+        .accessibilityAddTraits(.isButton)
     }
 }
 
@@ -108,7 +113,7 @@ struct DailyContentCardView: View {
             body: "Walt Disney World resort guests can make dining reservations 60 days before their check-in date for the entire length of their stay. Log into My Disney Experience at 6:00 AM Eastern Time for the best availability at popular restaurants like Be Our Guest and Cinderella's Royal Table.",
             resort: .waltDisneyWorld,
             daysOutRange: .planningTips,
-            source: "Disney Official"
+            source: nil
         ))
         .padding(.horizontal, 20)
     }

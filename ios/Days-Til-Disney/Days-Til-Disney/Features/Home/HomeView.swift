@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.parkThemeProvider) private var themeProvider
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: HomeViewModel?
     @State private var showCelebration = false
     @State private var pastTripsExpanded = false
@@ -30,6 +31,9 @@ struct HomeView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        // C-1: Prevent the system from inserting a translucent material bar over the gradient.
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             // Create the VM once on first appearance and load data.
@@ -46,7 +50,7 @@ struct HomeView: View {
             Task { await vm.onRefresh() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(.easeInOut(duration: 0.3)) {
+            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
                 showCelebration = newValue != nil
             }
         }
@@ -119,10 +123,16 @@ struct HomeView: View {
                 // Secondary trip cards (upcoming and ongoing).
                 if !secondary.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Other Trips")
-                            .font(DTDFont.titleSecondary)
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 20)
+                        HStack(spacing: 8) {
+                            Image(systemName: "suitcase.fill")
+                                .font(DTDFont.titleSecondary)
+                                .foregroundStyle(.white.opacity(0.8))
+                                .accessibilityHidden(true)
+                            Text("Other Trips")
+                                .font(DTDFont.titleSecondary)
+                                .foregroundStyle(.white)
+                        }
+                        .padding(.horizontal, 20)
 
                         ForEach(secondary) { trip in
                             TripCardView(
@@ -155,7 +165,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Disclosure header.
             Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.75)) {
                     pastTripsExpanded.toggle()
                 }
             } label: {
@@ -200,10 +210,12 @@ struct HomeView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Text("Days 'Til Disney")
-                .font(.system(size: 18, weight: .bold, design: .rounded))
+            // H-1: Use DTDFont.headline — rounds, semibold, Dynamic Type aware.
+            Text("Countdown to Magic")
+                .font(DTDFont.headline)
                 .foregroundStyle(.white)
                 .fixedSize()
+                .accessibilityHidden(true)
         }
         ToolbarItem(placement: .navigationBarTrailing) {
             HStack(spacing: 16) {
@@ -236,7 +248,7 @@ private struct EmptyTripsView: View {
 
     var body: some View {
         VStack(spacing: 28) {
-            CastleSilhouetteView(
+            HeroMarkView(
                 park: .magicKingdom,
                 size: 160,
                 color: .white,
@@ -250,7 +262,7 @@ private struct EmptyTripsView: View {
                     .font(DTDFont.titlePrimary)
                     .foregroundStyle(.white)
 
-                Text("Add your first Disney trip to start the countdown.")
+                Text("Add your first trip to start the countdown.")
                     .font(DTDFont.body)
                     .foregroundStyle(.white.opacity(0.75))
                     .multilineTextAlignment(.center)

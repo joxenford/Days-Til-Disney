@@ -139,10 +139,11 @@ final class AddEditTripViewModel {
                 }
                 // On first trip creation, request notification permission automatically.
                 // This is the natural onboarding moment — the user just committed to a trip.
+                let snapshot = trip.notificationSnapshot
                 if isFirstTrip {
-                    await requestPermissionAndSchedule(for: trip)
+                    await requestPermissionAndSchedule(for: snapshot)
                 } else {
-                    await scheduleNotificationsIfEnabled(for: trip)
+                    await scheduleNotificationsIfEnabled(for: snapshot)
                 }
 
             case .edit(let id):
@@ -161,7 +162,7 @@ final class AddEditTripViewModel {
                     }
                     // updateTrip calls markUpdated() internally — no need to call it here.
                     try await tripRepository.updateTrip(existing)
-                    await scheduleNotificationsIfEnabled(for: existing)
+                    await scheduleNotificationsIfEnabled(for: existing.notificationSnapshot)
                 } else {
                     saveError = "This trip no longer exists."
                     isSaving = false
@@ -184,7 +185,7 @@ final class AddEditTripViewModel {
     /// Requests permission on first trip creation (onboarding moment).
     /// If permission is granted, enables the pref and schedules notifications for the trip.
     /// If denied or not yet determined, does nothing — user can enable via Settings later.
-    private func requestPermissionAndSchedule(for trip: Trip) async {
+    private func requestPermissionAndSchedule(for snapshot: TripNotificationSnapshot) async {
         guard let notificationManager else { return }
         let status = await notificationManager.authorizationStatus()
         switch status {
@@ -193,22 +194,22 @@ final class AddEditTripViewModel {
             let granted = await notificationManager.requestPermission()
             if granted {
                 userPreferences?.milestoneNotificationsEnabled = true
-                await notificationManager.scheduleNotifications(for: trip)
+                await notificationManager.scheduleNotifications(for: snapshot)
             }
         case .authorized, .provisional:
             // Permission already granted from a prior session.
             userPreferences?.milestoneNotificationsEnabled = true
-            await notificationManager.scheduleNotifications(for: trip)
+            await notificationManager.scheduleNotifications(for: snapshot)
         default:
             // Denied or restricted — do not re-prompt; user can enable in Settings.
             break
         }
     }
 
-    private func scheduleNotificationsIfEnabled(for trip: Trip) async {
+    private func scheduleNotificationsIfEnabled(for snapshot: TripNotificationSnapshot) async {
         guard let notificationManager,
               userPreferences?.milestoneNotificationsEnabled == true else { return }
-        await notificationManager.scheduleNotifications(for: trip)
+        await notificationManager.scheduleNotifications(for: snapshot)
     }
 
     private func loadExistingTrip(id: UUID) async {

@@ -6,5 +6,15 @@
 	<array>
 		<string>group.com.thinkupllc.Days-Til-Disney</string>
 	</array>
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.com.thinkupllc.Days-Til-Disney</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
+	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
+	<string>$(TeamIdentifierPrefix)com.thinkupllc.Days-Til-Disney</string>
 </dict>
 </plist>
