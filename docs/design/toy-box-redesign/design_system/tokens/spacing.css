@@ -1,0 +1,20 @@
+:root {
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 10px;
+  --space-5: 12px;   /* the standard gap between tiles */
+  --space-6: 14px;
+  --space-7: 16px;
+  --space-8: 18px;   /* tile inner padding, compact */
+  --space-9: 20px;   /* screen gutter */
+  --space-10: 22px;
+  --space-11: 24px;  /* hero tile inner padding */
+  --space-12: 26px;
+  --space-14: 30px;
+  --space-16: 36px;
+
+  --gutter-screen: var(--space-9);
+  --gap-tile: var(--space-5);
+  --tap-min: 44px;
+}

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Karla:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#101014; -webkit-font-smoothing:antialiased; }
+  a { color:#E8C84A; text-decoration:none; }
+  a:hover { color:#F3DC8E; }
+</style>
+</helmet>
+
+<section style="padding:56px; display:flex; flex-direction:column; gap:34px; font-family:Karla,system-ui,sans-serif;">
+  <div style="display:flex; flex-direction:column; gap:10px; max-width:900px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:2px; color:#8F8E97;">TURN 4 · FRESH START</div>
+    <div style="font-family:'Instrument Serif',serif; font-size:38px; color:#F4F3F1;">Three directions, no paper anywhere</div>
+    <div style="font-size:16px; line-height:1.6; color:#9C9BA4; max-width:760px;">Neutral shell, park colour as one large panel, real light and dark themes. Each direction gets its whimsy from a different place — shape, scale, or the mechanic of counting down. Pick <a href="#4a">4a</a>, <a href="#4b">4b</a> or <a href="#4c">4c</a> and I'll build the whole app on it.</div>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:44px; align-items:flex-start;">
+
+    <!-- ═════════ 4a · ARCH ═════════ -->
+    <div id="4a" style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; background:#E8C84A; color:#17161A; padding:5px 9px; border-radius:4px;">4a</span>
+        <span style="font-family:'Instrument Serif',serif; font-size:24px; color:#F4F3F1;">Arch</span>
+        <span style="font-size:14px; color:#9A99A2;">Theatrical proscenium · high-contrast serif · whimsy from shape</span>
+      </div>
+      <div style="display:flex; gap:20px;">
+
+        <!-- 4a LIGHT -->
+        <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#F7F6F3; box-shadow:0 24px 60px rgba(0,0,0,.5);">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 24px 20px;">
+            <div style="font-family:'Instrument Serif',serif; font-size:22px; color:#17161A;">Countdown to Magic</div>
+            <div style="display:flex; gap:8px;">
+              <span style="width:34px; height:34px; border-radius:999px; border:1px solid #D8D6D0; display:grid; place-items:center; font-size:18px; color:#17161A;">+</span>
+              <span style="width:34px; height:34px; border-radius:999px; border:1px solid #D8D6D0; display:grid; place-items:center; font-size:13px; color:#17161A;">•••</span>
+            </div>
+          </div>
+          <div style="padding:0 24px;">
+            <div style="background:#1A3A6B; border-radius:170px 170px 20px 20px; padding:46px 26px 28px; text-align:center; position:relative;">
+              <div style="font-family:Karla,sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; color:rgba(247,246,243,.62);">MAGIC KINGDOM</div>
+              <div style="margin-top:10px; font-family:'Instrument Serif',serif; font-size:150px; line-height:.82; color:#F7F6F3;">45</div>
+              <div style="margin-top:4px; font-family:'Instrument Serif',serif; font-style:italic; font-size:24px; color:rgba(247,246,243,.82);">days until</div>
+              <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(247,246,243,.22); font-family:'Instrument Serif',serif; font-size:26px; line-height:1.2; color:#F7F6F3;">Magic Kingdom<br>Family Trip</div>
+              <div style="margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.2px; color:rgba(247,246,243,.7);">30 SEP — 07 OCT</div>
+            </div>
+          </div>
+          <div style="display:flex; padding:20px 24px 0;">
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; color:#63625E;">NIGHTS</span><span style="font-family:'Instrument Serif',serif; font-size:24px; color:#17161A;">7</span></div>
+            <div style="width:1px; background:#E2E0DA;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px; padding-left:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; color:#63625E;">PARKS</span><span style="font-family:'Instrument Serif',serif; font-size:24px; color:#17161A;">3</span></div>
+            <div style="width:1px; background:#E2E0DA;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px; padding-left:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; color:#63625E;">PACKED</span><span style="font-family:'Instrument Serif',serif; font-size:24px; color:#17161A;">12<span style="font-size:15px; color:#63625E;">/38</span></span></div>
+          </div>
+          <div style="margin:22px 24px 0; padding-top:18px; border-top:1px solid #E2E0DA;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2.4px; color:#8A6A18;">TODAY</div>
+            <div style="margin-top:10px; font-family:'Instrument Serif',serif; font-size:27px; line-height:1.2; color:#17161A;">Cinderella Castle has no bricks</div>
+            <div style="margin-top:8px; font-size:15px; line-height:1.55; color:#5F5E5A;">Fibreglass and steel the whole way up, with the top windows built small on purpose so it reads taller than it is.</div>
+          </div>
+          <div style="margin:22px 24px 0;">
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 0; border-top:1px solid #E2E0DA;">
+              <span style="width:34px; height:34px; border-radius:999px; background:#C62828; flex:0 0 34px;"></span>
+              <span style="flex:1; display:flex; flex-direction:column; gap:1px;">
+                <span style="font-family:'Instrument Serif',serif; font-size:19px; color:#17161A;">Tokyo Adventure</span>
+                <span style="font-size:13px; color:#63625E;">You're there now — day 3 of 7</span>
+              </span>
+              <span style="font-family:'Instrument Serif',serif; font-size:22px; color:#17161A;">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4a DARK -->
+        <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#121116; box-shadow:0 24px 60px rgba(0,0,0,.5);">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 24px 20px;">
+            <div style="font-family:'Instrument Serif',serif; font-size:22px; color:#F2F1EE;">Countdown to Magic</div>
+            <div style="display:flex; gap:8px;">
+              <span style="width:34px; height:34px; border-radius:999px; border:1px solid #33323A; display:grid; place-items:center; font-size:18px; color:#F2F1EE;">+</span>
+              <span style="width:34px; height:34px; border-radius:999px; border:1px solid #33323A; display:grid; place-items:center; font-size:13px; color:#F2F1EE;">•••</span>
+            </div>
+          </div>
+          <div style="padding:0 24px;">
+            <div style="background:#16305A; border-radius:170px 170px 20px 20px; padding:46px 26px 28px; text-align:center;">
+              <div style="font-size:11px; font-weight:700; letter-spacing:3px; color:rgba(242,241,238,.55);">MAGIC KINGDOM</div>
+              <div style="margin-top:10px; font-family:'Instrument Serif',serif; font-size:150px; line-height:.82; color:#F2F1EE;">45</div>
+              <div style="margin-top:4px; font-family:'Instrument Serif',serif; font-style:italic; font-size:24px; color:rgba(242,241,238,.8);">days until</div>
+              <div style="margin-top:22px; padding-top:18px; border-top:1px solid rgba(242,241,238,.2); font-family:'Instrument Serif',serif; font-size:26px; line-height:1.2; color:#F2F1EE;">Magic Kingdom<br>Family Trip</div>
+              <div style="margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.2px; color:rgba(242,241,238,.65);">30 SEP — 07 OCT</div>
+            </div>
+          </div>
+          <div style="display:flex; padding:20px 24px 0;">
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; color:#8F8E97;">NIGHTS</span><span style="font-family:'Instrument Serif',serif; font-size:24px; color:#F2F1EE;">7</span></div>
+            <div style="width:1px; background:#2A2933;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px; padding-left:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; color:#8F8E97;">PARKS</span><span style="font-family:'Instrument Serif',serif; font-size:24px; color:#F2F1EE;">3</span></div>
+            <div style="width:1px; background:#2A2933;"></div>
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px; padding-left:16px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; color:#8F8E97;">PACKED</span><span style="font-family:'Instrument Serif',serif; font-size:24px; color:#F2F1EE;">12<span style="font-size:15px; color:#8F8E97;">/38</span></span></div>
+          </div>
+          <div style="margin:22px 24px 0; padding-top:18px; border-top:1px solid #2A2933;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2.4px; color:#E8C84A;">TODAY</div>
+            <div style="margin-top:10px; font-family:'Instrument Serif',serif; font-size:27px; line-height:1.2; color:#F2F1EE;">Cinderella Castle has no bricks</div>
+            <div style="margin-top:8px; font-size:15px; line-height:1.55; color:#9C9BA4;">Fibreglass and steel the whole way up, with the top windows built small on purpose so it reads taller than it is.</div>
+          </div>
+          <div style="margin:22px 24px 0;">
+            <div style="display:flex; align-items:center; gap:14px; padding:14px 0; border-top:1px solid #2A2933;">
+              <span style="width:34px; height:34px; border-radius:999px; background:#C62828; flex:0 0 34px;"></span>
+              <span style="flex:1; display:flex; flex-direction:column; gap:1px;">
+                <span style="font-family:'Instrument Serif',serif; font-size:19px; color:#F2F1EE;">Tokyo Adventure</span>
+                <span style="font-size:13px; color:#8F8E97;">You're there now — day 3 of 7</span>
+              </span>
+              <span style="font-family:'Instrument Serif',serif; font-size:22px; color:#F2F1EE;">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════ 4b · TOY BOX ═════════ -->
+    <div id="4b" style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; background:#E8C84A; color:#17161A; padding:5px 9px; border-radius:4px;">4b</span>
+        <span style="font-family:Outfit,sans-serif; font-size:24px; font-weight:700; color:#F4F3F1;">Toy Box</span>
+        <span style="font-size:14px; color:#9A99A2;">Chunky tiles · geometric sans · whimsy from scale and roundness</span>
+      </div>
+      <div style="display:flex; gap:20px;">
+
+        <!-- 4b LIGHT -->
+        <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#F3F3F1; box-shadow:0 24px 60px rgba(0,0,0,.5); font-family:Outfit,sans-serif;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 20px 18px;">
+            <div style="font-size:19px; font-weight:700; letter-spacing:-.3px; color:#1B1B1F;">Countdown to Magic</div>
+            <div style="display:flex; gap:8px;">
+              <span style="width:36px; height:36px; border-radius:14px; background:#1B1B1F; color:#F3F3F1; display:grid; place-items:center; font-size:20px; font-weight:600;">+</span>
+              <span style="width:36px; height:36px; border-radius:14px; background:#E4E4E0; color:#1B1B1F; display:grid; place-items:center; font-size:14px; font-weight:700;">•••</span>
+            </div>
+          </div>
+          <div style="padding:0 20px; display:flex; flex-direction:column; gap:12px;">
+            <div style="background:#1A3A6B; border-radius:34px; padding:24px 26px 26px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:12px; font-weight:700; letter-spacing:1.6px; color:rgba(243,243,241,.7);">MAGIC KINGDOM</span>
+                <span style="background:rgba(243,243,241,.16); color:#F3F3F1; border-radius:999px; padding:5px 11px; font-size:11px; font-weight:700; letter-spacing:.8px;">PRIMARY</span>
+              </div>
+              <div style="margin-top:14px; display:flex; align-items:baseline; gap:10px;">
+                <span style="font-size:118px; font-weight:800; letter-spacing:-7px; line-height:.84; color:#F3F3F1;">45</span>
+                <span style="font-size:22px; font-weight:600; color:rgba(243,243,241,.8);">days</span>
+              </div>
+              <div style="margin-top:16px; font-size:24px; font-weight:600; letter-spacing:-.4px; line-height:1.2; color:#F3F3F1;">Magic Kingdom Family Trip</div>
+              <div style="margin-top:6px; font-family:Karla,sans-serif; font-size:13px; font-weight:500; color:rgba(243,243,241,.72);">30 Sep → 7 Oct · 7 nights</div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <div style="flex:1; background:#E7E7E3; border-radius:26px; padding:18px 20px;">
+                <div style="font-size:12px; font-weight:700; letter-spacing:1.2px; color:#5F5F66;">PACKED</div>
+                <div style="margin-top:8px; font-size:40px; font-weight:800; letter-spacing:-2px; line-height:1; color:#1B1B1F;">12<span style="font-size:20px; color:#6C6C72;">/38</span></div>
+                <div style="margin-top:12px; height:8px; border-radius:999px; background:#D2D2CD; overflow:hidden;"><span style="display:block; width:32%; height:8px; border-radius:999px; background:#1A3A6B;"></span></div>
+              </div>
+              <div style="flex:1; background:#E7E7E3; border-radius:26px; padding:18px 20px;">
+                <div style="font-size:12px; font-weight:700; letter-spacing:1.2px; color:#5F5F66;">NEXT UP</div>
+                <div style="margin-top:8px; font-size:40px; font-weight:800; letter-spacing:-2px; line-height:1; color:#1B1B1F;">30</div>
+                <div style="margin-top:8px; font-size:13px; font-weight:500; color:#5F5F66;">days → one month to go</div>
+              </div>
+            </div>
+            <div style="background:#FFFFFF; border-radius:30px; padding:22px 24px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="width:26px; height:26px; border-radius:999px; background:#E8C84A;"></span>
+                <span style="font-size:12px; font-weight:700; letter-spacing:1.4px; color:#7A6420;">TODAY'S FACT</span>
+              </div>
+              <div style="margin-top:12px; font-size:23px; font-weight:700; letter-spacing:-.4px; line-height:1.25; color:#1B1B1F;">Cinderella Castle has no bricks</div>
+              <div style="margin-top:8px; font-family:Karla,sans-serif; font-size:15px; line-height:1.55; color:#66666D;">Fibreglass and steel the whole way up — the top windows are small on purpose so it reads taller.</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; background:#E7E7E3; border-radius:26px; padding:16px 18px;">
+              <span style="width:44px; height:44px; border-radius:16px; background:#C62828; flex:0 0 44px;"></span>
+              <span style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                <span style="font-size:17px; font-weight:600; color:#1B1B1F;">Tokyo Adventure</span>
+                <span style="font-family:Karla,sans-serif; font-size:13px; color:#5F5F66;">Day 3 of 7 — you're there!</span>
+              </span>
+              <span style="font-size:20px; color:#6C6C72;">›</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4b DARK -->
+        <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#15151A; box-shadow:0 24px 60px rgba(0,0,0,.5); font-family:Outfit,sans-serif;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 20px 18px;">
+            <div style="font-size:19px; font-weight:700; letter-spacing:-.3px; color:#F1F1EF;">Countdown to Magic</div>
+            <div style="display:flex; gap:8px;">
+              <span style="width:36px; height:36px; border-radius:14px; background:#F1F1EF; color:#15151A; display:grid; place-items:center; font-size:20px; font-weight:600;">+</span>
+              <span style="width:36px; height:36px; border-radius:14px; background:#26262E; color:#F1F1EF; display:grid; place-items:center; font-size:14px; font-weight:700;">•••</span>
+            </div>
+          </div>
+          <div style="padding:0 20px; display:flex; flex-direction:column; gap:12px;">
+            <div style="background:#16305A; border-radius:34px; padding:24px 26px 26px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:12px; font-weight:700; letter-spacing:1.6px; color:rgba(241,241,239,.7);">MAGIC KINGDOM</span>
+                <span style="background:rgba(241,241,239,.16); color:#F1F1EF; border-radius:999px; padding:5px 11px; font-size:11px; font-weight:700; letter-spacing:.8px;">PRIMARY</span>
+              </div>
+              <div style="margin-top:14px; display:flex; align-items:baseline; gap:10px;">
+                <span style="font-size:118px; font-weight:800; letter-spacing:-7px; line-height:.84; color:#F1F1EF;">45</span>
+                <span style="font-size:22px; font-weight:600; color:rgba(241,241,239,.8);">days</span>
+              </div>
+              <div style="margin-top:16px; font-size:24px; font-weight:600; letter-spacing:-.4px; line-height:1.2; color:#F1F1EF;">Magic Kingdom Family Trip</div>
+              <div style="margin-top:6px; font-family:Karla,sans-serif; font-size:13px; font-weight:500; color:rgba(241,241,239,.72);">30 Sep → 7 Oct · 7 nights</div>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <div style="flex:1; background:#202028; border-radius:26px; padding:18px 20px;">
+                <div style="font-size:12px; font-weight:700; letter-spacing:1.2px; color:#9A99A2;">PACKED</div>
+                <div style="margin-top:8px; font-size:40px; font-weight:800; letter-spacing:-2px; line-height:1; color:#F1F1EF;">12<span style="font-size:20px; color:#93929B;">/38</span></div>
+                <div style="margin-top:12px; height:8px; border-radius:999px; background:#2E2E38; overflow:hidden;"><span style="display:block; width:32%; height:8px; border-radius:999px; background:#E8C84A;"></span></div>
+              </div>
+              <div style="flex:1; background:#202028; border-radius:26px; padding:18px 20px;">
+                <div style="font-size:12px; font-weight:700; letter-spacing:1.2px; color:#9A99A2;">NEXT UP</div>
+                <div style="margin-top:8px; font-size:40px; font-weight:800; letter-spacing:-2px; line-height:1; color:#F1F1EF;">30</div>
+                <div style="margin-top:8px; font-size:13px; font-weight:500; color:#9A99A2;">days → one month to go</div>
+              </div>
+            </div>
+            <div style="background:#202028; border-radius:30px; padding:22px 24px;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="width:26px; height:26px; border-radius:999px; background:#E8C84A;"></span>
+                <span style="font-size:12px; font-weight:700; letter-spacing:1.4px; color:#E8C84A;">TODAY'S FACT</span>
+              </div>
+              <div style="margin-top:12px; font-size:23px; font-weight:700; letter-spacing:-.4px; line-height:1.25; color:#F1F1EF;">Cinderella Castle has no bricks</div>
+              <div style="margin-top:8px; font-family:Karla,sans-serif; font-size:15px; line-height:1.55; color:#9C9BA4;">Fibreglass and steel the whole way up — the top windows are small on purpose so it reads taller.</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; background:#202028; border-radius:26px; padding:16px 18px;">
+              <span style="width:44px; height:44px; border-radius:16px; background:#C62828; flex:0 0 44px;"></span>
+              <span style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                <span style="font-size:17px; font-weight:600; color:#F1F1EF;">Tokyo Adventure</span>
+                <span style="font-family:Karla,sans-serif; font-size:13px; color:#9A99A2;">Day 3 of 7 — you're there!</span>
+              </span>
+              <span style="font-size:20px; color:#93929B;">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═════════ 4c · CALENDAR ═════════ -->
+    <div id="4c" style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-family:'JetBrains Mono',monospace; font-size:12px; background:#E8C84A; color:#17161A; padding:5px 9px; border-radius:4px;">4c</span>
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:700; color:#F4F3F1;">Countdown Grid</span>
+        <span style="font-size:14px; color:#9A99A2;">Every remaining day is a cell · today's cell opens · whimsy from the mechanic</span>
+      </div>
+      <div style="display:flex; gap:20px;">
+
+        <!-- 4c LIGHT -->
+        <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#F2F3F5; box-shadow:0 24px 60px rgba(0,0,0,.5); font-family:'Space Grotesk',sans-serif;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 22px 16px;">
+            <div style="font-size:17px; font-weight:700; letter-spacing:-.2px; color:#15161A;">Countdown to Magic</div>
+            <div style="display:flex; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; letter-spacing:1px; color:#5B5E64;"><span>ADD</span><span>SET</span></div>
+          </div>
+          <div style="padding:0 22px;">
+            <div style="background:#1A3A6B; border-radius:20px; padding:20px 22px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <span style="font-size:11px; font-weight:700; letter-spacing:2.4px; color:rgba(242,243,245,.65);">MAGIC KINGDOM</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(242,243,245,.65);">30.09 → 07.10</span>
+              </div>
+              <div style="margin-top:10px; display:flex; align-items:flex-end; justify-content:space-between;">
+                <span style="font-size:104px; font-weight:700; letter-spacing:-6px; line-height:.84; color:#F2F3F5;">45</span>
+                <span style="text-align:right;">
+                  <span style="display:block; font-size:11px; font-weight:700; letter-spacing:2.4px; color:rgba(242,243,245,.7);">DAYS LEFT</span>
+                  <span style="display:block; margin-top:4px; font-size:17px; font-weight:500; color:#F2F3F5;">Magic Kingdom<br>Family Trip</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:20px 22px 0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px;">
+              <span style="font-size:11px; font-weight:700; letter-spacing:2.4px; color:#5B5E64;">THE COUNTDOWN</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#63666C;">55 CROSSED · 45 TO GO</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:7px;">
+              <span style="aspect-ratio:1; border-radius:9px; background:#E2E4E8; color:#74777D; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">49</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#E2E4E8; color:#74777D; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">48</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#E2E4E8; color:#74777D; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">47</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#E2E4E8; color:#74777D; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">46</span>
+              <span style="grid-column:span 2; aspect-ratio:2.15; border-radius:9px; background:#1A3A6B; color:#F2F3F5; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700;">45 <span style="font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.4px; opacity:.75;">TODAY</span></span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">44</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">43</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">42</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">41</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">40</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">39</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">38</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">37</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">36</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">35</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">34</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">33</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">32</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">31</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#E8C84A; color:#3E3208; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700;">30</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">29</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">28</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">27</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">26</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">25</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">24</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #D5D8DD; color:#5B5E64; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">23</span>
+            </div>
+            <div style="margin-top:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.8px; color:#63666C;">
+              <span style="width:9px; height:9px; border-radius:3px; background:#E8C84A;"></span><span>NEXT MILESTONE · 30 DAYS = ONE MONTH TO GO</span>
+            </div>
+          </div>
+          <div style="margin:20px 22px 0; background:#FFFFFF; border-radius:18px; padding:20px;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:#7A6420;">TODAY'S CELL · FUN FACT</div>
+            <div style="margin-top:10px; font-size:21px; font-weight:700; letter-spacing:-.3px; line-height:1.25; color:#15161A;">Cinderella Castle has no bricks</div>
+            <div style="margin-top:8px; font-family:Karla,sans-serif; font-size:15px; line-height:1.55; color:#5F6167;">Fibreglass and steel the whole way up — the top windows are built small so it reads taller than it is.</div>
+          </div>
+          <div style="margin:16px 22px 0; display:flex; align-items:center; gap:14px; padding-top:16px; border-top:1px solid #DFE2E6;">
+            <span style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <span style="display:flex; align-items:baseline; justify-content:space-between;">
+                <span style="font-size:11px; font-weight:700; letter-spacing:2.4px; color:#5B5E64;">PACKING</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#15161A;">12/38</span>
+              </span>
+              <span style="display:block; height:6px; border-radius:999px; background:#DFE2E6; overflow:hidden;"><span style="display:block; width:32%; height:6px; border-radius:999px; background:#1A3A6B;"></span></span>
+            </span>
+          </div>
+          <div style="margin:14px 22px 0; display:flex; align-items:center; gap:12px; padding-top:14px; border-top:1px solid #DFE2E6;">
+            <span style="width:8px; height:32px; border-radius:4px; background:#C62828;"></span>
+            <span style="flex:1; display:flex; flex-direction:column; gap:1px;">
+              <span style="font-size:16px; font-weight:600; color:#15161A;">Tokyo Adventure</span>
+              <span style="font-family:Karla,sans-serif; font-size:13px; color:#5B5E64;">Day 3 of 7 — in park now</span>
+            </span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#63666C;">→</span>
+          </div>
+        </div>
+
+        <!-- 4c DARK -->
+        <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#0E0F12; box-shadow:0 24px 60px rgba(0,0,0,.5); font-family:'Space Grotesk',sans-serif;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 22px 16px;">
+            <div style="font-size:17px; font-weight:700; letter-spacing:-.2px; color:#EDEEF1;">Countdown to Magic</div>
+            <div style="display:flex; gap:14px; font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; letter-spacing:1px; color:#8A8C94;"><span>ADD</span><span>SET</span></div>
+          </div>
+          <div style="padding:0 22px;">
+            <div style="background:#16305A; border-radius:20px; padding:20px 22px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between;">
+                <span style="font-size:11px; font-weight:700; letter-spacing:2.4px; color:rgba(237,238,241,.6);">MAGIC KINGDOM</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(237,238,241,.6);">30.09 → 07.10</span>
+              </div>
+              <div style="margin-top:10px; display:flex; align-items:flex-end; justify-content:space-between;">
+                <span style="font-size:104px; font-weight:700; letter-spacing:-6px; line-height:.84; color:#EDEEF1;">45</span>
+                <span style="text-align:right;">
+                  <span style="display:block; font-size:11px; font-weight:700; letter-spacing:2.4px; color:rgba(237,238,241,.7);">DAYS LEFT</span>
+                  <span style="display:block; margin-top:4px; font-size:17px; font-weight:500; color:#EDEEF1;">Magic Kingdom<br>Family Trip</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div style="padding:20px 22px 0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px;">
+              <span style="font-size:11px; font-weight:700; letter-spacing:2.4px; color:#8A8C94;">THE COUNTDOWN</span>
+              <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#83858D;">55 CROSSED · 45 TO GO</span>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:7px;">
+              <span style="aspect-ratio:1; border-radius:9px; background:#1B1C22; color:#6C6E76; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">49</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#1B1C22; color:#6C6E76; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">48</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#1B1C22; color:#6C6E76; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">47</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#1B1C22; color:#6C6E76; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; text-decoration:line-through;">46</span>
+              <span style="grid-column:span 2; aspect-ratio:2.15; border-radius:9px; background:#2B5BA0; color:#F2F5FA; display:flex; align-items:center; justify-content:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700;">45 <span style="font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.4px; opacity:.8;">TODAY</span></span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">44</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">43</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">42</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">41</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">40</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">39</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">38</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">37</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">36</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">35</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">34</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">33</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">32</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">31</span>
+              <span style="aspect-ratio:1; border-radius:9px; background:#E8C84A; color:#3E3208; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700;">30</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">29</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">28</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">27</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">26</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">25</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">24</span>
+              <span style="aspect-ratio:1; border-radius:9px; border:1px solid #2A2C33; color:#8A8C94; display:grid; place-items:center; font-family:'JetBrains Mono',monospace; font-size:12px;">23</span>
+            </div>
+            <div style="margin-top:10px; display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.8px; color:#83858D;">
+              <span style="width:9px; height:9px; border-radius:3px; background:#E8C84A;"></span><span>NEXT MILESTONE · 30 DAYS = ONE MONTH TO GO</span>
+            </div>
+          </div>
+          <div style="margin:20px 22px 0; background:#171820; border-radius:18px; padding:20px;">
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:#E8C84A;">TODAY'S CELL · FUN FACT</div>
+            <div style="margin-top:10px; font-size:21px; font-weight:700; letter-spacing:-.3px; line-height:1.25; color:#EDEEF1;">Cinderella Castle has no bricks</div>
+            <div style="margin-top:8px; font-family:Karla,sans-serif; font-size:15px; line-height:1.55; color:#9A9CA4;">Fibreglass and steel the whole way up — the top windows are built small so it reads taller than it is.</div>
+          </div>
+          <div style="margin:16px 22px 0; display:flex; align-items:center; gap:14px; padding-top:16px; border-top:1px solid #23242B;">
+            <span style="flex:1; display:flex; flex-direction:column; gap:8px;">
+              <span style="display:flex; align-items:baseline; justify-content:space-between;">
+                <span style="font-size:11px; font-weight:700; letter-spacing:2.4px; color:#8A8C94;">PACKING</span>
+                <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#EDEEF1;">12/38</span>
+              </span>
+              <span style="display:block; height:6px; border-radius:999px; background:#23242B; overflow:hidden;"><span style="display:block; width:32%; height:6px; border-radius:999px; background:#E8C84A;"></span></span>
+            </span>
+          </div>
+          <div style="margin:14px 22px 0; display:flex; align-items:center; gap:12px; padding-top:14px; border-top:1px solid #23242B;">
+            <span style="width:8px; height:32px; border-radius:4px; background:#C62828;"></span>
+            <span style="flex:1; display:flex; flex-direction:column; gap:1px;">
+              <span style="font-size:16px; font-weight:600; color:#EDEEF1;">Tokyo Adventure</span>
+              <span style="font-family:Karla,sans-serif; font-size:13px; color:#8A8C94;">Day 3 of 7 — in park now</span>
+            </span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#83858D;">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:2600,&quot;height&quot;:1100}}"></script>
+</body>
+</html>

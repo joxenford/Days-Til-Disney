@@ -1,0 +1,96 @@
+<!-- @dsCard group="iOS App" viewport="390x844" subtitle="Click-through app: home, detail, packing, waits, settings" name="Countdown to Magic — app" -->
+<!-- @startingPoint section="App" subtitle="Full iOS app shell, light + dark" viewport="390x844" -->
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Countdown to Magic — iOS kit</title>
+<link rel="stylesheet" href="../design_system/styles.css">
+<style>
+  html,body{margin:0;background:#101014}
+  #root{width:390px;height:844px;overflow:hidden;background:var(--bg);position:relative}
+  *{box-sizing:border-box}
+</style>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+<div id="root" data-theme="light"></div>
+<script src="shared.js"></script>
+<script src="splash.js"></script>
+<script src="welcome.js"></script>
+<script src="empty.js"></script>
+<script src="addTrip.js"></script>
+<script src="milestone.js"></script>
+<script src="home.js"></script>
+<script src="tripDetail.js"></script>
+<script src="packingList.js"></script>
+<script src="parkDashboard.js"></script>
+<script src="settings.js"></script>
+<script>
+(function () {
+  var h = React.createElement;
+  var TRIP = {
+    name: 'Magic Kingdom Family Trip',
+    parkName: 'Magic Kingdom',
+    parks: ['Magic Kingdom', 'EPCOT', 'Hollywood Studios'],
+    park: 'var(--park-panel-magic-kingdom)',
+    daysOut: 45,
+    dates: '30 Sep → 7 Oct',
+    nights: 7,
+    total: 7
+  };
+
+  function App() {
+    var s = React.useState('splash'), screen = s[0], setScreen = s[1];
+    var pk = React.useState(['Magic Kingdom', 'EPCOT']), picked = pk[0], setPicked = pk[1];
+    var pr = React.useState(true), primary = pr[0], setPrimary = pr[1];
+    var t = React.useState('Light'), theme = t[0], setTheme = t[1];
+    var c = React.useState({ 'Sunscreen (SPF 50+)': true, 'Reusable water bottle': true }), checked = c[0], setChecked = c[1];
+    var o = React.useState('Wait'), sort = o[0], setSort = o[1];
+    var n = React.useState(true), notifications = n[0], setNotifications = n[1];
+
+    var resolved = theme === 'Dark' ? 'dark' : 'light';
+    React.useEffect(function () {
+      document.getElementById('root').setAttribute('data-theme', resolved);
+    }, [resolved]);
+
+    var packed = 0;
+    Object.keys(checked).forEach(function (k) { if (checked[k]) packed++; });
+    var trip = Object.assign({}, TRIP, { packed: packed });
+    var go = function (x) { setScreen(x); };
+    var toggle = function (i) { setChecked(function (prev) { var next = Object.assign({}, prev); next[i] = !next[i]; return next; }); };
+
+    React.useEffect(function () {
+      if (screen !== 'splash') return;
+      var t = setTimeout(function () { setScreen('welcome'); }, 1600);
+      return function () { clearTimeout(t); };
+    }, [screen]);
+
+    var togglePark = function (name) {
+      setPicked(function (prev) {
+        return prev.indexOf(name) > -1
+          ? (prev.length > 1 ? prev.filter(function (x) { return x !== name; }) : prev)
+          : prev.concat([name]);
+      });
+    };
+
+    var body;
+    if (screen === 'splash') body = h(window.KitSplash, { go: go });
+    else if (screen === 'welcome') body = h(window.KitWelcome, { go: go });
+    else if (screen === 'empty') body = h(window.KitEmpty, { go: go });
+    else if (screen === 'add') body = h(window.KitAddTrip, { go: go, picked: picked, togglePark: togglePark, primary: primary, setPrimary: setPrimary });
+    else if (screen === 'milestone') body = h(window.KitMilestone, { go: go, daysOut: 30 });
+    else if (screen === 'detail') body = h(window.KitTripDetail, { go: go, trip: trip });
+    else if (screen === 'packing') body = h(window.KitPackingList, { go: go, checked: checked, toggle: toggle, trip: trip });
+    else if (screen === 'park') body = h(window.KitParkDashboard, { go: go, sort: sort, setSort: setSort });
+    else if (screen === 'settings') body = h(window.KitSettings, { go: go, theme: theme, setTheme: setTheme, notifications: notifications, setNotifications: setNotifications });
+    else body = h(window.KitHome, { go: go, trip: trip, theme: resolved, toggleTheme: function () { setTheme(resolved === 'dark' ? 'Light' : 'Dark'); } });
+
+    var fullBleed = screen === 'splash' || screen === 'milestone';
+    return h('div', { style: { height: '100%', display: 'flex', flexDirection: 'column' } },
+      fullBleed ? null : h('div', { style: { height: 54, flex: '0 0 54px' } }),
+      h('div', { style: { flex: 1, minHeight: 0, overflowY: 'auto', paddingBottom: fullBleed ? 0 : 24 } }, body));
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+})();
+</script>
+</body></html>

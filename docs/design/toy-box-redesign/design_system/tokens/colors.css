@@ -1,0 +1,134 @@
+:root {
+  /* ── Park primaries — verbatim from Core/Models/ParkColorPalette.swift ── */
+  --park-magic-kingdom: #1A3A6B;
+  --park-magic-kingdom-deep: #0D2545;
+  --park-epcot: #0077B6;
+  --park-epcot-deep: #023E8A;
+  --park-hollywood-studios: #C0392B;
+  --park-hollywood-studios-deep: #7B241C;
+  --park-animal-kingdom: #2E7D32;
+  --park-animal-kingdom-deep: #1B5E20;
+  --park-disneyland: #8E44AD;
+  --park-disneyland-deep: #4A148C;
+  --park-california-adventure: #E64A19;
+  --park-california-adventure-deep: #BF360C;
+  --park-tokyo-disneyland: #C62828;
+  --park-tokyo-disneyland-deep: #880E4F;
+  --park-tokyo-disneysea: #1565C0;
+  --park-tokyo-disneysea-deep: #0D47A1;
+  --park-paris: #7B1FA2;
+  --park-paris-deep: #4A148C;
+  --park-walt-disney-studios: #D32F2F;
+  --park-walt-disney-studios-deep: #B71C1C;
+  --park-hong-kong: #00796B;
+  --park-hong-kong-deep: #004D40;
+  --park-shanghai: #1A237E;
+  --park-shanghai-deep: #0D1757;
+
+  /* ── Brand accents — Core/Extensions/Color+Hex.swift ── */
+  --gold: #E8C84A;
+  --gold-deep: #C9A84C;
+  --gold-ink: #3E3208;      /* text on a gold fill */
+  --gold-label-on-light: #7A6420;
+
+  /* ── Status — Engine/LiveParkData + ParkDashboardView ── */
+  --status-operating: #4CAF50;
+  --status-wait-long: #FF6B6B;
+  --status-closed: #F44336;
+  --status-refurb: #FF9800;
+
+  /* Wait-time text roles. The status values above are surface-agnostic dots/fills;
+     these are the *text* colours, and they must switch with the theme.
+     Light values are repo park primaries dark enough for 3:1 on --surface. */
+  --wait-short: #2E7D32;   /* animalKingdom primary */
+  --wait-mid: #7A6420;     /* gold, darkened for light surfaces */
+  --wait-long: #C0392B;    /* hollywoodStudios primary */
+
+  /* ── Light theme surfaces ── */
+  --light-bg: #F3F3F1;
+  --light-surface: #E7E7E3;
+  --light-raised: #FFFFFF;
+  --light-control: #E4E4E0;
+  --light-hairline: #D2D2CD;
+  --light-ink: #1B1B1F;
+  --light-ink-muted: #5F5F66;
+  --light-ink-faint: #63636A;
+  --light-ink-done: #6E6E75;
+
+  /* ── Dark theme surfaces ── */
+  --dark-bg: #15151A;
+  --dark-surface: #202028;
+  --dark-raised: #26262E;
+  --dark-hairline: #2E2E38;
+  --dark-ink: #F1F1EF;
+  --dark-ink-muted: #9A99A2;
+  --dark-ink-faint: #93929B;
+
+  /* ── Semantic aliases (light is the default theme) ── */
+  --bg: var(--light-bg);
+  --surface: var(--light-surface);
+  --surface-raised: var(--light-raised);
+  --surface-control: var(--light-control);
+  --hairline: var(--light-hairline);
+  --text-primary: var(--light-ink);
+  --text-muted: var(--light-ink-muted);
+  --text-faint: var(--light-ink-faint);
+  --text-done: var(--light-ink-done);
+  --text-on-park: #FFFFFF;
+  --accent: var(--park-magic-kingdom);
+  --accent-on-dark: var(--park-magic-kingdom-deep);
+  /* Interactive fills (toggle track, checkbox, progress) and gold label text.
+     These switch with the theme; --accent does not. */
+  --accent-interactive: var(--park-magic-kingdom);
+  --on-accent: #FFFFFF;
+  --knob: var(--light-bg);
+  --gold-label: var(--gold-label-on-light);
+
+  /* Park PANEL roles — always use these for a ParkPanel fill. They resolve to the
+     park primary on light and the -deep variant (backgroundGradientMid1) on dark. */
+  --park-panel-magic-kingdom: var(--park-magic-kingdom);
+  --park-panel-epcot: var(--park-epcot);
+  --park-panel-hollywood-studios: var(--park-hollywood-studios);
+  --park-panel-animal-kingdom: var(--park-animal-kingdom);
+  --park-panel-disneyland: var(--park-disneyland);
+  --park-panel-california-adventure: var(--park-california-adventure);
+  --park-panel-tokyo-disneyland: var(--park-tokyo-disneyland);
+  --park-panel-tokyo-disneysea: var(--park-tokyo-disneysea);
+  --park-panel-paris: var(--park-paris);
+  --park-panel-walt-disney-studios: var(--park-walt-disney-studios);
+  --park-panel-hong-kong: var(--park-hong-kong);
+  --park-panel-shanghai: var(--park-shanghai);
+}
+
+[data-theme="dark"] {
+  --bg: var(--dark-bg);
+  --surface: var(--dark-surface);
+  --surface-raised: var(--dark-raised);
+  --surface-control: var(--dark-raised);
+  --hairline: var(--dark-hairline);
+  --text-primary: var(--dark-ink);
+  --text-muted: var(--dark-ink-muted);
+  --text-faint: var(--dark-ink-faint);
+  --text-done: var(--dark-ink-faint);
+  --accent: var(--park-magic-kingdom-deep);
+  --accent-interactive: var(--gold);
+  --on-accent: var(--gold-ink);
+  --knob: var(--dark-bg);
+  --gold-label: var(--gold);
+  --wait-short: var(--status-operating);
+  --wait-mid: var(--gold);
+  --wait-long: var(--status-wait-long);
+
+  --park-panel-magic-kingdom: var(--park-magic-kingdom-deep);
+  --park-panel-epcot: var(--park-epcot-deep);
+  --park-panel-hollywood-studios: var(--park-hollywood-studios-deep);
+  --park-panel-animal-kingdom: var(--park-animal-kingdom-deep);
+  --park-panel-disneyland: var(--park-disneyland-deep);
+  --park-panel-california-adventure: var(--park-california-adventure-deep);
+  --park-panel-tokyo-disneyland: var(--park-tokyo-disneyland-deep);
+  --park-panel-tokyo-disneysea: var(--park-tokyo-disneysea-deep);
+  --park-panel-paris: var(--park-paris-deep);
+  --park-panel-walt-disney-studios: var(--park-walt-disney-studios-deep);
+  --park-panel-hong-kong: var(--park-hong-kong-deep);
+  --park-panel-shanghai: var(--park-shanghai-deep);
+}

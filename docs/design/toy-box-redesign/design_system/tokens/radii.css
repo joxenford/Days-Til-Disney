@@ -1,0 +1,11 @@
+:root {
+  --radius-pill: 999px;
+  --radius-check: 9px;
+  --radius-control: 14px;   /* header icon buttons */
+  --radius-chip: 16px;
+  --radius-tile-sm: 22px;
+  --radius-tile: 26px;
+  --radius-card: 30px;
+  --radius-hero: 34px;      /* park panel + share card */
+  --radius-device: 44px;
+}

@@ -1,0 +1,56 @@
+<!-- @dsCard group="Components" viewport="700x400" subtitle="Park panel, numerals, stat tiles, wait pills, trip rows" name="Countdown blocks" -->
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../../styles.css">
+<style>body{margin:0;padding:20px;background:var(--bg);font-family:var(--font-ui);color:var(--text-primary)}*{box-sizing:border-box}
+.lbl{font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--text-muted);margin:0 0 8px}
+.tile{flex:1;background:var(--surface);border-radius:var(--radius-tile);padding:18px 20px}
+.tl{font-size:12px;font-weight:700;letter-spacing:1.2px;color:var(--text-muted)}
+.tv{margin-top:8px;font-size:40px;font-weight:800;letter-spacing:-2px;line-height:1}
+.seg{flex:1;height:8px;border-radius:999px}
+.pill{border-radius:999px;padding:4px 12px;background:rgba(255,255,255,.06);font-size:19px;font-weight:700}
+.trow{display:flex;align-items:center;gap:14px;background:var(--surface);border-radius:var(--radius-tile);padding:16px 18px}
+.sw{width:44px;height:44px;flex:0 0 44px;border-radius:var(--radius-chip)}
+</style></head><body>
+<div style="display:flex;gap:18px;align-items:flex-start">
+  <div style="width:320px">
+    <p class="lbl">PARKPANEL + NUMERAL + MILESTONESTRIP</p>
+    <div style="background:var(--park-panel-magic-kingdom);border-radius:var(--radius-hero);padding:24px 26px 26px;color:#fff">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:12px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.78)">MAGIC KINGDOM</span>
+        <span style="background:rgba(255,255,255,.18);border-radius:999px;padding:5px 11px;font-size:11px;font-weight:700;letter-spacing:.8px">PRIMARY</span>
+      </div>
+      <div style="margin-top:14px;display:flex;align-items:baseline;gap:10px">
+        <span style="font-size:96px;font-weight:800;letter-spacing:-6px;line-height:.84">45</span>
+        <span style="font-size:22px;font-weight:600;color:rgba(255,255,255,.82)">days</span>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:8px">
+        <span class="seg" style="background:var(--gold)"></span><span class="seg" style="background:var(--gold)"></span><span class="seg" style="background:rgba(255,255,255,.28)"></span><span class="seg" style="background:rgba(255,255,255,.28)"></span><span class="seg" style="background:rgba(255,255,255,.28)"></span><span class="seg" style="background:rgba(255,255,255,.28)"></span><span class="seg" style="background:rgba(255,255,255,.28)"></span><span class="seg" style="background:rgba(255,255,255,.28)"></span>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+    <div><p class="lbl">STATTILE</p>
+      <div style="display:flex;gap:12px">
+        <div class="tile"><div class="tl">PACKED</div><div class="tv">12<span style="font-size:20px;color:var(--text-faint)">/38</span></div>
+          <div style="margin-top:12px;height:8px;border-radius:999px;background:var(--hairline);overflow:hidden"><span style="display:block;width:32%;height:8px;border-radius:999px;background:var(--accent)"></span></div></div>
+        <div class="tile"><div class="tl">NEXT UP</div><div class="tv">30</div><div style="margin-top:8px;font-family:var(--font-prose);font-size:13px;color:var(--text-muted)">days → one month to go</div></div>
+      </div></div>
+    <div><p class="lbl">WAITPILL — UNDER 20 / UNDER 45 / 45+ / NOT OPERATING</p>
+      <div style="display:flex;gap:10px;align-items:center;background:var(--dark-surface);padding:12px;border-radius:var(--radius-tile)">
+        <span class="pill" style="color:var(--wait-short)">10 min</span>
+        <span class="pill" style="color:var(--wait-mid)">35 min</span>
+        <span class="pill" style="color:var(--wait-long)">90 min</span>
+        <span style="background:var(--dark-raised);color:var(--dark-ink-muted);border-radius:999px;padding:6px 11px;font-size:11px;font-weight:700;letter-spacing:.6px">REFURB</span>
+      </div></div>
+    <div><p class="lbl">TRIPROW — ACTIVE / DIMMED</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="trow"><span class="sw" style="background:var(--park-panel-tokyo-disneyland)"></span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:600">Tokyo Adventure</span><span style="font-family:var(--font-prose);font-size:13px;color:var(--text-muted)">Day 3 of 7 — you're there!</span></span>
+          <span style="font-size:20px;color:var(--text-faint)">›</span></div>
+        <div class="trow" style="opacity:.6"><span class="sw" style="background:var(--park-panel-disneyland)"></span>
+          <span style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;font-weight:600">Disneyland Summer 2024</span><span style="font-family:var(--font-prose);font-size:13px;color:var(--text-muted)">Complete</span></span>
+          <span style="font-size:20px;color:var(--text-faint)">›</span></div>
+      </div></div>
+  </div>
+</div>
+</body></html>

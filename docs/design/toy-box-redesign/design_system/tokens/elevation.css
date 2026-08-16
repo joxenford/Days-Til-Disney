@@ -1,0 +1,8 @@
+:root {
+  /* The system is flat: separation comes from surface steps, not shadow.
+     The only shadow in the app is the device/preview frame. */
+  --shadow-none: none;
+  --shadow-frame: 0 24px 60px rgba(0,0,0,.5);
+  --border-checkbox: 2px solid var(--hairline);
+  --border-outline: 1.5px solid rgba(255,255,255,.35); /* on a park panel */
+}
