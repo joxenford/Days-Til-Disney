@@ -65,15 +65,4 @@ enum DisneyResort: String, Codable, CaseIterable, Identifiable {
     var primaryPark: DisneyPark {
         parks.first ?? .magicKingdom
     }
-
-    var castleAssetName: String {
-        switch self {
-        case .waltDisneyWorld:    return "castle-cinderella"
-        case .disneylandResort:   return "castle-sleeping-beauty"
-        case .tokyoDisneyResort:  return "castle-tokyo"
-        case .disneylandParis:    return "castle-paris"
-        case .hongKongDisneyland: return "castle-magical-dreams"
-        case .shanghaiDisneyland: return "castle-enchanted-storybook"
-        }
-    }
 }

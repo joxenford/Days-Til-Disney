@@ -1,5 +1,5 @@
 /* ============================================
-   Days Til Disney — Marketing Website JS
+   Countdown to Magic — Marketing Website JS
    Minimal vanilla JS for interactions
    ============================================ */
 

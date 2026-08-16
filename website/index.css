@@ -1,5 +1,5 @@
 /* ============================================
-   Days Til Disney — Landing Page Styles
+   Countdown to Magic — Landing Page Styles
    index.css (imports after styles.css)
    ============================================ */
 
@@ -124,6 +124,50 @@
   height: auto;
   display: block;
   border-radius: 36px;
+}
+
+/* Neutral placeholder standing in for the app screenshot until the
+   rebranded app ships. TODO: remove once a real screenshot replaces it. */
+.phone-placeholder {
+  width: 100%;
+  aspect-ratio: 660 / 1434;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 36px;
+  background: linear-gradient(180deg, var(--color-night-dark) 0%, var(--color-night-purple) 100%);
+  border: 1px solid var(--color-glass-border);
+}
+
+.phone-placeholder__eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+}
+
+.phone-placeholder__num {
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-text-primary);
+}
+
+.phone-placeholder__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-gold);
+  text-transform: uppercase;
+}
+
+.phone-placeholder__date {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
 }
 
 /* ---- Stats Strip ---- */

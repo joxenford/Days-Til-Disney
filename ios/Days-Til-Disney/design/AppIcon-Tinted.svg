@@ -1,0 +1,38 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Tinted variant: grayscale mark on black. iOS applies the user's tint by luminance. -->
+    <radialGradient id="star" cx="50%" cy="42%" r="62%">
+      <stop offset="0%"  stop-color="#FFFFFF"/>
+      <stop offset="45%" stop-color="#E4E4E4"/>
+      <stop offset="100%" stop-color="#C7C7C7"/>
+    </radialGradient>
+
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.30"/>
+      <stop offset="40%"  stop-color="#FFFFFF" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="trail" x1="0.60" y1="0.44" x2="0.24" y2="0.78">
+      <stop offset="0%"   stop-color="#DCDCDC" stop-opacity="0.95"/>
+      <stop offset="55%"  stop-color="#B8B8B8" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#B8B8B8" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="#000000"/>
+
+  <g transform="translate(-30,72)">
+    <circle cx="600" cy="440" r="300" fill="url(#glow)"/>
+    <path d="M 636 522
+             Q 480 648 250 800
+             Q 424 556 512 402 Z"
+          fill="url(#trail)"/>
+    <path d="M 600 282
+             Q 600 440 762 440
+             Q 600 440 600 598
+             Q 600 440 438 440
+             Q 600 440 600 282 Z"
+          fill="url(#star)"/>
+  </g>
+</svg>

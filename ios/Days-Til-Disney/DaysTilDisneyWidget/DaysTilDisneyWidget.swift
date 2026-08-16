@@ -80,8 +80,8 @@ struct DaysTilDisneyWidget: Widget {
                     }
                 }
         }
-        .configurationDisplayName("Days 'Til Disney")
-        .description("Count down the days to your Disney trip.")
+        .configurationDisplayName("Countdown to Magic")
+        .description("Count down the days to your next trip.")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular, .accessoryRectangular])
     }
 }
@@ -116,8 +116,8 @@ struct SmallWidgetView: View {
     var body: some View {
         if let trip {
             ZStack(alignment: .bottomTrailing) {
-                // Castle watermark — larger and more ghostly for legibility.
-                WidgetCastleSilhouette(size: 70)
+                // Hero mark watermark — larger and more ghostly for legibility.
+                WidgetHeroMark(size: 70)
                     .opacity(0.12)
                     .offset(x: 10, y: 10)
                     .accessibilityHidden(true)
@@ -168,8 +168,8 @@ struct MediumWidgetView: View {
     var body: some View {
         if let trip {
             ZStack(alignment: .trailing) {
-                // Castle on the right — partially clipped for a sense of grandeur.
-                WidgetCastleSilhouette(size: 100)
+                // Hero mark on the right — partially clipped for a sense of grandeur.
+                WidgetHeroMark(size: 100)
                     .opacity(0.2)
                     .offset(x: 30, y: 15)
                     .accessibilityHidden(true)
@@ -257,7 +257,7 @@ struct AccessoryCircularWidgetView: View {
                 Text("—")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
             }
-            .accessibilityLabel("Days Til Disney. No trip configured.")
+            .accessibilityLabel("Countdown to Magic. No trip configured.")
         }
     }
 }
@@ -298,10 +298,10 @@ struct AccessoryRectangularWidgetView: View {
             HStack {
                 Image(systemName: "sparkles")
                     .accessibilityHidden(true)
-                Text("Add a Disney trip!")
+                Text("Add a trip!")
                     .font(.system(size: 12, weight: .medium, design: .rounded))
             }
-            .accessibilityLabel("Days Til Disney. Add a trip to start your countdown.")
+            .accessibilityLabel("Countdown to Magic. Add a trip to start your countdown.")
         }
     }
 }
@@ -316,7 +316,7 @@ private func widgetAccessibilityLabel(trip: WidgetTripEntry) -> String {
         return "\(trip.tripName). Today is the day!"
     } else {
         let days = trip.daysUntilStart
-        return "\(trip.tripName). \(days) \(days == 1 ? "day" : "days") until your Disney trip."
+        return "\(trip.tripName). \(days) \(days == 1 ? "day" : "days") until your trip."
     }
 }
 
@@ -326,11 +326,11 @@ private func widgetAccessibilityLabel(trip: WidgetTripEntry) -> String {
 struct EmptyWidgetView: View {
     var body: some View {
         VStack(spacing: 6) {
-            Text("Days 'Til Disney")
+            Text("Countdown to Magic")
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.center)
-            WidgetCastleSilhouette(size: 44)
+            WidgetHeroMark(size: 44)
                 .opacity(0.5)
                 .accessibilityHidden(true)
             Text("Add a trip!")
@@ -338,102 +338,60 @@ struct EmptyWidgetView: View {
                 .foregroundStyle(.white.opacity(0.65))
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Days Til Disney. Add a trip to start your countdown.")
+        .accessibilityLabel("Countdown to Magic. Add a trip to start your countdown.")
     }
 }
 
-// MARK: - Castle Silhouette (self-contained for widget extension)
+// MARK: - Wish hero mark (self-contained for widget extension)
 
-struct WidgetCastleSilhouette: View {
+struct WidgetHeroMark: View {
     let size: CGFloat
 
     var body: some View {
-        WidgetFallbackCastleShape()
+        WidgetWishStarShape()
             .fill(.white)
             .frame(width: size, height: size)
     }
 }
 
-/// Cinderella Castle–inspired silhouette optimized for small widget sizes.
-/// Clean lines, no fine details that become noise at 60-70pt.
+/// The "Wish" shooting-star mark optimized for small widget sizes.
 ///
-/// SYNC NOTE: This shape is intentionally duplicated from `FallbackCastleShape` in
+/// SYNC NOTE: This shape is intentionally duplicated from `WishStar.path(in:)` in
 /// `Days-Til-Disney/DesignSystem/Components/CastleSilhouetteView.swift`.
 /// The widget extension cannot import from the main app target, so both shapes
 /// must be maintained independently. If you change the path coordinates here,
 /// update the corresponding shape in CastleSilhouetteView.swift as well.
-struct WidgetFallbackCastleShape: Shape {
+struct WidgetWishStarShape: Shape {
     func path(in rect: CGRect) -> Path {
+        // Single continuous outline: a sparkle head (top / right / left tips) whose
+        // lower-left arm is elongated into a tapering comet trail.
         let w = rect.width
         let h = rect.height
+        let m = min(w, h)
         var path = Path()
 
-        // ── Outline traced clockwise from bottom-left ──
+        let cx = w * 0.60
+        let cy = h * 0.40
+        let arm = m * 0.30
+        let waist = m * 0.085
 
-        // Left wall.
-        path.move(to: CGPoint(x: w * 0.13, y: h))
-        path.addLine(to: CGPoint(x: w * 0.13, y: h * 0.65))
+        let n    = CGPoint(x: cx,        y: cy - arm)
+        let e    = CGPoint(x: cx + arm,  y: cy)
+        let wl   = CGPoint(x: cx - arm,  y: cy)
+        let tail = CGPoint(x: w * 0.10,  y: h * 0.92)
 
-        // Left outer turret — clean triangular spire.
-        path.addLine(to: CGPoint(x: w * 0.16, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.16, y: h * 0.40))
-        path.addLine(to: CGPoint(x: w * 0.20, y: h * 0.20))
-        path.addLine(to: CGPoint(x: w * 0.24, y: h * 0.40))
-        path.addLine(to: CGPoint(x: w * 0.24, y: h * 0.65))
+        let vNE = CGPoint(x: cx + waist,       y: cy - waist)
+        let vES = CGPoint(x: cx + waist,       y: cy + waist)
+        let vTW = CGPoint(x: cx - waist * 1.3, y: cy + waist * 0.7)
+        let vWN = CGPoint(x: cx - waist,       y: cy - waist)
 
-        // Left peaked roofline.
-        path.addLine(to: CGPoint(x: w * 0.29, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.31, y: h * 0.57))
-        path.addLine(to: CGPoint(x: w * 0.33, y: h * 0.65))
-
-        // Left secondary spire — flanking the center.
-        path.addLine(to: CGPoint(x: w * 0.36, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.36, y: h * 0.34))
-        path.addLine(to: CGPoint(x: w * 0.40, y: h * 0.13))
-        path.addLine(to: CGPoint(x: w * 0.44, y: h * 0.34))
-        path.addLine(to: CGPoint(x: w * 0.44, y: h * 0.65))
-
-        // ── Central spire — dominant, reaches the top ──
-        path.addLine(to: CGPoint(x: w * 0.45, y: h * 0.30))
-        path.addLine(to: CGPoint(x: w * 0.50, y: h * 0.0))
-        path.addLine(to: CGPoint(x: w * 0.55, y: h * 0.30))
-
-        // Right secondary spire — slightly taller for asymmetry.
-        path.addLine(to: CGPoint(x: w * 0.56, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.56, y: h * 0.32))
-        path.addLine(to: CGPoint(x: w * 0.60, y: h * 0.11))
-        path.addLine(to: CGPoint(x: w * 0.64, y: h * 0.32))
-        path.addLine(to: CGPoint(x: w * 0.64, y: h * 0.65))
-
-        // Right peaked roofline.
-        path.addLine(to: CGPoint(x: w * 0.67, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.69, y: h * 0.58))
-        path.addLine(to: CGPoint(x: w * 0.71, y: h * 0.65))
-
-        // Right outer turret — slightly wider for asymmetry.
-        path.addLine(to: CGPoint(x: w * 0.75, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.75, y: h * 0.38))
-        path.addLine(to: CGPoint(x: w * 0.80, y: h * 0.17))
-        path.addLine(to: CGPoint(x: w * 0.85, y: h * 0.38))
-        path.addLine(to: CGPoint(x: w * 0.85, y: h * 0.65))
-
-        // Right wall.
-        path.addLine(to: CGPoint(x: w * 0.87, y: h * 0.65))
-        path.addLine(to: CGPoint(x: w * 0.87, y: h))
-
-        // ── Gothic pointed arch gate ──
-        path.addLine(to: CGPoint(x: w * 0.60, y: h))
-        path.addQuadCurve(
-            to: CGPoint(x: w * 0.50, y: h * 0.75),
-            control: CGPoint(x: w * 0.57, y: h * 0.80)
-        )
-        path.addQuadCurve(
-            to: CGPoint(x: w * 0.40, y: h),
-            control: CGPoint(x: w * 0.43, y: h * 0.80)
-        )
-        path.addLine(to: CGPoint(x: w * 0.13, y: h))
-
+        path.move(to: n)
+        path.addQuadCurve(to: e,    control: vNE)
+        path.addQuadCurve(to: tail, control: vES)
+        path.addQuadCurve(to: wl,   control: vTW)
+        path.addQuadCurve(to: n,    control: vWN)
         path.closeSubpath()
+
         return path
     }
 }

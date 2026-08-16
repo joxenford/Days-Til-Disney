@@ -101,14 +101,14 @@ struct iPadHomeLayout: View {
 
     private var emptyHeroPlaceholder: some View {
         VStack(spacing: 20) {
-            CastleSilhouetteView(
+            HeroMarkView(
                 park: .magicKingdom,
                 size: 140,
                 color: .white,
                 opacity: 0.55,
                 showGlow: false
             )
-            Text("Days 'Til Disney")
+            Text("Countdown to Magic")
                 .font(.system(size: 22, weight: .bold, design: .rounded))
                 .foregroundStyle(.white.opacity(0.8))
         }
@@ -210,7 +210,7 @@ private struct HomeRightPanelView: View {
 
         case .empty:
             VStack(spacing: 28) {
-                CastleSilhouetteView(
+                HeroMarkView(
                     park: .magicKingdom,
                     size: 120,
                     color: .white,
@@ -222,7 +222,7 @@ private struct HomeRightPanelView: View {
                     Text("Your adventure awaits!")
                         .font(DTDFont.titlePrimary)
                         .foregroundStyle(.white)
-                    Text("Add your first Disney trip to start the countdown.")
+                    Text("Add your first trip to start the countdown.")
                         .font(DTDFont.body)
                         .foregroundStyle(.white.opacity(0.75))
                         .multilineTextAlignment(.center)
@@ -382,7 +382,7 @@ private struct HomeRightPanelView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             // H-1: Use DTDFont.headline — rounded, semibold, Dynamic Type aware.
-            Text("Days 'Til Disney")
+            Text("Countdown to Magic")
                 .font(DTDFont.headline)
                 .foregroundStyle(.white)
                 .fixedSize()

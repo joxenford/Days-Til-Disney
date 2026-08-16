@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// First-launch welcome screen shown after the splash animation.
-/// Presents a magical castle backdrop with a CTA to create the user's first trip.
+/// Presents a magical hero-mark backdrop with a CTA to create the user's first trip.
 struct WelcomeView: View {
     /// Called when the user taps "Create Your First Trip" — the caller navigates to AddEditTripView.
     let onCreateTrip: () -> Void
@@ -10,8 +10,8 @@ struct WelcomeView: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @State private var castleOpacity: Double = 0
-    @State private var castleOffset: CGFloat = 60
+    @State private var markOpacity: Double = 0
+    @State private var markOffset: CGFloat = 60
     @State private var contentOpacity: Double = 0
     @State private var sparkleOpacity: Double = 0
 
@@ -31,19 +31,19 @@ struct WelcomeView: View {
             VStack(spacing: 0) {
                 Spacer()
 
-                // Castle hero.
+                // Hero mark.
                 ZStack {
-                    CastleSilhouetteView(
+                    HeroMarkView(
                         park: .magicKingdom,
                         size: 240,
                         color: .white,
-                        opacity: castleOpacity,
+                        opacity: markOpacity,
                         showGlow: true,
                         glowColor: Color.magicSparkle
                     )
-                    .offset(y: castleOffset)
+                    .offset(y: markOffset)
 
-                    // Sparkle constellation around the castle.
+                    // Sparkle constellation around the mark.
                     WelcomeSparkles()
                         .opacity(sparkleOpacity)
                         .accessibilityHidden(true)
@@ -58,7 +58,7 @@ struct WelcomeView: View {
                         .font(DTDFont.titleSecondary)
                         .foregroundStyle(.white.opacity(0.85))
 
-                    Text("Days 'Til Disney")
+                    Text("Countdown to Magic")
                         .font(.system(size: 36, weight: .black, design: .rounded))
                         .foregroundStyle(Color.disneyGold)
                         .shadow(color: Color.disneyGold.opacity(0.4), radius: 8, y: 4)
@@ -85,7 +85,7 @@ struct WelcomeView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 18))
                             .shadow(color: .white.opacity(0.25), radius: 12, y: 6)
                     }
-                    .accessibilityLabel("Create your first Disney trip")
+                    .accessibilityLabel("Create your first trip")
                     .padding(.horizontal, 32)
 
                     // H-2: Minimum 44×44pt tap target + capsule background for visual affordance.
@@ -117,20 +117,20 @@ struct WelcomeView: View {
     private func runEntrance() {
         if reduceMotion {
             // Skip animations — show everything immediately.
-            castleOpacity = 0.9
-            castleOffset = 0
+            markOpacity = 0.9
+            markOffset = 0
             sparkleOpacity = 1.0
             contentOpacity = 1.0
             return
         }
 
-        // Castle rises from below.
+        // Mark rises from below.
         withAnimation(.spring(response: 0.9, dampingFraction: 0.72).delay(0.1)) {
-            castleOpacity = 0.9
-            castleOffset = 0
+            markOpacity = 0.9
+            markOffset = 0
         }
 
-        // Sparkles pop after castle settles.
+        // Sparkles pop after the mark settles.
         withAnimation(.spring(response: 0.6, dampingFraction: 0.65).delay(0.55)) {
             sparkleOpacity = 1.0
         }

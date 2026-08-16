@@ -43,7 +43,7 @@ enum DefaultPackingItems {
         Template(name: "Poncho or compact rain jacket", category: .parkDay),
         Template(name: "Sunglasses", category: .parkDay),
         Template(name: "Hat or sun visor", category: .parkDay),
-        Template(name: "Mickey ears / Disney ears", category: .parkDay),
+        Template(name: "Themed ears / headband", category: .parkDay),
         Template(name: "Lanyard for park tickets", category: .parkDay),
 
         // Electronics

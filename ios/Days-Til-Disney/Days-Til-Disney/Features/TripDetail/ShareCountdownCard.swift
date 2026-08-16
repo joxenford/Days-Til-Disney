@@ -39,8 +39,8 @@ struct ShareCountdownCard: View {
                 endRadius: ShareCountdownCard.width * 0.85
             )
 
-            // Castle watermark — large and ethereal behind everything.
-            CastleSilhouetteView(
+            // Hero mark watermark — large and ethereal behind everything.
+            HeroMarkView(
                 park: park,
                 size: ShareCountdownCard.width * 0.85,
                 color: .white,
@@ -165,7 +165,7 @@ struct ShareCountdownCard: View {
             Image(systemName: "wand.and.stars")
                 .font(.caption)
                 .foregroundStyle(accentColor.opacity(0.9))
-            Text("Days Til Disney")
+            Text("Countdown to Magic")
                 .font(.system(.caption, design: .rounded, weight: .semibold))
                 .foregroundStyle(.white.opacity(0.70))
         }

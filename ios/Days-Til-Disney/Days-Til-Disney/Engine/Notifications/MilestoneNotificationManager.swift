@@ -187,12 +187,12 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
         switch milestone.daysOut {
         case 100: return "\(emoji) 100 Days of Magic!"
         case 50:  return "\(emoji) 50 Days to Go!"
-        case 30:  return "\(emoji) One Month Until Disney!"
+        case 30:  return "\(emoji) One Month Until Your Trip!"
         case 14:  return "\(emoji) Two Weeks Away!"
         case 7:   return "\(emoji) One Week Until the Magic!"
         case 3:   return "\(emoji) Almost There — 3 Days!"
         case 1:   return "\(emoji) Tomorrow's the Big Day!"
-        default:  return "\(emoji) \(milestone.daysOut) Days to Disney!"
+        default:  return "\(emoji) \(milestone.daysOut) Days to Go!"
         }
     }
 
@@ -212,7 +212,7 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
         case 3:
             return "Just 3 days until \(parkName)! Finish those last-minute preparations and rest up."
         case 1:
-            return "One sleep left! Tomorrow you'll be at \(parkName). Sweet Disney dreams tonight!"
+            return "One sleep left! Tomorrow you'll be at \(parkName). Sweet dreams tonight!"
         default:
             return "\(milestone.daysOut) days until \(snapshot.name) at \(parkName). The magic is coming!"
         }

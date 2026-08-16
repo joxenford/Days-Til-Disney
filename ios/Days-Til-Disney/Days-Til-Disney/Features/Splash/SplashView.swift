@@ -1,14 +1,14 @@
 import SwiftUI
 
-/// Launch splash screen. Displays an animated castle with sparkle effects
+/// Launch splash screen. Displays an animated hero mark with sparkle effects
 /// then calls `onComplete` to transition to the home screen.
 struct SplashView: View {
     let onComplete: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    @State private var castleOpacity: Double = 0
-    @State private var castleScale: Double = 0.6
+    @State private var markOpacity: Double = 0
+    @State private var markScale: Double = 0.6
     @State private var titleOpacity: Double = 0
     @State private var sparkleOpacity: Double = 0
     @State private var sparkleScale: Double = 0.5
@@ -26,14 +26,14 @@ struct SplashView: View {
             VStack(spacing: 32) {
                 Spacer()
 
-                // Castle silhouette
-                CastleSilhouetteView(
+                // Hero mark
+                HeroMarkView(
                     park: .magicKingdom,
                     size: 220,
                     color: .white,
-                    opacity: castleOpacity
+                    opacity: markOpacity
                 )
-                .scaleEffect(castleScale)
+                .scaleEffect(markScale)
 
                 // Sparkle decoration
                 SparkleDecoration()
@@ -43,11 +43,11 @@ struct SplashView: View {
 
                 // App title
                 VStack(spacing: 8) {
-                    Text("Days Til")
+                    Text("Countdown to")
                         .font(DTDFont.displayMedium)
                         .foregroundStyle(Color.disneyGold)
 
-                    Text("Disney")
+                    Text("Magic")
                         .font(.system(size: 48, weight: .black, design: .rounded))
                         .foregroundStyle(.white)
                 }
@@ -58,7 +58,7 @@ struct SplashView: View {
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Days Til Disney, loading")
+        .accessibilityLabel("Countdown to Magic, loading")
         .task {
             runAnimation()
             // Use Task.sleep instead of DispatchQueue.main.asyncAfter so the wait is
@@ -74,18 +74,18 @@ struct SplashView: View {
     private func runAnimation() {
         if reduceMotion {
             // Show everything immediately — no motion.
-            castleOpacity = 0.85
-            castleScale = 1.0
+            markOpacity = 0.85
+            markScale = 1.0
             sparkleOpacity = 1.0
             sparkleScale = 1.0
             titleOpacity = 1.0
             return
         }
 
-        // 1. Castle rises
+        // 1. Mark rises
         withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
-            castleOpacity = 0.85
-            castleScale = 1.0
+            markOpacity = 0.85
+            markScale = 1.0
         }
 
         // 2. Sparkles pop

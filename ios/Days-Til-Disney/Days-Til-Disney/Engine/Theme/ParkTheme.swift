@@ -5,7 +5,6 @@ import SwiftUI
 protocol ParkTheme {
     var park: DisneyPark { get }
     var palette: ParkColorPalette { get }
-    var castleAssetName: String { get }
     var timeOfDay: TimeOfDay { get }
 
     var primaryColor: Color { get }
@@ -17,7 +16,6 @@ protocol ParkTheme {
 // MARK: - Default implementations
 
 extension ParkTheme {
-    var castleAssetName: String { park.castleAssetName }
     var primaryColor: Color { palette.primary }
     var secondaryColor: Color { palette.secondary }
     var accentColor: Color { palette.accent }

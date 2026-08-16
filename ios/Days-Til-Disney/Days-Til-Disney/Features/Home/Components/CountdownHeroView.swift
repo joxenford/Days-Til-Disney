@@ -65,8 +65,8 @@ struct CountdownHeroView: View {
                         }
 
                     VStack(spacing: 0) {
-                        // Castle silhouette header — glows with the park's accent color.
-                        CastleSilhouetteView(
+                        // Hero mark header — glows with the park's accent color.
+                        HeroMarkView(
                             park: trip.primaryPark,
                             size: 110,
                             color: .white,
@@ -237,7 +237,7 @@ struct CountdownHeroView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Day \(dayNumber) of \(totalDays)")
 
-            Text("You're at Disney!")
+            Text("You're at the parks!")
                 .font(DTDFont.headline)
                 .foregroundStyle(.white.opacity(0.85))
 

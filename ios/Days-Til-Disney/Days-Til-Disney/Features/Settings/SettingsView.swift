@@ -69,12 +69,12 @@ struct SettingsView: View {
             }
 
             // About.
-            Section("About") {
+            Section {
                 HStack {
-                    Text("Days Til Disney")
+                    Text("Countdown to Magic")
                         .font(DTDFont.body)
                     Spacer()
-                    Image(systemName: "castle.fill")
+                    Image(systemName: "sparkles")
                         .foregroundStyle(Color.disneyGold)
                         .accessibilityHidden(true)
                 }
@@ -102,6 +102,13 @@ struct SettingsView: View {
                     Link("Support", destination: supportURL)
                         .font(DTDFont.body)
                 }
+            } header: {
+                Text("About")
+            } footer: {
+                Text("Countdown to Magic is an unofficial app. Not affiliated with, endorsed by, or sponsored by The Walt Disney Company.")
+                    .font(DTDFont.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("about.disclaimer")
             }
 
             #if DEBUG

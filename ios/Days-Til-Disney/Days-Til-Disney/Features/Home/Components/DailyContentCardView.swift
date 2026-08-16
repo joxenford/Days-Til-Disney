@@ -113,7 +113,7 @@ struct DailyContentCardView: View {
             body: "Walt Disney World resort guests can make dining reservations 60 days before their check-in date for the entire length of their stay. Log into My Disney Experience at 6:00 AM Eastern Time for the best availability at popular restaurants like Be Our Guest and Cinderella's Royal Table.",
             resort: .waltDisneyWorld,
             daysOutRange: .planningTips,
-            source: "Disney Official"
+            source: nil
         ))
         .padding(.horizontal, 20)
     }

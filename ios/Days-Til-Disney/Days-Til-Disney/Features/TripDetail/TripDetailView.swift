@@ -98,7 +98,7 @@ struct TripDetailView: View {
 
         case .error(let message):
             VStack(spacing: 24) {
-                CastleSilhouetteView(
+                HeroMarkView(
                     park: .magicKingdom,
                     size: 120,
                     color: .white,
@@ -130,8 +130,8 @@ struct TripDetailView: View {
         case .loaded(let trip, let content):
             ScrollView {
                 VStack(spacing: 24) {
-                    // Large castle hero.
-                    CastleSilhouetteView(
+                    // Large hero mark.
+                    HeroMarkView(
                         park: trip.primaryPark,
                         size: 180,
                         color: .white,
@@ -409,7 +409,7 @@ struct TripDetailView: View {
     @ViewBuilder
     private func contentFeed(content: [DailyContent]) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Disney Tips for Your Trip")
+            Text("Tips for Your Trip")
                 .font(DTDFont.titleSecondary)
                 .foregroundStyle(.white)
                 .padding(.horizontal, 20)

@@ -211,7 +211,7 @@ struct HomeView: View {
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
             // H-1: Use DTDFont.headline — rounds, semibold, Dynamic Type aware.
-            Text("Days 'Til Disney")
+            Text("Countdown to Magic")
                 .font(DTDFont.headline)
                 .foregroundStyle(.white)
                 .fixedSize()
@@ -248,7 +248,7 @@ private struct EmptyTripsView: View {
 
     var body: some View {
         VStack(spacing: 28) {
-            CastleSilhouetteView(
+            HeroMarkView(
                 park: .magicKingdom,
                 size: 160,
                 color: .white,
@@ -262,7 +262,7 @@ private struct EmptyTripsView: View {
                     .font(DTDFont.titlePrimary)
                     .foregroundStyle(.white)
 
-                Text("Add your first Disney trip to start the countdown.")
+                Text("Add your first trip to start the countdown.")
                     .font(DTDFont.body)
                     .foregroundStyle(.white.opacity(0.75))
                     .multilineTextAlignment(.center)

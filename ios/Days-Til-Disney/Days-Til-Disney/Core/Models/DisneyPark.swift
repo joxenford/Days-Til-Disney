@@ -85,10 +85,6 @@ enum DisneyPark: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    var castleAssetName: String {
-        resort.castleAssetName
-    }
-
     /// The UUID used by the ThemeParks.wiki API to identify this park.
     /// Returns nil for parks that are not currently mapped (should not occur for any
     /// of the 12 supported parks, but callers must handle the optional gracefully).
