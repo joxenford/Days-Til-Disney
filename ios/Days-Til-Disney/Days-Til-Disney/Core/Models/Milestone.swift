@@ -14,49 +14,49 @@ struct Milestone: Identifiable, Hashable {
     static let all: [Milestone] = [
         Milestone(
             daysOut: 100,
-            title: "100 Days of Magic!",
+            title: "100 days of magic!",
             subtitle: "The countdown begins. Start dreaming big!",
             celebrationType: .confetti
         ),
         Milestone(
             daysOut: 50,
-            title: "Halfway There!",
+            title: "Halfway there!",
             subtitle: "50 days to go. Now is a great time to start planning.",
             celebrationType: .sparkle
         ),
         Milestone(
             daysOut: 30,
-            title: "One Month to Go!",
+            title: "One month to go!",
             subtitle: "30 days! Time to start packing lists and dining plans.",
             celebrationType: .confetti
         ),
         Milestone(
             daysOut: 14,
-            title: "Two Weeks Away!",
+            title: "Two weeks away!",
             subtitle: "The excitement is building. Two weeks!",
             celebrationType: .sparkle
         ),
         Milestone(
             daysOut: 7,
-            title: "One Week to Go!",
+            title: "One week to go!",
             subtitle: "Seven sleeps until the magic! Start packing.",
             celebrationType: .fireworks
         ),
         Milestone(
             daysOut: 3,
-            title: "Almost There!",
+            title: "Almost there!",
             subtitle: "Just 3 days! Finish those last-minute preparations.",
             celebrationType: .sparkle
         ),
         Milestone(
             daysOut: 1,
-            title: "Tomorrow's the Day!",
+            title: "Tomorrow's the day!",
             subtitle: "One sleep until the magic. Rest up, adventurer!",
             celebrationType: .fireworks
         ),
         Milestone(
             daysOut: 0,
-            title: "TODAY IS THE DAY!",
+            title: "Today is the day!",
             subtitle: "The wait is over. Welcome to the magic!",
             celebrationType: .fireworks
         )

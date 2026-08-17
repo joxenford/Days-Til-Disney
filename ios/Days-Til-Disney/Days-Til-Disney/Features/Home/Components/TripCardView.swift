@@ -73,7 +73,7 @@ struct TripCardView: View {
             .padding(.horizontal, 16)
             .background {
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(.ultraThinMaterial)
+                    .fill(DTDColor.surface)
                     .overlay {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(trip.colorPalette.primary.opacity(isPast ? 0.03 : 0.08))

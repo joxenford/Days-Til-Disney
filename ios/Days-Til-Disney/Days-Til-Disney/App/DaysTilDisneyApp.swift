@@ -24,14 +24,6 @@ struct DaysTilDisneyApp: App {
                 .environment(container.themeProvider)
                 .environment(\.parkThemeProvider, container.themeProvider)
                 .preferredColorScheme(container.userPreferences.colorScheme)
-                .onReceive(
-                    NotificationCenter.default.publisher(
-                        for: UIApplication.willEnterForegroundNotification
-                    )
-                ) { _ in
-                    // Refresh time-of-day gradient when returning from background.
-                    container.themeProvider.refreshTimeOfDay()
-                }
         }
     }
 }

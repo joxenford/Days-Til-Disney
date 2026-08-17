@@ -73,7 +73,7 @@ struct DailyContentCardView: View {
         }
         .background {
             RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThinMaterial)
+                .fill(DTDColor.surfaceRaised)
                 .overlay {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.disneyGold.opacity(0.05))

@@ -261,7 +261,7 @@ final class HomeViewModelTests: XCTestCase {
 
         await sut.onAppear()
 
-        XCTAssertEqual(themeProvider.currentTheme.park, .epcot)
+        XCTAssertEqual(themeProvider.park, .epcot)
     }
 
     // MARK: - Helpers

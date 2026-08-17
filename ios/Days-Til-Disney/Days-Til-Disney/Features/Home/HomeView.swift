@@ -2,7 +2,6 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: HomeViewModel?
     @State private var showCelebration = false
@@ -15,11 +14,8 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            // Layer 0: Park-themed gradient fills the entire screen.
-            GradientBackgroundView()
-
-            // Layer 1: Star field (visible at dusk/night, invisible during the day).
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             Group {
                 if let vm = viewModel {
@@ -248,15 +244,6 @@ private struct EmptyTripsView: View {
 
     var body: some View {
         VStack(spacing: 28) {
-            HeroMarkView(
-                park: .magicKingdom,
-                size: 160,
-                color: .white,
-                opacity: 0.85,
-                showGlow: true,
-                glowColor: Color.magicSparkle
-            )
-
             VStack(spacing: 12) {
                 Text("Your adventure awaits!")
                     .font(DTDFont.titlePrimary)

@@ -9,7 +9,6 @@ struct CountdownHeroView: View {
     /// Called when the user taps "Plan your next adventure" on a past primary trip.
     var onAddTrip: (() -> Void)? = nil
 
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppContainer.self) private var appContainer
 
@@ -18,9 +17,9 @@ struct CountdownHeroView: View {
     @State private var shortestWait: Int? = nil
     @State private var liveFetchAttempted = false
 
-    /// Accent color used for glows — prefer the theme's accent, fall back to park palette.
+    /// Accent color for the trip's park (used by ongoing/past display states).
     private var accentColor: Color {
-        themeProvider.currentTheme.accentColor
+        trip.colorPalette.accent
     }
 
     var body: some View {
@@ -32,50 +31,11 @@ struct CountdownHeroView: View {
 
             Button(action: trip.isPast ? (onAddTrip ?? onTap) : onTap) {
                 ZStack {
-                    // Card background: subtle park gradient tint over glass material.
+                    // ponytail: flat Phase-1 stub; the park panel styling lands in Phase 4.3.
                     RoundedRectangle(cornerRadius: 28)
-                        .fill(.ultraThinMaterial)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 28)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            trip.colorPalette.primary.opacity(0.30),
-                                            trip.colorPalette.backgroundGradientEnd.opacity(0.12),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                        }
-                        // Thin accent border for park identity.
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 28)
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [
-                                            accentColor.opacity(0.40),
-                                            accentColor.opacity(0.10),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                        }
+                        .fill(DTDColor.surface)
 
                     VStack(spacing: 0) {
-                        // Hero mark header — glows with the park's accent color.
-                        HeroMarkView(
-                            park: trip.primaryPark,
-                            size: 110,
-                            color: .white,
-                            opacity: 0.80,
-                            showGlow: true,
-                            glowColor: accentColor
-                        )
-                        .padding(.top, 28)
-
                         // Park name — use .textCase(.uppercase) rather than .uppercased()
                         // so VoiceOver reads the natural name instead of spelling letters.
                         Text(trip.primaryPark.displayName)
@@ -114,9 +74,6 @@ struct CountdownHeroView: View {
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 20)
-            // Two-layer shadow: a deep shadow for elevation, plus a colored bloom for magic.
-            .shadow(color: .black.opacity(0.35), radius: 24, y: 10)
-            .shadow(color: accentColor.opacity(0.25), radius: 32, y: 4)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(trip.isPast
                 ? "Trip complete. \(trip.name)."

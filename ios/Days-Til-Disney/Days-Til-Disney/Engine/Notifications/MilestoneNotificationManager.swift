@@ -185,14 +185,14 @@ final class DefaultMilestoneNotificationManager: MilestoneNotificationManager {
     private func notificationTitle(for milestone: Milestone, snapshot: TripNotificationSnapshot) -> String {
         let emoji = snapshot.primaryParkEmoji
         switch milestone.daysOut {
-        case 100: return "\(emoji) 100 Days of Magic!"
-        case 50:  return "\(emoji) 50 Days to Go!"
-        case 30:  return "\(emoji) One Month Until Your Trip!"
-        case 14:  return "\(emoji) Two Weeks Away!"
-        case 7:   return "\(emoji) One Week Until the Magic!"
-        case 3:   return "\(emoji) Almost There — 3 Days!"
-        case 1:   return "\(emoji) Tomorrow's the Big Day!"
-        default:  return "\(emoji) \(milestone.daysOut) Days to Go!"
+        case 100: return "\(emoji) 100 days of magic!"
+        case 50:  return "\(emoji) 50 days to go!"
+        case 30:  return "\(emoji) One month until your trip!"
+        case 14:  return "\(emoji) Two weeks away!"
+        case 7:   return "\(emoji) One week until the magic!"
+        case 3:   return "\(emoji) Almost there — 3 days!"
+        case 1:   return "\(emoji) Tomorrow's the big day!"
+        default:  return "\(emoji) \(milestone.daysOut) days to go!"
         }
     }
 

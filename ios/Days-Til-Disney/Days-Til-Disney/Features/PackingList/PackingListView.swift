@@ -4,15 +4,14 @@ struct PackingListView: View {
     let tripID: UUID
 
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: PackingListViewModel?
     @State private var showResetConfirmation = false
 
     var body: some View {
         ZStack {
-            GradientBackgroundView()
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             Group {
                 if let vm = viewModel {

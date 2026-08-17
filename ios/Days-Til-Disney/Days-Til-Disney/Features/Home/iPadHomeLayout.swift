@@ -9,7 +9,6 @@ import SwiftUI
 /// `NavigationStack` path in `AppNavigationRouter` is left completely untouched.
 struct iPadHomeLayout: View {
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     let router: AppNavigationRouter
@@ -62,8 +61,8 @@ struct iPadHomeLayout: View {
 
     private func leftColumn(width: CGFloat) -> some View {
         ZStack {
-            GradientBackgroundView()
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
             heroContent
         }
         // Width is 42% of the actual available container width from GeometryReader,
@@ -101,13 +100,6 @@ struct iPadHomeLayout: View {
 
     private var emptyHeroPlaceholder: some View {
         VStack(spacing: 20) {
-            HeroMarkView(
-                park: .magicKingdom,
-                size: 140,
-                color: .white,
-                opacity: 0.55,
-                showGlow: false
-            )
             Text("Countdown to Magic")
                 .font(.system(size: 22, weight: .bold, design: .rounded))
                 .foregroundStyle(.white.opacity(0.8))
@@ -180,8 +172,8 @@ private struct HomeRightPanelView: View {
 
     var body: some View {
         ZStack {
-            GradientBackgroundView()
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             Group {
                 if let vm = viewModel {
@@ -210,14 +202,6 @@ private struct HomeRightPanelView: View {
 
         case .empty:
             VStack(spacing: 28) {
-                HeroMarkView(
-                    park: .magicKingdom,
-                    size: 120,
-                    color: .white,
-                    opacity: 0.85,
-                    showGlow: true,
-                    glowColor: Color.magicSparkle
-                )
                 VStack(spacing: 12) {
                     Text("Your adventure awaits!")
                         .font(DTDFont.titlePrimary)

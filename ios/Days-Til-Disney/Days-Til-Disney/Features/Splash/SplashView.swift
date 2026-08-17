@@ -15,25 +15,12 @@ struct SplashView: View {
 
     var body: some View {
         ZStack {
-            // Background gradient — use Magic Kingdom palette as the "cold start" theme.
-            LinearGradient(
-                colors: DisneyPark.magicKingdom.colorPalette.gradientStops,
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+            // ponytail: flat Phase-1 stub; the 132×132 park panel lands in Phase 4.1.
+            DTDColor.bg
+                .ignoresSafeArea()
 
             VStack(spacing: 32) {
                 Spacer()
-
-                // Hero mark
-                HeroMarkView(
-                    park: .magicKingdom,
-                    size: 220,
-                    color: .white,
-                    opacity: markOpacity
-                )
-                .scaleEffect(markScale)
 
                 // Sparkle decoration
                 SparkleDecoration()

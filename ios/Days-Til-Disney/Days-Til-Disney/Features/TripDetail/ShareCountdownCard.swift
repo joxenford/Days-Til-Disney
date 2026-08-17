@@ -39,16 +39,6 @@ struct ShareCountdownCard: View {
                 endRadius: ShareCountdownCard.width * 0.85
             )
 
-            // Hero mark watermark — large and ethereal behind everything.
-            HeroMarkView(
-                park: park,
-                size: ShareCountdownCard.width * 0.85,
-                color: .white,
-                opacity: 0.07
-            )
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-            .offset(y: 30)
-
             // Main card content.
             VStack(spacing: 0) {
                 Spacer()

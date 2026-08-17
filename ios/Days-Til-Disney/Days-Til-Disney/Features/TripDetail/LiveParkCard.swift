@@ -96,7 +96,7 @@ struct LiveParkCard: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(DTDColor.surfaceRaised)
                 .overlay(
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .fill(

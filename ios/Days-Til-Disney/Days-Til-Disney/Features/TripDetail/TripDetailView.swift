@@ -5,7 +5,6 @@ struct TripDetailView: View {
     let router: AppNavigationRouter
 
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: TripDetailViewModel?
     @State private var showCelebration = false
@@ -15,8 +14,8 @@ struct TripDetailView: View {
 
     var body: some View {
         ZStack {
-            GradientBackgroundView()
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             Group {
                 if let vm = viewModel {
@@ -98,12 +97,6 @@ struct TripDetailView: View {
 
         case .error(let message):
             VStack(spacing: 24) {
-                HeroMarkView(
-                    park: .magicKingdom,
-                    size: 120,
-                    color: .white,
-                    opacity: 0.55
-                )
                 VStack(spacing: 12) {
                     Text("Something went wrong")
                         .font(DTDFont.titlePrimary)
@@ -130,15 +123,6 @@ struct TripDetailView: View {
         case .loaded(let trip, let content):
             ScrollView {
                 VStack(spacing: 24) {
-                    // Large hero mark.
-                    HeroMarkView(
-                        park: trip.primaryPark,
-                        size: 180,
-                        color: .white,
-                        opacity: 0.55
-                    )
-                    .padding(.top, 24)
-
                     // Trip name.
                     Text(trip.name)
                         .font(DTDFont.displayMedium)

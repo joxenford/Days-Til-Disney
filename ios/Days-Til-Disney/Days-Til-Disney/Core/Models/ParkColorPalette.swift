@@ -163,35 +163,17 @@ struct ParkColorPalette: Sendable {
         textOnPrimary: .white
     )
 
-    // MARK: - Time-of-Day Overlay Colors
+}
 
-    struct TimeOfDayOverlay {
-        let gradientStart: Color
-        let gradientEnd: Color
-        let opacity: Double
+// MARK: - Toy Box panel resolver
+
+extension ParkColorPalette {
+    /// The single park-coloured panel fill. Resolves to `primary` on light and the
+    /// `-deep` tone (`backgroundGradientMid1`) on dark. **No call site branches on
+    /// colorScheme** — every panel reads `@Environment(\.colorScheme)` and passes it here.
+    /// (`ImageRenderer`/share cards and the park dashboard's constant-deep panel pass an
+    /// explicit scheme by design.)
+    func panelColor(for scheme: ColorScheme) -> Color {
+        scheme == .dark ? backgroundGradientMid1 : primary
     }
-
-    static let dawnOverlay = TimeOfDayOverlay(
-        gradientStart: Color(hex: "#FF9966"),
-        gradientEnd: Color(hex: "#FFB347"),
-        opacity: 0.25
-    )
-
-    static let dayOverlay = TimeOfDayOverlay(
-        gradientStart: .clear,
-        gradientEnd: .clear,
-        opacity: 0.0
-    )
-
-    static let duskOverlay = TimeOfDayOverlay(
-        gradientStart: Color(hex: "#FF6B35"),
-        gradientEnd: Color(hex: "#8E44AD"),
-        opacity: 0.30
-    )
-
-    static let nightOverlay = TimeOfDayOverlay(
-        gradientStart: Color(hex: "#1a1a2e"),
-        gradientEnd: Color(hex: "#16213E"),
-        opacity: 0.45
-    )
 }

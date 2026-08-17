@@ -156,8 +156,7 @@ private struct MilestoneCelebrationCard: View {
         .padding(28)
         .background(
             RoundedRectangle(cornerRadius: 24)
-                .fill(.ultraThinMaterial)
-                .shadow(color: .black.opacity(0.3), radius: 20, y: 8)
+                .fill(DTDColor.surface)
         )
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(event.title). \(event.subtitle)")

@@ -17,33 +17,15 @@ struct WelcomeView: View {
 
     var body: some View {
         ZStack {
-            // Gradient background — Magic Kingdom palette matches the splash screen.
-            LinearGradient(
-                colors: DisneyPark.magicKingdom.colorPalette.gradientStops,
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-
-            // Twinkling star field.
-            StarFieldView()
+            // ponytail: flat Phase-1 stub; the tile-grid header lands in Phase 4.2.
+            DTDColor.bg
+                .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 Spacer()
 
-                // Hero mark.
+                // Sparkle constellation (hero mark removed — Toy Box has no Wish mark).
                 ZStack {
-                    HeroMarkView(
-                        park: .magicKingdom,
-                        size: 240,
-                        color: .white,
-                        opacity: markOpacity,
-                        showGlow: true,
-                        glowColor: Color.magicSparkle
-                    )
-                    .offset(y: markOffset)
-
-                    // Sparkle constellation around the mark.
                     WelcomeSparkles()
                         .opacity(sparkleOpacity)
                         .accessibilityHidden(true)

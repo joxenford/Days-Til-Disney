@@ -8,14 +8,13 @@ struct ParkDashboardView: View {
     let initialPark: DisneyPark
 
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
 
     @State private var viewModel: ParkDashboardViewModel?
 
     var body: some View {
         ZStack {
-            GradientBackgroundView()
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             if let vm = viewModel {
                 dashboardContent(vm: vm)
@@ -377,7 +376,7 @@ private struct AttractionRowCard: View {
         .padding(.vertical, 14)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(DTDColor.surface)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .fill(attraction.status.cardTint)
@@ -498,7 +497,7 @@ private struct ShowRowCard: View {
         .padding(.vertical, 14)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(DTDColor.surface)
                 .overlay(
                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .strokeBorder(.white.opacity(0.08), lineWidth: 1)
