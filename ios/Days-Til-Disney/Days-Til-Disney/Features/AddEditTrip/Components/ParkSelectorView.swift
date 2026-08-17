@@ -1,184 +1,141 @@
 import SwiftUI
 
-/// Visual resort/park picker. Displays resort cards grouped by destination.
-/// Each resort card expands to show individual park selection checkmarks.
+/// Toy Box resort/park picker. The selected resort renders as the screen's single
+/// `ParkPanel` with a check-box row per park; every other resort is a neutral
+/// surface pill that switches the selection.
 ///
 /// Park toggle logic lives exclusively in `onTogglePark` — the view never mutates
-/// `selectedParks` directly, avoiding duplicated guard logic.
+/// `selectedParks` directly, so the at-least-one-park invariant stays in the ViewModel.
 struct ParkSelectorView: View {
     @Binding var selectedResort: DisneyResort
     @Binding var selectedParks: Set<DisneyPark>
     let onResortChange: (DisneyResort) -> Void
-    /// Called when the user taps a park row. The parent is responsible for enforcing
-    /// deselection rules (e.g. keeping at least one park selected).
+    /// Called when the user taps a park row. The parent enforces deselection rules
+    /// (e.g. keeping at least one park selected).
     let onTogglePark: (DisneyPark) -> Void
 
     var body: some View {
-        VStack(spacing: 12) {
-            ForEach(DisneyResort.allCases) { resort in
-                ResortCard(
-                    resort: resort,
-                    isSelected: selectedResort == resort,
-                    selectedParks: selectedResort == resort ? selectedParks : [],
-                    onSelect: {
-                        onResortChange(resort)
-                    },
-                    onTogglePark: { park in
-                        // Only forward the toggle when the user is acting on the
-                        // currently selected resort's parks.
-                        if selectedResort == resort {
-                            onTogglePark(park)
+        VStack(spacing: DTDSpacing.tileGap) {
+            resortPanel
+            otherResorts
+        }
+    }
+
+    // MARK: - Selected resort panel (the one ParkPanel on this screen)
+
+    private var resortPanel: some View {
+        let resort = selectedResort
+        let parks = resort.parks
+        // First selected park in resort order carries the "THEME" tag — it drives Trip.primaryPark.
+        let themePark = parks.first(where: { selectedParks.contains($0) })
+
+        return ParkPanel(park: resort.primaryPark) {
+            VStack(alignment: .leading, spacing: DTDSpacing.x4) {
+                HStack(alignment: .center) {
+                    Text(resort.displayName)
+                        .font(DTDFont.bodyStrong)
+                        .foregroundStyle(.white)
+                    Spacer(minLength: 0)
+                    Text("SELECTED")
+                        .font(DTDFont.labelSmall)
+                        .textCase(.uppercase)
+                        .tracking(0.8)
+                        .foregroundStyle(.white)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, DTDSpacing.x4)
+                        .background(DTDColor.onParkBadge)
+                        .clipShape(Capsule())
+                }
+
+                Text("\(resort.location) · \(parks.count) park\(parks.count == 1 ? "" : "s")")
+                    .font(DTDFont.prose)
+                    .foregroundStyle(.white.opacity(0.8))
+
+                if parks.count > 1 {
+                    VStack(spacing: DTDSpacing.x3) {
+                        ForEach(parks) { park in
+                            parkRow(
+                                park: park,
+                                isSelected: selectedParks.contains(park),
+                                isTheme: park == themePark
+                            )
                         }
                     }
-                )
+                    .padding(.top, DTDSpacing.x2)
+                }
             }
         }
     }
-}
 
-// MARK: - Resort card
-
-private struct ResortCard: View {
-    let resort: DisneyResort
-    let isSelected: Bool
-    let selectedParks: Set<DisneyPark>
-    let onSelect: () -> Void
-    let onTogglePark: (DisneyPark) -> Void
-
-    @State private var isExpanded: Bool = false
-
-    var body: some View {
-        VStack(spacing: 0) {
-            // Resort header row.
-            // Expansion rules:
-            //   - Newly selected resort: .onChange(of: isSelected) opens it.
-            //   - Already selected resort: tapping toggles open/closed.
-            //   - Switching away from a resort: .onChange closes it implicitly
-            //     because isSelected becomes false, hiding the expanded section.
-            Button(action: {
-                if isSelected {
-                    // Already selected — toggle the expanded panel.
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        isExpanded.toggle()
-                    }
-                } else {
-                    // Selecting a new resort — onSelect triggers .onChange which
-                    // sets isExpanded = true for this card.
-                    onSelect()
-                }
-            }) {
-                HStack(spacing: 14) {
-                    // Selection indicator — 32pt visual size, 44pt tap target.
-                    ZStack {
-                        Circle()
-                            .strokeBorder(isSelected ? resort.primaryPark.colorPalette.primary : Color.secondary.opacity(0.4), lineWidth: 2)
-                            .frame(width: 32, height: 32)
-                        if isSelected {
-                            Circle()
-                                .fill(resort.primaryPark.colorPalette.primary)
-                                .frame(width: 18, height: 18)
-                        }
-                    }
-                    .frame(width: 44, height: 44)
-                    .contentShape(Circle())
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(resort.displayName)
-                            .font(DTDFont.bodyMedium)
-                            .foregroundStyle(.primary)
-
-                        Text(resort.location)
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    Spacer()
-
-                    // Park count badge.
-                    Text("\(resort.parks.count) \(resort.parks.count == 1 ? "park" : "parks")")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.secondary)
-
-                    Image(systemName: isExpanded && isSelected ? "chevron.up" : "chevron.down")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 14)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(resort.displayName)
-            .accessibilityHint(isSelected
-                ? (isExpanded ? "Tap to collapse park list" : "Tap to expand park list")
-                : "Tap to select this resort"
-            )
-            .accessibilityAddTraits(isSelected ? .isSelected : [])
-
-            // Park selection (expanded state).
-            if isExpanded && isSelected && resort.parks.count > 1 {
-                Divider()
-                    .padding(.horizontal, 16)
-
-                VStack(spacing: 0) {
-                    ForEach(resort.parks) { park in
-                        ParkRow(
-                            park: park,
-                            isSelected: selectedParks.contains(park),
-                            onToggle: { onTogglePark(park) }
-                        )
-                    }
-                }
-                .padding(.bottom, 8)
-                .transition(.opacity.combined(with: .move(edge: .top)))
-            }
-        }
-        .background {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.secondarySystemGroupedBackground))
-                .overlay {
-                    if isSelected {
-                        RoundedRectangle(cornerRadius: 16)
-                            .strokeBorder(resort.primaryPark.colorPalette.primary, lineWidth: 2)
-                    }
-                }
-        }
-        .onChange(of: isSelected) { _, nowSelected in
-            if nowSelected { isExpanded = true }
-        }
-    }
-}
-
-// MARK: - Park row (within expanded resort card)
-
-private struct ParkRow: View {
-    let park: DisneyPark
-    let isSelected: Bool
-    let onToggle: () -> Void
-
-    var body: some View {
-        Button(action: onToggle) {
-            HStack(spacing: 12) {
-                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(isSelected ? park.colorPalette.primary : Color.secondary.opacity(0.5))
-                    .font(.title3)
-
-                Text(park.emoji)
-                    .font(.body)
+    private func parkRow(park: DisneyPark, isSelected: Bool, isTheme: Bool) -> some View {
+        Button {
+            onTogglePark(park)
+        } label: {
+            HStack(spacing: DTDSpacing.x5) {
+                checkBox(isSelected: isSelected, tint: park.colorPalette.primary)
 
                 Text(park.displayName)
-                    .font(DTDFont.body)
-                    .foregroundStyle(.primary)
+                    .font(.system(size: 15, weight: isSelected ? .semibold : .medium, design: .rounded))
+                    .foregroundStyle(isSelected ? .white : .white.opacity(0.85))
 
-                Spacer()
+                Spacer(minLength: 0)
+
+                if isTheme {
+                    Text("THEME")
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .tracking(0.8)
+                        .foregroundStyle(.white.opacity(0.8))
+                }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
+            .padding(.vertical, DTDSpacing.x5)
+            .padding(.horizontal, DTDSpacing.x6)
+            .background(isSelected ? Color.white.opacity(0.16) : Color.clear)
+            .overlay {
+                if !isSelected {
+                    RoundedRectangle(cornerRadius: DTDRadius.chip, style: .continuous)
+                        .strokeBorder(DTDColor.onParkOutline, lineWidth: 1.5)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: DTDRadius.chip, style: .continuous))
             .contentShape(Rectangle())
         }
-        .buttonStyle(.plain)
+        .buttonStyle(DTDPressStyle())
         .accessibilityLabel("\(park.displayName), \(isSelected ? "selected" : "not selected")")
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    /// White 20px box; the park-coloured check carries the park identity (replaces the
+    /// removed `DisneyPark.emoji`). ponytail: mockup shows no separate colour swatch.
+    private func checkBox(isSelected: Bool, tint: Color) -> some View {
+        RoundedRectangle(cornerRadius: 7, style: .continuous)
+            .fill(isSelected ? Color.white : Color.clear)
+            .overlay {
+                if isSelected {
+                    Text("✓")
+                        .font(.system(size: 12, weight: .black, design: .rounded))
+                        .foregroundStyle(tint)
+                } else {
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .strokeBorder(Color.white.opacity(0.55), lineWidth: 1.5)
+                }
+            }
+            .frame(width: 20, height: 20)
+    }
+
+    // MARK: - Other resorts (neutral surface pills)
+
+    private var otherResorts: some View {
+        let others = DisneyResort.allCases.filter { $0 != selectedResort }
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: DTDSpacing.x4) {
+                ForEach(others) { resort in
+                    DTDChip(resort.displayName) {
+                        onResortChange(resort)
+                    }
+                }
+            }
+            .padding(.horizontal, 2)
+        }
     }
 }
 
@@ -188,7 +145,7 @@ private struct ParkRow: View {
     @Previewable @State var resort: DisneyResort = .waltDisneyWorld
     @Previewable @State var parks: Set<DisneyPark> = [.magicKingdom]
 
-    ScrollView {
+    return ScrollView {
         ParkSelectorView(
             selectedResort: $resort,
             selectedParks: $parks,
@@ -203,5 +160,5 @@ private struct ParkRow: View {
         )
         .padding()
     }
-    .background(Color(.systemGroupedBackground))
+    .background(DTDColor.bg)
 }

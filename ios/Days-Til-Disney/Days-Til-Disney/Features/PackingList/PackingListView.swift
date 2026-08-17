@@ -17,14 +17,13 @@ struct PackingListView: View {
                 if let vm = viewModel {
                     contentView(vm: vm)
                 } else {
-                    ProgressView().tint(.white)
+                    ProgressView().tint(DTDColor.accentInteractive)
                 }
             }
         }
-        .navigationTitle("Packing List")
+        .navigationTitle("Packing list")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.clear, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             let vm = PackingListViewModel.make(tripID: tripID, from: appContainer)
@@ -59,209 +58,160 @@ struct PackingListView: View {
     private func contentView(vm: PackingListViewModel) -> some View {
         switch vm.viewState {
         case .loading:
-            ProgressView().tint(.white)
+            ProgressView().tint(DTDColor.accentInteractive)
 
         case .error(let message):
-            VStack(spacing: 16) {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.largeTitle)
-                    .foregroundStyle(.white.opacity(0.6))
+            VStack(spacing: DTDSpacing.x7) {
+                Text("Something went wrong")
+                    .font(DTDFont.title)
+                    .foregroundStyle(DTDColor.textPrimary)
                 Text(message)
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white)
+                    .font(DTDFont.prose)
+                    .foregroundStyle(DTDColor.textMuted)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
 
-        case .loaded(_, let sections):
+        case .loaded(let trip, let sections):
             ScrollView {
-                VStack(spacing: 20) {
-                    progressHeader(vm: vm)
+                VStack(spacing: DTDSpacing.tileGap) {
+                    summaryPanel(vm: vm, trip: trip)
 
-                    if sections.isEmpty {
-                        emptyState(vm: vm)
-                    } else {
-                        ForEach(sections) { section in
-                            sectionView(section: section, vm: vm)
-                        }
+                    ForEach(sections) { section in
+                        sectionCard(section: section, vm: vm)
                     }
 
                     if vm.isAddingItem {
                         addItemForm(vm: vm)
+                    } else {
+                        addOwnItemFooter(vm: vm)
                     }
 
                     Spacer().frame(height: 40)
                 }
-                .padding(.top, 16)
+                .padding(.horizontal, DTDSpacing.gutter)
+                .padding(.top, DTDSpacing.x7)
             }
         }
     }
 
-    // MARK: - Progress header
+    // MARK: - Summary panel (the one ParkPanel)
 
-    private func progressHeader(vm: PackingListViewModel) -> some View {
-        VStack(spacing: 12) {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("\(vm.totalChecked) of \(vm.totalItems) packed")
-                        .font(DTDFont.titleSecondary)
-                        .foregroundStyle(.white)
-                    Text(progressLabel(checked: vm.totalChecked, total: vm.totalItems))
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.65))
+    private func summaryPanel(vm: PackingListViewModel, trip: Trip) -> some View {
+        let done = vm.totalChecked
+        let total = vm.totalItems
+        return ParkPanel(park: trip.primaryPark) {
+            VStack(alignment: .leading, spacing: DTDSpacing.x5) {
+                HStack(alignment: .lastTextBaseline) {
+                    HStack(alignment: .lastTextBaseline, spacing: 0) {
+                        // ponytail: 64/800 packing summary numeral has no Numeral role — hand-rolled.
+                        Text("\(done)")
+                            .font(.system(size: 64, weight: .black, design: .rounded))
+                            .tracking(-4)
+                            .foregroundStyle(.white)
+                        Text("/\(total)")
+                            .font(.system(size: 28, weight: .black, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.7))
+                    }
+                    Spacer(minLength: 0)
+                    Text("\(max(0, total - done)) to go")
+                        .font(DTDFont.prose)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white.opacity(0.8))
                 }
-                Spacer()
-                // Circular progress indicator.
-                CircularProgressView(
-                    progress: vm.totalItems > 0
-                        ? Double(vm.totalChecked) / Double(vm.totalItems)
-                        : 0
-                )
-                .frame(width: 52, height: 52)
+                DTDProgressBar(value: done, total: total, tone: .gold, height: 10)
             }
-            .padding(.horizontal, 20)
-
-            // Linear progress bar.
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(.white.opacity(0.15))
-                        .frame(height: 6)
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(Color.disneyGold)
-                        .frame(
-                            width: vm.totalItems > 0
-                                ? geo.size.width * CGFloat(vm.totalChecked) / CGFloat(vm.totalItems)
-                                : 0,
-                            height: 6
-                        )
-                        .animation(reduceMotion ? .none : .spring(response: 0.4, dampingFraction: 0.8), value: vm.totalChecked)
-                }
-            }
-            .frame(height: 6)
-            .padding(.horizontal, 20)
         }
-        .padding(.vertical, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.white.opacity(0.07))
-        )
-        .padding(.horizontal, 20)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(vm.totalChecked) of \(vm.totalItems) items packed")
+        .accessibilityLabel("\(done) of \(total) items packed")
     }
 
-    // MARK: - Section
+    // MARK: - Category card
 
-    private func sectionView(section: PackingSection, vm: PackingListViewModel) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            // Section header.
-            HStack(spacing: 8) {
-                Image(systemName: section.category.systemImageName)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(Color.disneyGold)
-                    .accessibilityHidden(true)
-                Text(section.category.displayName)
-                    .font(DTDFont.captionBold)
-                    .foregroundStyle(.white.opacity(0.75))
-                    .textCase(.uppercase)
-                    .kerning(0.5)
-                Spacer()
+    private func sectionCard(section: PackingSection, vm: PackingListViewModel) -> some View {
+        VStack(alignment: .leading, spacing: DTDSpacing.x5) {
+            HStack {
+                SectionLabel(section.category.displayName)
+                Spacer(minLength: 0)
                 Text("\(section.checkedCount)/\(section.totalCount)")
-                    .font(DTDFont.caption)
-                    .foregroundStyle(.white.opacity(0.45))
+                    .font(DTDFont.prose)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(DTDColor.textMuted)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
 
-            Divider()
-                .background(.white.opacity(0.1))
-                .padding(.horizontal, 20)
-
-            // Items.
-            // H-6: .swipeActions() only works inside List rows. These rows live inside a
-            // ScrollView/ForEach, so swipe actions are silently ignored. Replace with a
-            // .contextMenu delete action that works in any container.
-            ForEach(section.items) { item in
-                PackingItemRow(item: item) {
-                    vm.toggleItem(item)
-                }
-                .contextMenu {
-                    Button(role: .destructive) {
-                        withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.25)) {
-                            vm.deleteItem(item)
+            VStack(spacing: DTDSpacing.x5) {
+                ForEach(section.items) { item in
+                    DTDCheckbox(item.name, checked: item.isChecked) {
+                        vm.toggleItem(item)
+                    }
+                    .contextMenu {
+                        Button(role: .destructive) {
+                            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.25)) {
+                                vm.deleteItem(item)
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
-                    } label: {
-                        Label("Delete", systemImage: "trash")
                     }
                 }
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.white.opacity(0.07))
-        )
-        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, DTDSpacing.x8)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
     }
 
-    // MARK: - Empty state
+    // MARK: - Add-your-own footer
 
-    private func emptyState(vm: PackingListViewModel) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: "bag.fill")
-                .font(.system(size: 44))
-                .foregroundStyle(.white.opacity(0.4))
-            Text("Your packing list is empty")
-                .font(DTDFont.titleSecondary)
-                .foregroundStyle(.white)
-            Text("Tap + to add your first item")
-                .font(DTDFont.body)
-                .foregroundStyle(.white.opacity(0.6))
+    private func addOwnItemFooter(vm: PackingListViewModel) -> some View {
+        Button {
+            withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
+                vm.beginAddItem()
+            }
+        } label: {
+            HStack(spacing: DTDSpacing.x5) {
+                Text("+")
+                    .font(.system(size: 20, weight: .semibold, design: .rounded))
+                Text("Add your own item")
+                    .font(DTDFont.bodyStrong)
+                Spacer(minLength: 0)
+            }
+            .foregroundStyle(DTDColor.textMuted)
+            .padding(.vertical, DTDSpacing.x7)
+            .padding(.horizontal, DTDSpacing.x9)
+            .contentShape(Rectangle())
         }
-        .padding(.top, 40)
-        .frame(maxWidth: .infinity)
+        .buttonStyle(DTDPressStyle())
+        .accessibilityLabel("Add your own item")
     }
 
     // MARK: - Add item form
 
     private func addItemForm(vm: PackingListViewModel) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("New Item")
-                .font(DTDFont.captionBold)
-                .foregroundStyle(.white.opacity(0.75))
-                .textCase(.uppercase)
-                .kerning(0.5)
-                .padding(.horizontal, 20)
-                .padding(.top, 16)
+        VStack(alignment: .leading, spacing: DTDSpacing.x5) {
+            SectionLabel("New item")
 
-            // Item name input.
             TextField("Item name", text: Binding(
                 get: { vm.newItemName },
                 set: { vm.newItemName = $0 }
             ))
-            .font(DTDFont.body)
-            .foregroundStyle(.white)
-            .padding(.horizontal, 14)
-            .padding(.vertical, 11)
-            .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(.white.opacity(0.12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10, style: .continuous)
-                            .strokeBorder(.white.opacity(0.2), lineWidth: 1)
-                    )
-            )
-            .padding(.horizontal, 20)
+            .font(DTDFont.bodyStrong)
+            .foregroundStyle(DTDColor.textPrimary)
+            .tint(DTDColor.accentInteractive)
+            .padding(.vertical, DTDSpacing.x5)
+            .padding(.horizontal, DTDSpacing.x6)
+            .background(DTDColor.surface)
+            .clipShape(RoundedRectangle(cornerRadius: DTDRadius.control, style: .continuous))
             .submitLabel(.done)
             .onSubmit { vm.addCustomItem() }
 
-            // Category picker — .menu style avoids the fragile UISegmentedControl
-            // color override that .segmented requires on dark backgrounds.
             HStack {
                 Text("Category")
                     .font(DTDFont.body)
-                    .foregroundStyle(.white.opacity(0.75))
-                Spacer()
+                    .foregroundStyle(DTDColor.textMuted)
+                Spacer(minLength: 0)
                 Picker("Category", selection: Binding(
                     get: { vm.newItemCategory },
                     set: { vm.newItemCategory = $0 }
@@ -271,63 +221,28 @@ struct PackingListView: View {
                     }
                 }
                 .pickerStyle(.menu)
-                .tint(Color.disneyGold)
+                .tint(DTDColor.accentInteractive)
             }
-            .padding(.horizontal, 20)
 
-            // Action buttons.
-            HStack(spacing: 12) {
-                Button("Cancel") {
+            HStack(spacing: DTDSpacing.x5) {
+                DTDButton("Cancel", variant: .secondary) {
                     withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.2)) {
                         vm.cancelAddItem()
                     }
                 }
-                .font(DTDFont.bodyMedium)
-                .foregroundStyle(.white.opacity(0.7))
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 11)
-                .background(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(.white.opacity(0.08))
-                )
-
-                Button("Add Item") {
+                DTDButton("Add item") {
                     vm.addCustomItem()
                 }
-                .font(DTDFont.bodyMedium)
-                .foregroundStyle(vm.newItemName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    ? .white.opacity(0.3)
-                    : Color.black
-                )
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 11)
-                .background(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(vm.newItemName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                            ? Color.white.opacity(0.12)
-                            : Color.disneyGold
-                        )
-                )
+                .opacity(vm.newItemName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.45 : 1)
                 .disabled(vm.newItemName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 16)
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.white.opacity(0.07))
-        )
-        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, DTDSpacing.x8)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
         .transition(.opacity.combined(with: .move(edge: .bottom)))
-    }
-
-    // MARK: - Helpers
-
-    private func progressLabel(checked: Int, total: Int) -> String {
-        guard total > 0 else { return "Add items to get started" }
-        if checked == total { return "All packed! You're ready for the magic." }
-        let remaining = total - checked
-        return "\(remaining) item\(remaining == 1 ? "" : "s") left to pack"
     }
 
     // MARK: - Toolbar
@@ -335,106 +250,18 @@ struct PackingListView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            HStack(spacing: 4) {
-                // Reset button — only shown when list is loaded.
+            HStack(spacing: DTDSpacing.x3) {
                 if case .loaded = viewModel?.viewState {
-                    Button {
+                    DTDIconButton(glyph: "↻", accessibilityLabel: "Reset to defaults") {
                         showResetConfirmation = true
-                    } label: {
-                        Image(systemName: "arrow.counterclockwise")
-                            .foregroundStyle(.white)
-                            .font(.title3)
                     }
-                    .accessibilityLabel("Reset to defaults")
                 }
-
-                Button {
+                DTDIconButton(glyph: "+", accessibilityLabel: "Add item", tone: .loud) {
                     withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
                         viewModel?.beginAddItem()
                     }
-                } label: {
-                    Image(systemName: "plus")
-                        .foregroundStyle(.white)
-                        .font(.title3)
                 }
-                .accessibilityLabel("Add item")
             }
-        }
-    }
-}
-
-// MARK: - Packing Item Row
-
-private struct PackingItemRow: View {
-    let item: PackingItem
-    let onToggle: () -> Void
-
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    var body: some View {
-        Button {
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            onToggle()
-        } label: {
-            HStack(spacing: 14) {
-                // Checkmark circle.
-                ZStack {
-                    Circle()
-                        .strokeBorder(
-                            item.isChecked ? Color.disneyGold : .white.opacity(0.3),
-                            lineWidth: 1.5
-                        )
-                        .frame(width: 24, height: 24)
-
-                    if item.isChecked {
-                        Circle()
-                            .fill(Color.disneyGold)
-                            .frame(width: 24, height: 24)
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(.black)
-                    }
-                }
-                .animation(reduceMotion ? .none : .spring(response: 0.3, dampingFraction: 0.7), value: item.isChecked)
-
-                // Item name.
-                Text(item.name)
-                    .font(DTDFont.body)
-                    .foregroundStyle(item.isChecked ? .white.opacity(0.4) : .white)
-                    .strikethrough(item.isChecked, color: .white.opacity(0.4))
-                    .animation(reduceMotion ? .none : .easeInOut(duration: 0.2), value: item.isChecked)
-
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 13)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(item.name)
-        .accessibilityValue(item.isChecked ? "Checked" : "Unchecked")
-        .accessibilityHint("Double tap to \(item.isChecked ? "uncheck" : "check")")
-        .accessibilityAddTraits(.isButton)
-    }
-}
-
-// MARK: - Circular Progress View
-
-private struct CircularProgressView: View {
-    let progress: Double
-
-    var body: some View {
-        ZStack {
-            Circle()
-                .stroke(.white.opacity(0.15), lineWidth: 4)
-            Circle()
-                .trim(from: 0, to: progress)
-                .stroke(Color.disneyGold, style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                .rotationEffect(.degrees(-90))
-                .animation(.spring(response: 0.5, dampingFraction: 0.8), value: progress)
-            Text("\(Int(progress * 100))%")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundStyle(.white)
         }
     }
 }

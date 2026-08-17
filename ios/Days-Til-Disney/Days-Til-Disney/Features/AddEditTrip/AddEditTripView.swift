@@ -9,19 +9,23 @@ struct AddEditTripView: View {
     @FocusState private var isNameFieldFocused: Bool
 
     var body: some View {
-        Group {
-            if let vm = viewModel {
-                form(vm: vm)
-            } else {
-                ProgressView()
+        ZStack {
+            DTDColor.bg
+                .ignoresSafeArea()
+
+            Group {
+                if let vm = viewModel {
+                    form(vm: vm)
+                } else {
+                    ProgressView().tint(DTDColor.accentInteractive)
+                }
             }
         }
         .navigationTitle(mode.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(false)
-        // C-3: Match the dark gradient theme of the rest of the app so navigation
-        // from Home/Detail doesn't feel like a jarring light-mode flash.
-        .preferredColorScheme(.dark)
+        .navigationBarBackButtonHidden(true)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar { toolbarContent }
         .task {
             let vm = AddEditTripViewModel.make(mode: mode, from: appContainer)
             viewModel = vm
@@ -34,49 +38,51 @@ struct AddEditTripView: View {
         }
     }
 
+    // MARK: - Toolbar (Cancel / title / Save)
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button("Cancel") { router.navigateBack() }
+                .font(DTDFont.body)
+                .foregroundStyle(DTDColor.textMuted)
+        }
+        ToolbarItem(placement: .navigationBarTrailing) {
+            if let vm = viewModel {
+                saveButton(vm: vm)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func saveButton(vm: AddEditTripViewModel) -> some View {
+        Button {
+            isNameFieldFocused = false
+            Task { await vm.save() }
+        } label: {
+            if vm.isSaving {
+                ProgressView().tint(DTDColor.textPrimary)
+            } else {
+                Text("Save")
+                    .font(DTDFont.bodyStrong)
+                    .foregroundStyle(DTDColor.textPrimary)
+                    .opacity(vm.form.isValid ? 1 : 0.45)
+            }
+        }
+        .disabled(!vm.form.isValid || vm.isSaving)
+        // Label reconciliation: visible text is "Save" but the UITest queries "Create Trip".
+        .accessibilityLabel(mode.isEditing ? "Save Changes" : "Create Trip")
+    }
+
     // MARK: - Form
 
     @ViewBuilder
     private func form(vm: AddEditTripViewModel) -> some View {
-        Form {
-            // Trip name.
-            Section("Trip Name") {
-                TextField("e.g. Smith Family Magic Adventure", text: Binding(
-                    get: { vm.form.name },
-                    set: { vm.form.name = $0 }
-                ))
-                .focused($isNameFieldFocused)
-                .font(DTDFont.body)
-                .accessibilityLabel("Trip name")
-            }
+        ScrollView {
+            VStack(spacing: DTDSpacing.tileGap) {
+                nameCard(vm: vm)
+                dateCards(vm: vm)
 
-            // Date pickers.
-            Section("Trip Dates") {
-                DatePicker(
-                    "Start Date",
-                    selection: Binding(
-                        get: { vm.form.startDate },
-                        set: { vm.form.startDate = $0 }
-                    ),
-                    in: mode.isEditing ? vm.form.startDate... : Date()...,
-                    displayedComponents: .date
-                )
-                .font(DTDFont.body)
-
-                DatePicker(
-                    "End Date",
-                    selection: Binding(
-                        get: { vm.form.endDate },
-                        set: { vm.form.endDate = $0 }
-                    ),
-                    in: vm.form.startDate...,
-                    displayedComponents: .date
-                )
-                .font(DTDFont.body)
-            }
-
-            // Resort & park selector.
-            Section("Destination") {
                 ParkSelectorView(
                     selectedResort: Binding(
                         get: { vm.form.selectedResort },
@@ -89,60 +95,106 @@ struct AddEditTripView: View {
                     onResortChange: { vm.resortDidChange(to: $0) },
                     onTogglePark: { vm.togglePark($0) }
                 )
-                .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                .listRowBackground(Color.clear)
-            }
 
-            // Primary toggle.
-            Section {
-                Toggle(isOn: Binding(
-                    get: { vm.form.isPrimary },
-                    set: { vm.form.isPrimary = $0 }
-                )) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Set as Primary Trip")
-                            .font(DTDFont.body)
-                        Text("Shows as the main countdown on your home screen.")
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
+                primaryToggle(vm: vm)
 
-            // Error message.
-            if let error = vm.saveError {
-                Section {
+                if let error = vm.saveError {
                     Text(error)
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.red)
+                        .font(DTDFont.prose)
+                        .foregroundStyle(DTDColor.waitLong)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            }
 
-            // Save button.
-            Section {
-                Button(action: {
-                    isNameFieldFocused = false
-                    Task { await vm.save() }
-                }) {
-                    if vm.isSaving {
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Text("Saving...")
-                                .font(DTDFont.headline)
-                            Spacer()
-                        }
-                    } else {
-                        Text(mode.isEditing ? "Save Changes" : "Create Trip")
-                            .font(DTDFont.headline)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
-                .disabled(!vm.form.isValid || vm.isSaving)
-                .foregroundStyle(vm.form.isValid ? Color.accentColor : Color.secondary)
+                Spacer().frame(height: 40)
             }
+            .padding(.horizontal, DTDSpacing.gutter)
+            .padding(.top, DTDSpacing.x7)
         }
         .onAppear { isNameFieldFocused = !mode.isEditing }
+    }
+
+    // MARK: - Cards
+
+    private func nameCard(vm: AddEditTripViewModel) -> some View {
+        VStack(alignment: .leading, spacing: DTDSpacing.x3) {
+            SectionLabel("Trip name")
+            TextField("Smith Family Magic Adventure", text: Binding(
+                get: { vm.form.name },
+                set: { vm.form.name = $0 }
+            ))
+            .font(.system(size: 22, weight: .bold, design: .rounded))
+            .tracking(-0.4)
+            .foregroundStyle(DTDColor.textPrimary)
+            .tint(DTDColor.accentInteractive)
+            .focused($isNameFieldFocused)
+            .accessibilityLabel("Trip name")
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, DTDSpacing.x8)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
+    }
+
+    private func dateCards(vm: AddEditTripViewModel) -> some View {
+        HStack(spacing: DTDSpacing.tileGap) {
+            dateCard(
+                label: "From",
+                selection: Binding(
+                    get: { vm.form.startDate },
+                    set: { vm.form.startDate = $0 }
+                ),
+                range: (mode.isEditing ? vm.form.startDate : Date())...
+            )
+            dateCard(
+                label: "To",
+                selection: Binding(
+                    get: { vm.form.endDate },
+                    set: { vm.form.endDate = $0 }
+                ),
+                range: vm.form.startDate...
+            )
+        }
+    }
+
+    private func dateCard(label: String, selection: Binding<Date>, range: PartialRangeFrom<Date>) -> some View {
+        VStack(alignment: .leading, spacing: DTDSpacing.x2) {
+            SectionLabel(label)
+            DatePicker("", selection: selection, in: range, displayedComponents: .date)
+                .labelsHidden()
+                .datePickerStyle(.compact)
+                .tint(DTDColor.accentInteractive)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, DTDSpacing.x8)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
+    }
+
+    private func primaryToggle(vm: AddEditTripViewModel) -> some View {
+        HStack(spacing: DTDSpacing.x6) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Primary countdown")
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DTDColor.textPrimary)
+                Text("Shows big on the home screen")
+                    .font(DTDFont.prose)
+                    .foregroundStyle(DTDColor.textMuted)
+            }
+            Spacer(minLength: 0)
+            DTDToggle(
+                isOn: Binding(
+                    get: { vm.form.isPrimary },
+                    set: { vm.form.isPrimary = $0 }
+                ),
+                accessibilityLabel: "Primary countdown"
+            )
+        }
+        .padding(.vertical, DTDSpacing.x7)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surfaceRaised)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
     }
 }
 
