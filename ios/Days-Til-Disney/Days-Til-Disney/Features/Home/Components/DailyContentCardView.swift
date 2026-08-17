@@ -8,76 +8,70 @@ struct DailyContentCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Header row.
-            HStack(spacing: 12) {
-                Image(systemName: content.type.systemImageName)
-                    .font(.title3)
-                    .foregroundStyle(Color.disneyGold)
-                    .frame(width: 36, height: 36)
-                    .background(Color.disneyGold.opacity(0.15))
-                    .clipShape(Circle())
+            // Header row: gold dot + eyebrow label, then title.
+            HStack(spacing: DTDSpacing.x4) {
+                Circle()
+                    .fill(DTDColor.gold)
+                    .frame(width: 26, height: 26)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    // H-3: Use .textCase(.uppercase) instead of .uppercased() so VoiceOver
-                    // reads the natural word rather than spelling individual letters.
-                    Text(content.type.displayName)
-                        .font(DTDFont.captionBold)
-                        .foregroundStyle(Color.disneyGold)
-                        .textCase(.uppercase)
-                        .tracking(1.5)
-
-                    Text(content.title)
-                        .font(DTDFont.headline)
-                        .foregroundStyle(.white)
-                        .lineLimit(2)
-                }
+                // H-3: Use .textCase(.uppercase) instead of .uppercased() so VoiceOver
+                // reads the natural word rather than spelling individual letters.
+                Text(content.type.displayName)
+                    .font(DTDFont.labelUpper)
+                    .foregroundStyle(DTDColor.goldLabel)
+                    .textCase(.uppercase)
+                    .tracking(1.4)
 
                 Spacer()
 
                 Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.5))
+                    .foregroundStyle(DTDColor.textFaint)
             }
-            .padding(.horizontal, 18)
-            .padding(.top, 18)
+            .padding(.horizontal, DTDSpacing.x11)
+            .padding(.top, DTDSpacing.x10)
+
+            Text(content.title)
+                .font(DTDFont.heading)
+                .foregroundStyle(DTDColor.textPrimary)
+                .lineLimit(isExpanded ? nil : 2)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, DTDSpacing.x11)
+                .padding(.top, DTDSpacing.x5)
 
             // Body — expandable.
             if isExpanded {
                 Text(content.body)
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white.opacity(0.85))
+                    .font(DTDFont.prose)
+                    .foregroundStyle(DTDColor.textMuted)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 18)
-                    .padding(.top, 12)
+                    .padding(.horizontal, DTDSpacing.x11)
+                    .padding(.top, DTDSpacing.x3)
                     .transition(.opacity.combined(with: .move(edge: .top)))
 
                 if let source = content.source {
                     Text("Source: \(source)")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.4))
-                        .padding(.horizontal, 18)
-                        .padding(.top, 6)
+                        .font(DTDFont.prose)
+                        .foregroundStyle(DTDColor.textFaint)
+                        .padding(.horizontal, DTDSpacing.x11)
+                        .padding(.top, DTDSpacing.x2)
                 }
             } else {
                 // Collapsed preview.
                 Text(content.body)
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white.opacity(0.75))
+                    .font(DTDFont.prose)
+                    .foregroundStyle(DTDColor.textMuted)
                     .lineLimit(2)
-                    .padding(.horizontal, 18)
-                    .padding(.top, 8)
+                    .padding(.horizontal, DTDSpacing.x11)
+                    .padding(.top, DTDSpacing.x3)
             }
 
-            Spacer().frame(height: 18)
+            Spacer().frame(height: DTDSpacing.x10)
         }
         .background {
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: DTDRadius.card, style: .continuous)
                 .fill(DTDColor.surfaceRaised)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.disneyGold.opacity(0.05))
-                }
         }
         .onTapGesture {
             withAnimation(reduceMotion ? .none : .spring(response: 0.35, dampingFraction: 0.8)) {
@@ -98,7 +92,7 @@ struct DailyContentCardView: View {
 
 #Preview("Fun Fact") {
     ZStack {
-        Color(hex: "#0D2545").ignoresSafeArea()
+        DTDColor.bg.ignoresSafeArea()
         DailyContentCardView(content: .preview)
             .padding(.horizontal, 20)
     }
@@ -106,7 +100,7 @@ struct DailyContentCardView: View {
 
 #Preview("Planning Tip") {
     ZStack {
-        Color(hex: "#0D2545").ignoresSafeArea()
+        DTDColor.bg.ignoresSafeArea()
         DailyContentCardView(content: DailyContent(
             type: .planningTip,
             title: "Book Dining 60 Days Out",
@@ -117,4 +111,5 @@ struct DailyContentCardView: View {
         ))
         .padding(.horizontal, 20)
     }
+    .background(DTDColor.bg)
 }

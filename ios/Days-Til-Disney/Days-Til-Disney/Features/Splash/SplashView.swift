@@ -1,130 +1,63 @@
 import SwiftUI
 
-/// Launch splash screen. Displays an animated hero mark with sparkle effects
-/// then calls `onComplete` to transition to the home screen.
+/// Launch splash. A single 132×132 park panel with a sample numeral, the plain
+/// "Countdown to Magic" wordmark, and a loading bar — then calls `onComplete`.
 struct SplashView: View {
     let onComplete: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
 
-    @State private var markOpacity: Double = 0
-    @State private var markScale: Double = 0.6
-    @State private var titleOpacity: Double = 0
-    @State private var sparkleOpacity: Double = 0
-    @State private var sparkleScale: Double = 0.5
+    @State private var contentOpacity: Double = 0
 
     var body: some View {
         ZStack {
-            // ponytail: flat Phase-1 stub; the 132×132 park panel lands in Phase 4.1.
             DTDColor.bg
                 .ignoresSafeArea()
 
-            VStack(spacing: 32) {
-                Spacer()
-
-                // Sparkle decoration
-                SparkleDecoration()
-                    .opacity(sparkleOpacity)
-                    .scaleEffect(sparkleScale)
-                    .accessibilityHidden(true)
-
-                // App title
-                VStack(spacing: 8) {
-                    Text("Countdown to")
-                        .font(DTDFont.displayMedium)
-                        .foregroundStyle(Color.disneyGold)
-
-                    Text("Magic")
-                        .font(.system(size: 48, weight: .black, design: .rounded))
+            VStack(alignment: .leading, spacing: 0) {
+                // 132×132 park panel, "45" bottom-aligned inside 16px padding.
+                ZStack(alignment: .bottomLeading) {
+                    RoundedRectangle(cornerRadius: DTDRadius.device, style: .continuous)
+                        .fill(DisneyPark.magicKingdom.colorPalette.panelColor(for: colorScheme))
+                    // ponytail: 64pt is a splash one-off, not in the numeral scale.
+                    Text("45")
+                        .font(.system(size: 64, weight: .black, design: .rounded))
+                        .tracking(-4)
                         .foregroundStyle(.white)
+                        .padding(DTDSpacing.x7)
                 }
-                .opacity(titleOpacity)
+                .frame(width: 132, height: 132)
 
-                Spacer()
-                Spacer()
+                Text("Countdown\nto Magic")
+                    .font(.system(size: 44, weight: .black, design: .rounded))
+                    .tracking(-1.6)
+                    .foregroundStyle(DTDColor.textPrimary)
+                    .padding(.top, DTDSpacing.x16)
+
+                Text("Getting your trips…")
+                    .font(DTDFont.prose)
+                    .foregroundStyle(DTDColor.textMuted)
+                    .padding(.top, DTDSpacing.x6)
+
+                DTDProgressBar(value: 62, total: 100, tone: .accent, height: 8)
+                    .padding(.top, DTDSpacing.x12)
             }
+            .padding(.horizontal, 40)
+            .opacity(contentOpacity)
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Countdown to Magic, loading")
         .task {
-            runAnimation()
+            withAnimation(reduceMotion ? .none : .easeOut(duration: 0.5)) {
+                contentOpacity = 1
+            }
             // Use Task.sleep instead of DispatchQueue.main.asyncAfter so the wait is
             // cancellable when the view disappears (e.g. if the user force-quits).
             try? await Task.sleep(for: .seconds(2.2))
             guard !Task.isCancelled else { return }
             onComplete()
         }
-    }
-
-    // MARK: - Animation sequence
-
-    private func runAnimation() {
-        if reduceMotion {
-            // Show everything immediately — no motion.
-            markOpacity = 0.85
-            markScale = 1.0
-            sparkleOpacity = 1.0
-            sparkleScale = 1.0
-            titleOpacity = 1.0
-            return
-        }
-
-        // 1. Mark rises
-        withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
-            markOpacity = 0.85
-            markScale = 1.0
-        }
-
-        // 2. Sparkles pop
-        withAnimation(.spring(response: 0.6, dampingFraction: 0.65).delay(0.4)) {
-            sparkleOpacity = 1.0
-            sparkleScale = 1.0
-        }
-
-        // 3. Title fades in
-        withAnimation(.easeInOut(duration: 0.6).delay(0.7)) {
-            titleOpacity = 1.0
-        }
-
-        // Transition timing is handled by the .task modifier using Task.sleep.
-    }
-}
-
-// MARK: - Sparkle decoration
-
-private struct SparkleDecoration: View {
-    private struct SparklePoint: Identifiable {
-        let id: Int
-        /// Normalized offset from center: -1.0 to +1.0 relative to container half-width/height.
-        let normalizedX: CGFloat
-        let normalizedY: CGFloat
-        let size: CGFloat
-        let delay: Double
-    }
-
-    private let points: [SparklePoint] = [
-        SparklePoint(id: 0, normalizedX: -0.80, normalizedY: -0.50, size: 14, delay: 0.0),
-        SparklePoint(id: 1, normalizedX:  0.80, normalizedY: -0.75, size: 10, delay: 0.15),
-        SparklePoint(id: 2, normalizedX: -0.50, normalizedY:  0.75, size:  8, delay: 0.30),
-        SparklePoint(id: 3, normalizedX:  0.60, normalizedY:  0.625, size: 12, delay: 0.10),
-        SparklePoint(id: 4, normalizedX:  0.00, normalizedY: -1.25, size:  9, delay: 0.20),
-    ]
-
-    var body: some View {
-        GeometryReader { geo in
-            let hw = geo.size.width / 2
-            let hh = geo.size.height / 2
-            ZStack {
-                ForEach(points) { point in
-                    Image(systemName: "sparkle")
-                        .foregroundStyle(Color.magicSparkle)
-                        .font(.system(size: point.size))
-                        .offset(x: point.normalizedX * hw, y: point.normalizedY * hh)
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .frame(width: 200, height: 80)
     }
 }
 

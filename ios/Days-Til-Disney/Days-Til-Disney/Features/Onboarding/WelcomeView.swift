@@ -1,164 +1,90 @@
 import SwiftUI
 
 /// First-launch welcome screen shown after the splash animation.
-/// Presents a magical hero-mark backdrop with a CTA to create the user's first trip.
+/// Toy Box: a 3×2 tile grid, a plain headline, and stacked full-width buttons —
+/// no hero mark, no sparkle constellation.
 struct WelcomeView: View {
-    /// Called when the user taps "Create Your First Trip" — the caller navigates to AddEditTripView.
+    /// Called when the user taps "Create your first trip" — the caller navigates to AddEditTripView.
     let onCreateTrip: () -> Void
     /// Called when the user taps the skip option — proceeds to HomeView without a trip.
     let onSkip: () -> Void
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
 
-    @State private var markOpacity: Double = 0
-    @State private var markOffset: CGFloat = 60
-    @State private var contentOpacity: Double = 0
-    @State private var sparkleOpacity: Double = 0
+    private struct Tile: Identifiable {
+        let id: Int
+        let fill: Color
+        var number: String?
+        var ink: Color = .white
+    }
+
+    private var tiles: [Tile] {
+        [
+            Tile(id: 0, fill: DisneyPark.magicKingdom.colorPalette.panelColor(for: colorScheme), number: "45"),
+            Tile(id: 1, fill: DTDColor.surface),
+            Tile(id: 2, fill: DisneyPark.tokyoDisneyland.colorPalette.panelColor(for: colorScheme), number: "7"),
+            Tile(id: 3, fill: DTDColor.surface),
+            Tile(id: 4, fill: DTDColor.gold, number: "30", ink: DTDColor.goldInk),
+            Tile(id: 5, fill: DTDColor.surface)
+        ]
+    }
 
     var body: some View {
         ZStack {
-            // ponytail: flat Phase-1 stub; the tile-grid header lands in Phase 4.2.
             DTDColor.bg
                 .ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                Spacer()
-
-                // Sparkle constellation (hero mark removed — Toy Box has no Wish mark).
-                ZStack {
-                    WelcomeSparkles()
-                        .opacity(sparkleOpacity)
-                        .accessibilityHidden(true)
-                }
-                .frame(height: 280)
-
-                Spacer().frame(height: 40)
-
-                // Headline and subtitle.
-                VStack(spacing: 14) {
-                    Text("Welcome to")
-                        .font(DTDFont.titleSecondary)
-                        .foregroundStyle(.white.opacity(0.85))
-
-                    Text("Countdown to Magic")
-                        .font(.system(size: 36, weight: .black, design: .rounded))
-                        .foregroundStyle(Color.disneyGold)
-                        .shadow(color: Color.disneyGold.opacity(0.4), radius: 8, y: 4)
-
-                    Text("Start counting down to your\nmagical adventure")
-                        .font(DTDFont.body)
-                        .foregroundStyle(.white.opacity(0.75))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                }
-                .opacity(contentOpacity)
-
-                Spacer().frame(height: 48)
-
-                // CTA buttons.
-                VStack(spacing: 16) {
-                    Button(action: onCreateTrip) {
-                        Label("Create Your First Trip", systemImage: "sparkles")
-                            .font(DTDFont.headline)
-                            .foregroundStyle(.black)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 18)
-                            .background(Color.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 18))
-                            .shadow(color: .white.opacity(0.25), radius: 12, y: 6)
+            VStack(alignment: .leading, spacing: 0) {
+                // 3×2 decorative tile grid.
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: DTDSpacing.x4), count: 3),
+                    spacing: DTDSpacing.x4
+                ) {
+                    ForEach(tiles) { tile in
+                        ZStack {
+                            RoundedRectangle(cornerRadius: DTDRadius.tileSm, style: .continuous)
+                                .fill(tile.fill)
+                            if let number = tile.number {
+                                Text(number)
+                                    .font(.system(size: 26, weight: .black, design: .rounded))
+                                    .foregroundStyle(tile.ink)
+                            }
+                        }
+                        .aspectRatio(1, contentMode: .fit)
                     }
-                    .accessibilityLabel("Create your first trip")
-                    .padding(.horizontal, 32)
-
-                    // H-2: Minimum 44×44pt tap target + capsule background for visual affordance.
-                    Button(action: onSkip) {
-                        Text("I'll do this later")
-                            .font(DTDFont.body)
-                            .foregroundStyle(.white.opacity(0.7))
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(
-                                Capsule()
-                                    .fill(.white.opacity(0.10))
-                            )
-                    }
-                    .accessibilityLabel("Skip onboarding and go to home screen")
                 }
-                .opacity(contentOpacity)
+                .padding(.top, DTDSpacing.x4)
+                .accessibilityHidden(true)
 
-                Spacer()
-                Spacer()
+                // Headline + body.
+                VStack(alignment: .leading, spacing: DTDSpacing.x7) {
+                    Text("The best part\nstarts early.")
+                        .font(DTDFont.display)
+                        .tracking(-1.4)
+                        .foregroundStyle(DTDColor.textPrimary)
+
+                    Text("Add your trip and the countdown begins. A fact a day, a packing list that knows your park, and live waits once you're through the gates.")
+                        .font(.system(size: 17, weight: .regular, design: .default))
+                        .lineSpacing(4)
+                        .foregroundStyle(DTDColor.textMuted)
+                }
+                .padding(.top, DTDSpacing.x16)
+
+                Spacer(minLength: DTDSpacing.x16)
+
+                // Stacked full-width buttons.
+                VStack(spacing: DTDSpacing.x5) {
+                    DTDButton("Create your first trip", action: onCreateTrip)
+                        .accessibilityLabel("Create your first trip")
+
+                    DTDButton("I'll do this later", variant: .secondary, action: onSkip)
+                        .accessibilityLabel("Skip onboarding and go to home screen")
+                }
             }
+            .padding(.horizontal, DTDSpacing.x11)
+            .padding(.bottom, DTDSpacing.x11)
         }
-        .onAppear { runEntrance() }
         .accessibilityElement(children: .contain)
-    }
-
-    // MARK: - Entrance animation
-
-    private func runEntrance() {
-        if reduceMotion {
-            // Skip animations — show everything immediately.
-            markOpacity = 0.9
-            markOffset = 0
-            sparkleOpacity = 1.0
-            contentOpacity = 1.0
-            return
-        }
-
-        // Mark rises from below.
-        withAnimation(.spring(response: 0.9, dampingFraction: 0.72).delay(0.1)) {
-            markOpacity = 0.9
-            markOffset = 0
-        }
-
-        // Sparkles pop after the mark settles.
-        withAnimation(.spring(response: 0.6, dampingFraction: 0.65).delay(0.55)) {
-            sparkleOpacity = 1.0
-        }
-
-        // Text and buttons slide in.
-        withAnimation(.easeOut(duration: 0.55).delay(0.65)) {
-            contentOpacity = 1.0
-        }
-    }
-}
-
-// MARK: - Sparkle decoration
-
-private struct WelcomeSparkles: View {
-    private struct Point: Identifiable {
-        let id: Int
-        /// Normalized offset from center: -1.0 to +1.0 relative to container half-width/height.
-        let normalizedX: CGFloat
-        let normalizedY: CGFloat
-        let size: CGFloat
-    }
-
-    private let points: [Point] = [
-        Point(id: 0, normalizedX: -0.917, normalizedY: -0.286, size: 16),
-        Point(id: 1, normalizedX:  0.917, normalizedY: -0.393, size: 11),
-        Point(id: 2, normalizedX: -0.625, normalizedY:  0.357, size:  9),
-        Point(id: 3, normalizedX:  0.750, normalizedY:  0.286, size: 13),
-        Point(id: 4, normalizedX:  0.000, normalizedY: -0.571, size: 10),
-        Point(id: 5, normalizedX: -1.083, normalizedY:  0.071, size:  8),
-        Point(id: 6, normalizedX:  1.042, normalizedY:  0.036, size:  8),
-    ]
-
-    var body: some View {
-        GeometryReader { geo in
-            let hw = geo.size.width / 2
-            let hh = geo.size.height / 2
-            ZStack {
-                ForEach(points) { point in
-                    Image(systemName: "sparkle")
-                        .foregroundStyle(Color.magicSparkle)
-                        .font(.system(size: point.size))
-                        .offset(x: point.normalizedX * hw, y: point.normalizedY * hh)
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
     }
 }
 
@@ -166,5 +92,4 @@ private struct WelcomeSparkles: View {
 
 #Preview {
     WelcomeView(onCreateTrip: {}, onSkip: {})
-        .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .magicKingdom))
 }
