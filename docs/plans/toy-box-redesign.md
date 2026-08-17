@@ -14,7 +14,12 @@ Replace the current "gradient + starfield + glass" visual system with the flat, 
 
 This build is **also the App Store 5.2.1 resubmission**. It must preserve every just-merged rebrand fix (see Non-Negotiables) and must not reintroduce Disney trade dress. The redesign is already 5.2.1-favourable — it *removes* the Wish-star hero mark, the castle-adjacent gradients, and `DisneyPark.emoji` from the UI.
 
-Android is **out of scope** this pass.
+Android is **out of scope** this pass. **iPad IS in scope** — the Head of Agency approved a full iPad Toy Box adaptation (added scope; needs its own design pass, see below).
+
+**Resubmission coupling (DECIDED — hard ship-together):** the App Store 5.2.1 resubmission is blocked on the **entire** redesign (iPhone + iPad + widgets + share cards + website) landing through review + QA. There is **no** sanctioned "removals-only compliance floor" fallback — the merged rebrand already clears 5.2.1 on `main`, but we are deliberately holding the resubmission for the full Toy Box build.
+
+### iPad Design Dependency (gates Phase 4i)
+No iPad Toy Box design exists. Before the iPad layout is built, `mobile-ui-designer` must produce an iPad adaptation of the Toy Box system (how the one-park-panel rule, tile stacks, and numerals reflow on a large canvas — split view / multi-column / max content width). Runs in parallel with the iPhone foundation/components/screens work (Phases 1–4, 5, 6), which it does not block; it gates only **Phase 4i**.
 
 ---
 
@@ -83,8 +88,8 @@ Two colorScheme gotchas baked into the phases below:
 2. **Logo.** Wordmark-only, plain type ("Countdown to Magic", SF Rounded semibold ~19px). **No mark invented.**
 3. **Milestone celebration.** Drop the `CelebrationOverlay` 70-particle system. Keep the **haptic** and the full-bleed park panel. (See Phase 4.10.)
 4. **`privacy.html`** is **in website scope** (Phase 7) — it needs the same de-glassing treatment though it is not in `website_kit/`.
-5. **Milestone copy stays verbatim from `Milestone.swift`** (Title Case — e.g. `"One Month to Go!"`). The mockups render sentence case ("One month to go!"). **This is a copy mismatch → PM/design open question**, not something the implementer silently rewrites (rewriting is a data change that breaks presentational-only).
-6. **iPad — open question, decide at the gate.** Toy Box specs iPhone 390×844 only; there is no iPad design. This plan edits `iPadHomeLayout.swift` for the infra *removals* (starfield/glass/hero-mark), but does not redesign the iPad layout. **Default: iPad gets removals only and inherits the restyled iPhone components** (no bespoke iPad Toy Box layout this pass). If the Head of Agency wants iPad fully adapted, that is added scope — flag before build.
+5. **Milestone copy → sentence case (DECIDED at gate).** Update the `Milestone.swift` title strings from Title Case ("One Month to Go!") to sentence case ("One month to go!") so source and mockups agree and the whole app honors the design system's sentence-case rule. This is a **sanctioned deliberate copy edit** — an explicit, approved exception to presentational-only (data strings change, but it's a copy correction, not a behaviour change). Update any unit test that asserts a milestone title string in the same change. `MilestoneNotificationManager` uses the same titles — confirm the notification copy reads correctly sentence-cased too (in scope for this string edit).
+6. **iPad → FULL Toy Box adaptation (DECIDED at gate — added scope).** Toy Box specs iPhone 390×844 only, so a proper iPad layout must be **designed first** (`mobile-ui-designer`) and then built. This is a real scope addition beyond the original iPhone-only handoff. See the **iPad Design Dependency** note below and **Phase 4i**. iPad is now a hard part of this ship (per "hard ship-together").
 
 ---
 
@@ -97,6 +102,7 @@ Two colorScheme gotchas baked into the phases below:
 | 2 | Core components (Button, IconButton, Chip, SectionLabel, ProgressBar, Checkbox, Toggle, SegmentedControl) | dev | CP-2 |
 | 3 | Countdown components (ParkPanel, CountdownNumeral, StatTile, TripRow, WaitPill, MilestoneStrip) | dev | CP-3 |
 | 4 | Screens 1–11 (screen-by-screen restyle; milestone screen is new UI + 1 new route) | dev | CP-4.x per screen |
+| 4i | **iPad Toy Box layout** — full adaptation (added scope; gated on the iPad design pass) | dev + `mobile-ui-designer` | CP-4i |
 | 5 | Widgets (systemSmall ×2 / systemMedium / accessoryCircular / accessoryRectangular) | dev | CP-5 |
 | 6 | Share cards (countdown + arrival states) | dev | CP-6 |
 | 7 | Website (`website/` incl. `privacy.html`) | `web-marketing-dev` | CP-7 |
@@ -279,8 +285,11 @@ Appearance card with `SegmentedControl` (Light/Dark/System, active ink). Two tog
 - Present it from **both**: the Home "Next up" `StatTile` tap (on-demand), and the existing milestone trigger (replaces the `CelebrationOverlay` presentation at `HomeView.swift:63`, `iPadHomeLayout.swift:54`, `TripDetailView.swift:68`).
 - Add **one route** to `Navigation/AppNavigationRouter.swift`. **Route signature (architect gate — defined at plan time):** `case milestone(tripID: UUID)`, matching the existing cases' `tripID`/`park` payload convention. `MilestoneView` resolves `daysUntilStart`, `primaryPark`, and the matching `Milestone` from the trip (via the existing `HomeViewModel`/`TripDetailViewModel` context) — the route carries only the `tripID`, no denormalized payload.
 - **Delete** `DesignSystem/Animations/CelebrationOverlay.swift` and its three call sites. **Keep the haptic** (relocate the `MilestoneEvent` haptic into the presentation path — the `CelebrationType.isHeavyHaptic` hint still applies). No confetti/fireworks/particles.
-- Copy stays verbatim (Title Case) — flag the sentence-case mockup mismatch to PM.
+- Milestone titles render **sentence case** (per gate decision — the `Milestone.swift` strings are edited to sentence case in Phase 1/foundation as a sanctioned copy correction; see Open-question default #5).
 **CP-4.10.**
+
+### 4i iPad — full Toy Box adaptation (`iPadHomeLayout.swift` + iPad layouts)
+**Added scope, gated on the iPad design pass (`mobile-ui-designer`).** Beyond the infra removals already done in Phase 1e/4.3, build the iPad Toy Box layout to the design pass's spec: how the one-park-panel rule and tile stacks reflow on the large canvas (multi-column / max content width / split behaviour), across all size classes and orientations, light + dark. Reuse the Phase 2/3 components — do not fork them. Do not start until the iPad design is delivered and approved. **CP-4i.**
 
 ---
 
@@ -358,7 +367,7 @@ Keep the `.reveal` IntersectionObserver, nav `.is-scrolled`, smooth anchor scrol
 
 1. **Build:** `xcodebuild build` on `Days-Til-Disney` + widget extension, clean.
 2. **Tests:** `xcodebuild test` — unit + `RebrandQATests` green (same bar as CP-0).
-3. **Per-screen visual pass in LIGHT and DARK** (the primary QA) via the `ios-ui-testing` skill / simulator: all 11 screens, 4 widget families, 2 share-card states. Verify: exactly one park panel per screen; no gradient/blur/shadow/starfield/glow; no Wish mark; no emoji; `panelColor` correct on both schemes.
+3. **Per-screen visual pass in LIGHT and DARK** (the primary QA) via the `ios-ui-testing` skill / simulator: all 11 screens, 4 widget families, 2 share-card states, **plus the iPad layout (Phase 4i) on an iPad simulator across orientations**. Verify: exactly one park panel per screen; no gradient/blur/shadow/starfield/glow; no Wish mark; no emoji; `panelColor` correct on both schemes.
 4. **Dynamic Type:** AX5 pass — numerals scale-to-fit (no clip), body/label scale, header non-clipping.
 5. **5.2.1 re-check:** disclaimer exact + queryable; no castle/trade dress/character IP; app name intact; launcher icon unchanged.
 6. **Mechanical trade-dress backstop (required — this is a resubmission build).** A deterministic grep/build-script check over the **app + widget SHIPPING targets only** (exclude `#Preview` blocks and the preview device-frame shadow) asserting these render patterns are gone: `HeroMarkView(`, `WishStarShape`, `WidgetWishStarShape`, `GradientBackgroundView`, `StarFieldView`, `CelebrationOverlay`, `.ultraThinMaterial`, `.emoji` used inside a `View`, a background `LinearGradient`, and `.shadow(`. Rationale: deleted *types* are compiler-proven gone, but `.emoji` (the property survives as data) and any net-new gradient/shadow/material are NOT type-guarded — this catches them. Scope to shipping targets so preview false-positives don't turn it into ignored theater. A non-empty match fails the gate.
@@ -381,7 +390,7 @@ Keep the `.reveal` IntersectionObserver, nav `.is-scrolled`, smooth anchor scrol
 1. **`CastleSilhouetteView.swift` is misnamed** — it contains **no** castle type; it defines `HeroMarkView` / `WishStarShape` / `enum WishStar`. The handoff's "remove `WishStarShape` hero mark" = remove `HeroMarkView` from its 9 call sites + delete this file + the widget's duplicated `WidgetWishStarShape`.
 2. **`ParkColorPalette` has no `deep` property** — the `-deep` tone is the existing `backgroundGradientMid1` stop (values match the token file). `panelColor(for:)` uses it directly.
 3. **Milestone field is `subtitle`, not "body"**, and there is **no `daysBeforeStart`** (it's `daysOut`). The milestone strip computes passed-thresholds from `Milestone.all` (`daysOut`) + `daysUntilStart`.
-4. **Milestone copy is Title Case in source** ("One Month to Go!") but sentence case in the mockups — verbatim-vs-mockup conflict → **PM/design open question** (do not rewrite silently).
+4. **Milestone copy is Title Case in source** ("One Month to Go!") but sentence case in the mockups — **RESOLVED at gate: update the source strings to sentence case** (sanctioned copy edit; see Open-question default #5).
 5. **`DTDFont` is not custom-font-based** — it already uses `.system(design:.rounded)`, so Outfit→SF Pro Rounded is a token extension, not a font-file addition. Many call sites also hand-roll raw `.system(...)`; the redesign should route them through the new tokens.
 6. **Two screens force `.preferredColorScheme(.dark)`** (Settings, AddEditTrip) — must be removed for light-mode to work; the handoff doesn't mention it.
 7. **Milestone screen does not exist today** — it's new UI + one new `AppNavigationRouter` route, not a restyle of an existing view.
