@@ -87,4 +87,15 @@ final class MilestoneTests: XCTestCase {
         let set: Set<Milestone> = [Milestone.all[0], Milestone.all[0], Milestone.all[1]]
         XCTAssertEqual(set.count, 2)
     }
+
+    // MARK: - MilestoneStrip passed-count (the one bit of new redesign logic)
+
+    func test_milestoneStrip_passedCount() {
+        // Spec example: daysOut=30 → 100, 50, 30 reached → 3 of 8 (discriminates >= from >).
+        XCTAssertEqual(MilestoneStrip.passedCount(daysOut: 30), 3)
+        // Before any milestone: none reached.
+        XCTAssertEqual(MilestoneStrip.passedCount(daysOut: 101), 0)
+        // On/after arrival: all eight reached.
+        XCTAssertEqual(MilestoneStrip.passedCount(daysOut: 0), 8)
+    }
 }
