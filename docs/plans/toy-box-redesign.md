@@ -18,8 +18,8 @@ Android is **out of scope** this pass. **iPad IS in scope** — the Head of Agen
 
 **Resubmission coupling (DECIDED — hard ship-together):** the App Store 5.2.1 resubmission is blocked on the **entire** redesign (iPhone + iPad + widgets + share cards + website) landing through review + QA. There is **no** sanctioned "removals-only compliance floor" fallback — the merged rebrand already clears 5.2.1 on `main`, but we are deliberately holding the resubmission for the full Toy Box build.
 
-### iPad Design Dependency (gates Phase 4i)
-No iPad Toy Box design exists. Before the iPad layout is built, `mobile-ui-designer` must produce an iPad adaptation of the Toy Box system (how the one-park-panel rule, tile stacks, and numerals reflow on a large canvas — split view / multi-column / max content width). Runs in parallel with the iPhone foundation/components/screens work (Phases 1–4, 5, 6), which it does not block; it gates only **Phase 4i**.
+### iPad Design Dependency (gates Phase 4i) — DELIVERED
+`mobile-ui-designer` produced the iPad adaptation: **`docs/design/toy-box-redesign/ipad-adaptation.md`**. Spine: a **size-class hybrid** — compact width (Slide Over / narrow split) renders the iPhone views unchanged; regular width uses either a max-width (~680pt) single column (Add Trip, Settings, Welcome, Packing, Milestone) or a two-column canvas (Home, Trip Detail, Park Dashboard). The old persistent left-hero/right-nav `iPadHomeLayout` shell is **deleted** (it puts two park panels on screen). Columns key off the `GeometryReader` container width (never a fraction of full screen), lead column capped at 420pt, one park panel per nav state. Numeral = share of panel height (~45% cap): 118/96 hold; milestone grows to 220–240. Ran in parallel with foundation; gates only **Phase 4i**.
 
 ---
 
