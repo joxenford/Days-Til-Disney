@@ -17,7 +17,6 @@ struct iPadHomeLayout: View {
     // fill the right pane while the hero stays visible on the left.
     @State private var rightPath = NavigationPath()
     @State private var viewModel: HomeViewModel?
-    @State private var showCelebration = false
     @State private var isInitialLoad = true
 
     var body: some View {
@@ -41,19 +40,13 @@ struct iPadHomeLayout: View {
             Task { await vm.onRefresh() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
-                showCelebration = newValue != nil
-            }
-        }
-        .onChange(of: showCelebration) { _, isShown in
-            if !isShown { viewModel?.dismissMilestone() }
-        }
-        .overlay {
-            if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
-                CelebrationOverlay(event: event, isPresented: $showCelebration)
-                    .transition(.opacity)
-                    .zIndex(100)
-            }
+            // Reaching a milestone pushes the full-bleed MilestoneView onto the right-column
+            // stack (replaces the dropped particle overlay). Haptic fires the instant it
+            // resolves, then the VM flag is cleared.
+            guard let event = newValue else { return }
+            MilestoneHaptic.fire(event.celebrationType)
+            rightPath.append(AppRoute.milestone(tripID: event.tripID))
+            viewModel?.dismissMilestone()
         }
     }
 
@@ -145,6 +138,9 @@ struct iPadHomeLayout: View {
 
         case .parkDashboard(let tripID, let park, let allParks):
             ParkDashboardView(tripID: tripID, parks: allParks, initialPark: park)
+
+        case .milestone(let tripID):
+            MilestoneView(tripID: tripID)
         }
     }
 

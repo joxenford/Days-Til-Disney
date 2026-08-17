@@ -7,7 +7,6 @@ struct TripDetailView: View {
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: TripDetailViewModel?
-    @State private var showCelebration = false
     @State private var isInitialLoad = true
     @State private var showShareSheet = false
     @State private var isNotesExpanded = false
@@ -41,13 +40,12 @@ struct TripDetailView: View {
             Task { await vm.onAppear() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
-                showCelebration = newValue != nil
-            }
-        }
-        .onChange(of: showCelebration) { _, isShown in
-            // When the overlay is dismissed (by tapping or the button), clear the VM's state.
-            if !isShown { viewModel?.dismissMilestone() }
+            // Reaching a milestone pushes the full-bleed MilestoneView (replaces the dropped
+            // particle overlay). Haptic fires the instant it resolves, then the flag clears.
+            guard let event = newValue else { return }
+            MilestoneHaptic.fire(event.celebrationType)
+            router.navigate(to: .milestone(tripID: event.tripID))
+            viewModel?.dismissMilestone()
         }
         // When a share image is ready, present the share sheet.
         .onChange(of: viewModel?.shareImage) { _, image in
@@ -59,13 +57,6 @@ struct TripDetailView: View {
             if let image = viewModel?.shareImage {
                 ShareSheet(image: image)
                     .ignoresSafeArea()
-            }
-        }
-        .overlay {
-            if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
-                CelebrationOverlay(event: event, isPresented: $showCelebration)
-                    .transition(.opacity)
-                    .zIndex(100)
             }
         }
     }

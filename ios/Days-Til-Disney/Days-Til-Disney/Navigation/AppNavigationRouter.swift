@@ -11,6 +11,9 @@ enum AppRoute: Hashable {
     case packingList(tripID: UUID)
     /// Live wait times and show schedule for a specific park during an ongoing trip.
     case parkDashboard(tripID: UUID, park: DisneyPark, allParks: [DisneyPark])
+    /// Milestone celebration screen. Carries only the trip; `MilestoneView` resolves
+    /// `daysUntilStart`, `primaryPark`, and the matching `Milestone` from the trip.
+    case milestone(tripID: UUID)
 }
 
 // MARK: - Root screen states
@@ -127,6 +130,9 @@ struct AppNavigationRouter: View {
 
         case .parkDashboard(let tripID, let park, let allParks):
             ParkDashboardView(tripID: tripID, parks: allParks, initialPark: park)
+
+        case .milestone(let tripID):
+            MilestoneView(tripID: tripID)
         }
     }
 

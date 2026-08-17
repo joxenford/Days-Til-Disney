@@ -4,7 +4,6 @@ struct HomeView: View {
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: HomeViewModel?
-    @State private var showCelebration = false
     @State private var pastTripsExpanded = false
     /// Tracks whether the initial load via `.task` has completed.
     /// `.onAppear` skips the first fire so only return-from-navigation refreshes run.
@@ -45,20 +44,13 @@ struct HomeView: View {
             Task { await vm.onRefresh() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
-                showCelebration = newValue != nil
-            }
-        }
-        .onChange(of: showCelebration) { _, isShown in
-            // When the overlay is dismissed (by tapping or the button), clear the VM's state.
-            if !isShown { viewModel?.dismissMilestone() }
-        }
-        .overlay {
-            if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
-                CelebrationOverlay(event: event, isPresented: $showCelebration)
-                    .transition(.opacity)
-                    .zIndex(100)
-            }
+            // Reaching a milestone pushes the full-bleed MilestoneView (replaces the dropped
+            // particle overlay). Fire the haptic at the instant it resolves, then clear the
+            // VM flag so re-triggering works.
+            guard let event = newValue else { return }
+            MilestoneHaptic.fire(event.celebrationType)
+            router.navigate(to: .milestone(tripID: event.tripID))
+            viewModel?.dismissMilestone()
         }
     }
 
@@ -256,15 +248,20 @@ struct HomeView: View {
         // Next milestone the countdown will reach (largest threshold still below today's count).
         // Non-navigating in Wave A — the milestone screen + route land in Phase 4.10.
         let daysOut = trip.daysUntilStart
-        if let next = Milestone.all.filter({ $0.daysOut < daysOut }).max(by: { $0.daysOut < $1.daysOut }) {
-            StatTile(label: "Next up",
-                     value: "\(next.daysOut)",
-                     caption: "days → \(next.title)")
-        } else {
-            StatTile(label: "Next up",
-                     value: "—",
-                     caption: trip.isPast ? "trip complete" : "you're there now!")
+        Button {
+            router.navigate(to: .milestone(tripID: trip.id))
+        } label: {
+            if let next = Milestone.all.filter({ $0.daysOut < daysOut }).max(by: { $0.daysOut < $1.daysOut }) {
+                StatTile(label: "Next up",
+                         value: "\(next.daysOut)",
+                         caption: "days → \(next.title)")
+            } else {
+                StatTile(label: "Next up",
+                         value: "—",
+                         caption: trip.isPast ? "trip complete" : "you're there now!")
+            }
         }
+        .buttonStyle(.plain)
     }
 }
 
