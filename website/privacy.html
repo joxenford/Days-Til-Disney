@@ -18,27 +18,21 @@
   <meta property="og:image"       content="https://daystildisney.com/og-image.png">
 
   <!-- Theme -->
-  <meta name="theme-color" content="#0D2545">
+  <meta name="theme-color" content="#F3F3F1">
 
   <!-- Fonts + Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="privacy.css">
 </head>
 
 <body>
-  <!-- Fixed background layers -->
-  <div class="page-bg" aria-hidden="true"></div>
-  <div class="star-field" aria-hidden="true"></div>
-
   <!-- Navigation -->
   <nav class="nav" id="nav" aria-label="Main navigation">
     <div class="nav__inner">
       <a href="index.html" class="nav__logo" aria-label="Countdown to Magic home">
-        <!-- TODO: new mark from design: wordmark/icon lockup for Countdown to Magic -->
-        <span class="nav__logo-icon" aria-hidden="true">&#x2728;</span>
         <span class="nav__logo-text">
           <span class="logo-main">Countdown to Magic</span>
           <span class="logo-sub">by ThinkUp LLC</span>
@@ -64,7 +58,6 @@
 
         <!-- Page Header -->
         <header class="privacy-header reveal">
-          <div class="privacy-header__icon" aria-hidden="true">&#x1F6E1;&#xFE0F;</div>
           <h1 class="heading-lg privacy-header__title">Privacy Policy</h1>
           <p class="privacy-header__app text-gold">Countdown to Magic</p>
           <p class="privacy-header__date text-tertiary">
@@ -73,7 +66,7 @@
         </header>
 
         <!-- Short version callout -->
-        <div class="privacy-summary glass-card glass-card--bright reveal reveal-delay-1" role="note" aria-label="Privacy policy summary">
+        <div class="privacy-summary surface-tile surface-tile--raised reveal reveal-delay-1" role="note" aria-label="Privacy policy summary">
           <p>
             The short version: we <strong class="text-gold">do not collect, store, or share</strong> any of your personal data. Your information stays on your device and under your control.
           </p>
@@ -81,26 +74,11 @@
 
         <!-- Trust badges -->
         <div class="privacy-badges reveal reveal-delay-2" aria-label="Privacy highlights">
-          <div class="privacy-badge">
-            <span aria-hidden="true">&#x1F6AB;</span>
-            <span>No ads</span>
-          </div>
-          <div class="privacy-badge">
-            <span aria-hidden="true">&#x1F511;</span>
-            <span>No account</span>
-          </div>
-          <div class="privacy-badge">
-            <span aria-hidden="true">&#x1F4F5;</span>
-            <span>No tracking</span>
-          </div>
-          <div class="privacy-badge">
-            <span aria-hidden="true">&#x1F5A5;&#xFE0F;</span>
-            <span>No servers</span>
-          </div>
-          <div class="privacy-badge">
-            <span aria-hidden="true">&#x1F476;</span>
-            <span>COPPA compliant</span>
-          </div>
+          <div class="privacy-badge">No ads</div>
+          <div class="privacy-badge">No account</div>
+          <div class="privacy-badge">No tracking</div>
+          <div class="privacy-badge">No servers</div>
+          <div class="privacy-badge">COPPA compliant</div>
         </div>
 
         <div class="gold-divider" style="margin: 0 0 40px;"></div>
@@ -214,7 +192,7 @@
         <div class="gold-divider" style="margin: 8px 0 40px;"></div>
 
         <!-- Contact Section -->
-        <section class="privacy-contact glass-card reveal" aria-labelledby="contact-heading">
+        <section class="privacy-contact surface-tile reveal" aria-labelledby="contact-heading">
           <h2 id="contact-heading" class="privacy-contact__heading">Contact Us</h2>
           <p class="privacy-contact__text">
             If you have any questions or concerns about this Privacy Policy or the Countdown to Magic app, please reach out.
@@ -242,10 +220,7 @@
   <footer class="footer" role="contentinfo">
     <div class="container">
       <div class="footer__inner">
-        <div class="footer__logo">
-          <span class="footer__logo-icon" aria-hidden="true">&#x2728;</span>
-          <span>Countdown to Magic</span>
-        </div>
+        <div class="footer__logo">Countdown to Magic</div>
         <nav class="footer__links" aria-label="Footer navigation">
           <a href="index.html">Home</a>
           <a href="index.html#features">Features</a>
