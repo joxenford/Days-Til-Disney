@@ -216,11 +216,15 @@ struct HomeView: View {
         ToolbarItem(placement: .navigationBarLeading) {
             // Plain wordmark. Fixed 19pt (never grows with Dynamic Type, so it can't
             // clip at AX5) and left queryable so the UITest can find the staticText.
+            // fixedSize forces the leading toolbar slot to grant intrinsic width —
+            // without it the slot compresses the text to "C…". Safe at AX5 because the
+            // point size is fixed, so the natural width never exceeds the bar.
             Text("Countdown to Magic")
                 .font(.system(size: 19, weight: .bold, design: .rounded))
                 .tracking(-0.3)
                 .foregroundStyle(DTDColor.textPrimary)
                 .lineLimit(1)
+                .fixedSize()
         }
         ToolbarItem(placement: .navigationBarTrailing) {
             HStack(spacing: DTDSpacing.x3) {

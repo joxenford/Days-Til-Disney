@@ -34,10 +34,14 @@ struct StatTile<Content: View>: View {
             }
             .foregroundStyle(DTDColor.textPrimary)
             if let caption {
+                // prose scales with Dynamic Type; at AX5 it balloons and truncates
+                // mid-word. Cap its growth and let it tighten/wrap within the tile.
                 Text(caption)
                     .font(DTDFont.prose)
                     .foregroundStyle(DTDColor.textMuted)
                     .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
             }
             content()
         }
