@@ -88,51 +88,31 @@ struct HomeView: View {
         }
     }
 
+    // Family (b) — two-column canvas on regular width; the existing single column on
+    // compact (iPhone + iPad multitasking). Two-column only anchors when a primary trip
+    // exists (it owns the sole park panel); otherwise the single column is used at any width.
     @ViewBuilder
     private func loadedView(vm: HomeViewModel, primary: Trip?, secondary: [Trip], past: [Trip]) -> some View {
+        if let primary {
+            DTDTwoColumnCanvas(
+                lead: { VStack(spacing: 20) { heroAndTiles(vm: vm, primary: primary) } },
+                trailing: { VStack(spacing: 20) { neutralStack(vm: vm, secondary: secondary, past: past) } },
+                compact: { AnyView(singleColumn(vm: vm, primary: primary, secondary: secondary, past: past)) }
+            )
+        } else {
+            singleColumn(vm: vm, primary: nil, secondary: secondary, past: past)
+        }
+    }
+
+    // The iPhone / compact body — unchanged content and order (hero → tiles → daily →
+    // list → past). Kept as the single source the two-column families reuse.
+    private func singleColumn(vm: HomeViewModel, primary: Trip?, secondary: [Trip], past: [Trip]) -> some View {
         ScrollView {
             LazyVStack(spacing: 20) {
-                // Hero countdown for primary trip, with its packing + milestone stat tiles.
                 if let primary {
-                    CountdownHeroView(
-                        trip: primary,
-                        onTap: { router.navigate(to: .tripDetail(tripID: primary.id)) },
-                        onAddTrip: { router.navigate(to: .addTrip) }
-                    )
-
-                    statTiles(for: primary)
-                        .padding(.horizontal, 20)
+                    heroAndTiles(vm: vm, primary: primary)
                 }
-
-                // Daily content card.
-                if let content = vm.dailyContent {
-                    DailyContentCardView(content: content)
-                        .padding(.horizontal, 20)
-                }
-
-                // Secondary trip cards (upcoming and ongoing).
-                if !secondary.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        SectionLabel("Other trips")
-                            .padding(.horizontal, 20)
-
-                        ForEach(secondary) { trip in
-                            TripCardView(
-                                trip: trip,
-                                onTap: { router.navigate(to: .tripDetail(tripID: trip.id)) },
-                                onSetPrimary: { Task { await vm.setPrimaryTrip(id: trip.id) } },
-                                onEdit: { router.navigate(to: .editTrip(tripID: trip.id)) },
-                                onDelete: { Task { await vm.deleteTrip(id: trip.id) } }
-                            )
-                            .padding(.horizontal, 20)
-                        }
-                    }
-                }
-
-                // Collapsible past trips section.
-                if !past.isEmpty {
-                    pastTripsSection(vm: vm, past: past)
-                }
+                neutralStack(vm: vm, secondary: secondary, past: past)
 
                 // Bottom padding for tab bar / home indicator.
                 Spacer().frame(height: 40)
@@ -140,6 +120,50 @@ struct HomeView: View {
             .padding(.top, 16)
         }
         .refreshable { await vm.onRefresh() }
+    }
+
+    // Lead column content: the sole park panel (hero) + its stat tiles.
+    @ViewBuilder
+    private func heroAndTiles(vm: HomeViewModel, primary: Trip) -> some View {
+        CountdownHeroView(
+            trip: primary,
+            onTap: { router.navigate(to: .tripDetail(tripID: primary.id)) },
+            onAddTrip: { router.navigate(to: .addTrip) }
+        )
+
+        statTiles(for: primary)
+            .padding(.horizontal, 20)
+    }
+
+    // Trailing column content: the neutral stack (daily card + trip list + past trips).
+    @ViewBuilder
+    private func neutralStack(vm: HomeViewModel, secondary: [Trip], past: [Trip]) -> some View {
+        if let content = vm.dailyContent {
+            DailyContentCardView(content: content)
+                .padding(.horizontal, 20)
+        }
+
+        if !secondary.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionLabel("Other trips")
+                    .padding(.horizontal, 20)
+
+                ForEach(secondary) { trip in
+                    TripCardView(
+                        trip: trip,
+                        onTap: { router.navigate(to: .tripDetail(tripID: trip.id)) },
+                        onSetPrimary: { Task { await vm.setPrimaryTrip(id: trip.id) } },
+                        onEdit: { router.navigate(to: .editTrip(tripID: trip.id)) },
+                        onDelete: { Task { await vm.deleteTrip(id: trip.id) } }
+                    )
+                    .padding(.horizontal, 20)
+                }
+            }
+        }
+
+        if !past.isEmpty {
+            pastTripsSection(vm: vm, past: past)
+        }
     }
 
     @ViewBuilder

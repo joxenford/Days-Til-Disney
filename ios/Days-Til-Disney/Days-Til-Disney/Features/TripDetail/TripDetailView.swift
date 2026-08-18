@@ -98,41 +98,63 @@ struct TripDetailView: View {
             }
 
         case .loaded(let trip, let content):
-            ScrollView {
-                VStack(spacing: DTDSpacing.tileGap) {
-                    heroPanel(trip: trip)
-                    metricTiles(trip: trip)
+            // Family (b) — two-column canvas on regular width; the single column on compact.
+            // Lead col: the sole park panel + metric tiles. Trailing col: packing/live,
+            // notes, tips.
+            DTDTwoColumnCanvas(
+                lead: { VStack(spacing: DTDSpacing.tileGap) { leadContent(trip: trip) } },
+                trailing: { VStack(spacing: DTDSpacing.tileGap) { trailingContent(trip: trip, vm: vm, content: content) } },
+                compact: { AnyView(singleColumn(trip: trip, vm: vm, content: content)) }
+            )
+        }
+    }
 
-                    // Packing list shortcut — hidden during the trip (not useful in the park).
-                    if !trip.isOngoing {
-                        packingRow(trip: trip)
-                    }
-
-                    // Live park data card — only shown while the trip is in progress.
-                    if trip.isOngoing {
-                        LiveParkCard(
-                            trip: trip,
-                            onViewAll: {
-                                router.navigate(to: .parkDashboard(
-                                    tripID: trip.id,
-                                    park: trip.primaryPark,
-                                    allParks: trip.parks
-                                ))
-                            }
-                        )
-                    }
-
-                    notesCard(trip: trip, vm: vm)
-
-                    if !content.isEmpty {
-                        tipsSection(content: content)
-                    }
-
-                    Spacer().frame(height: 40)
-                }
-                .padding(.horizontal, DTDSpacing.gutter)
-                .padding(.top, DTDSpacing.x7)
+    // The iPhone / compact body — unchanged content and order.
+    private func singleColumn(trip: Trip, vm: TripDetailViewModel, content: [DailyContent]) -> some View {
+        ScrollView {
+            VStack(spacing: DTDSpacing.tileGap) {
+                leadContent(trip: trip)
+                trailingContent(trip: trip, vm: vm, content: content)
+                Spacer().frame(height: 40)
             }
+            .padding(.horizontal, DTDSpacing.gutter)
+            .padding(.top, DTDSpacing.x7)
+        }
+    }
+
+    // Lead column: the sole park panel + the START / END / NIGHTS metric tiles.
+    @ViewBuilder
+    private func leadContent(trip: Trip) -> some View {
+        heroPanel(trip: trip)
+        metricTiles(trip: trip)
+    }
+
+    // Trailing column: the neutral stack (packing shortcut or live card, notes, tips).
+    @ViewBuilder
+    private func trailingContent(trip: Trip, vm: TripDetailViewModel, content: [DailyContent]) -> some View {
+        // Packing list shortcut — hidden during the trip (not useful in the park).
+        if !trip.isOngoing {
+            packingRow(trip: trip)
+        }
+
+        // Live park data card — only shown while the trip is in progress.
+        if trip.isOngoing {
+            LiveParkCard(
+                trip: trip,
+                onViewAll: {
+                    router.navigate(to: .parkDashboard(
+                        tripID: trip.id,
+                        park: trip.primaryPark,
+                        allParks: trip.parks
+                    ))
+                }
+            )
+        }
+
+        notesCard(trip: trip, vm: vm)
+
+        if !content.isEmpty {
+            tipsSection(content: content)
         }
     }
 

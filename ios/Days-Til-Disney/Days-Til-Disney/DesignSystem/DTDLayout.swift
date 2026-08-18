@@ -38,3 +38,21 @@ enum DTDSpacing {
     static let tileGap: CGFloat = 12
     static let tapMin: CGFloat = 44
 }
+
+/// iPad-only layout tokens (regular width). Verbatim from
+/// `docs/design/toy-box-redesign/ipad-adaptation.md` §3. These grow *whitespace and
+/// column count* only — components keep their iPhone radii/padding/type. Two-column
+/// geometry is driven off the GeometryReader **container** width, never a screen fraction.
+enum DTDPadLayout {
+    static let space18: CGFloat = 32
+    static let space20: CGFloat = 40
+    static let space24: CGFloat = 64
+    /// Regular-width outer margin (vs 20 on iPhone).
+    static let gutterScreen: CGFloat = 40
+    /// Clamp for family (a) single-column screens (Add Trip, Settings, Welcome, Packing, Milestone).
+    static let maxContentWidth: CGFloat = 680
+    /// Gap between the lead and trailing columns in family (b).
+    static let colGap: CGFloat = 32
+    /// Max width of the panel / lead column in family (b).
+    static let panelColMax: CGFloat = 420
+}

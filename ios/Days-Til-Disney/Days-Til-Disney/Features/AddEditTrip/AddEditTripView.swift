@@ -109,6 +109,8 @@ struct AddEditTripView: View {
             }
             .padding(.horizontal, DTDSpacing.gutter)
             .padding(.top, DTDSpacing.x7)
+            // Family (a) — clamp to ~680 and centre on regular-width iPad; no-op on compact.
+            .dtdContentColumn()
         }
         .onAppear { isNameFieldFocused = !mode.isEditing }
     }

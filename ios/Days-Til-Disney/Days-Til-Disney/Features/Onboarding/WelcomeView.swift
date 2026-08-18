@@ -83,6 +83,8 @@ struct WelcomeView: View {
             }
             .padding(.horizontal, DTDSpacing.x11)
             .padding(.bottom, DTDSpacing.x11)
+            // Family (a) — clamp to ~680 and centre on regular-width iPad; no-op on compact.
+            .dtdContentColumn()
         }
         .accessibilityElement(children: .contain)
     }

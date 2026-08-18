@@ -19,14 +19,19 @@ struct CountdownNumeral: View {
     var unit: String?
     var size: Size = .hero
     var onPark: Bool = true
+    /// Explicit point-size override — used only for the iPad milestone screen, where the
+    /// numeral grows to its share of the taller full-bleed panel (~220–240) rather than the
+    /// fixed role size. `nil` keeps the role's iPhone size. When set, `trackingOverride`
+    /// supplies the wider tracking the larger glyph needs.
+    var pointSize: CGFloat? = nil
+    var trackingOverride: CGFloat? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var bump: CGFloat = 1
 
     var body: some View {
         HStack(alignment: .lastTextBaseline, spacing: 8) {
-            Text("\(value)")
-                .dtdNumeral(size.role)
+            numeralText
                 .scaleEffect(bump, anchor: .bottomLeading)
             if let unit {
                 Text(unit)
@@ -44,6 +49,20 @@ struct CountdownNumeral: View {
             guard bump != 1 else { return }
             try? await Task.sleep(for: .seconds(0.3))
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { bump = 1 }
+        }
+    }
+
+    @ViewBuilder
+    private var numeralText: some View {
+        if let pointSize {
+            Text("\(value)")
+                .font(.system(size: pointSize, weight: .black, design: .rounded))
+                .tracking(trackingOverride ?? size.role.tracking)
+                .minimumScaleFactor(0.3)
+                .allowsTightening(true)
+        } else {
+            Text("\(value)")
+                .dtdNumeral(size.role)
         }
     }
 

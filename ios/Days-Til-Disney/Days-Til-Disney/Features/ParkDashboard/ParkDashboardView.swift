@@ -82,27 +82,48 @@ struct ParkDashboardView: View {
     // MARK: - Loaded
 
     @ViewBuilder
+    // Family (b) — two-column canvas on regular width; the single column on compact.
+    // Lead col: park selector + the deep-tone summary panel + sort pills. Trailing col:
+    // the attraction list (and shows).
     private func loadedView(vm: ParkDashboardViewModel) -> some View {
+        DTDTwoColumnCanvas(
+            lead: { VStack(spacing: DTDSpacing.tileGap) { leadContent(vm: vm) } },
+            trailing: { VStack(spacing: DTDSpacing.tileGap) { trailingContent(vm: vm) } },
+            compact: { AnyView(singleColumn(vm: vm)) }
+        )
+    }
+
+    // The iPhone / compact body — unchanged content and order.
+    private func singleColumn(vm: ParkDashboardViewModel) -> some View {
         ScrollView {
             LazyVStack(spacing: DTDSpacing.tileGap) {
-                if vm.parks.count > 1 {
-                    parkPicker(vm: vm)
-                }
-
-                summaryPanel(vm: vm)
-                sortPills(vm: vm)
-                attractionsSection(vm: vm)
-
-                if !vm.shows.isEmpty {
-                    showsSection(vm: vm)
-                }
-
+                leadContent(vm: vm)
+                trailingContent(vm: vm)
                 Spacer().frame(height: 40)
             }
             .padding(.horizontal, DTDSpacing.gutter)
             .padding(.top, DTDSpacing.x7)
         }
         .refreshable { await vm.refresh() }
+    }
+
+    // Lead column: selector + the sole (deep-tone) summary panel + sort pills.
+    @ViewBuilder
+    private func leadContent(vm: ParkDashboardViewModel) -> some View {
+        if vm.parks.count > 1 {
+            parkPicker(vm: vm)
+        }
+        summaryPanel(vm: vm)
+        sortPills(vm: vm)
+    }
+
+    // Trailing column: the attraction list and shows.
+    @ViewBuilder
+    private func trailingContent(vm: ParkDashboardViewModel) -> some View {
+        attractionsSection(vm: vm)
+        if !vm.shows.isEmpty {
+            showsSection(vm: vm)
+        }
     }
 
     // MARK: - Park picker
