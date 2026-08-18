@@ -67,7 +67,7 @@ struct ParkColorPalette: Sendable {
         textOnPrimary: .white
     )
 
-    /// Disneyland — Sleeping Beauty castle: deep amethyst to lilac dawn.
+    /// Disneyland — deep amethyst to lilac dawn.
     static let disneyland = ParkColorPalette(
         primary: Color(hex: "#8E44AD"),
         secondary: Color(hex: "#E91E8C"),
@@ -81,7 +81,7 @@ struct ParkColorPalette: Sendable {
 
     /// California Adventure — Pacific sunset: terracotta to blazing orange-gold.
     static let californiaAdventure = ParkColorPalette(
-        primary: Color(hex: "#E64A19"),
+        primary: Color(hex: "#BF360C"),
         secondary: Color(hex: "#FFB300"),
         accent: Color(hex: "#FFE082"),
         backgroundGradientStart: Color(hex: "#3E1000"),   // Deep sunset rust

@@ -14,6 +14,7 @@ struct MilestoneView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var trip: Trip?
+    @State private var loadFailed = false
 
     var body: some View {
         ZStack {
@@ -25,6 +26,8 @@ struct MilestoneView: View {
 
             if let trip {
                 content(for: trip)
+            } else if loadFailed {
+                notFound
             } else {
                 ProgressView().tint(.white)
             }
@@ -34,8 +37,14 @@ struct MilestoneView: View {
         .toolbarBackground(.hidden, for: .navigationBar)
         .task {
             // Read-only trip fetch — no new ViewModel API (guardrail); resolves park,
-            // daysUntilStart, and the matching milestone locally.
-            trip = try? await appContainer.tripRepository.fetchTrip(by: tripID)
+            // daysUntilStart, and the matching milestone locally. On throw/nil we surface a
+            // terminal not-found state rather than spinning forever.
+            do {
+                trip = try await appContainer.tripRepository.fetchTrip(by: tripID)
+                loadFailed = (trip == nil)
+            } catch {
+                loadFailed = true
+            }
         }
     }
 
@@ -90,6 +99,21 @@ struct MilestoneView: View {
                 .dtdContentColumn()
                 .frame(minHeight: geo.size.height, alignment: .center)
             }
+        }
+    }
+
+    // MARK: - Terminal not-found state
+
+    /// Shown when the trip fetch throws or returns nil, so the screen resolves instead of
+    /// spinning forever (loading/success/error convention). Mirrors TripDetail's not-found.
+    private var notFound: some View {
+        VStack(spacing: DTDSpacing.x7) {
+            Text("Couldn't load this milestone")
+                .font(DTDFont.title)
+                .foregroundStyle(DTDColor.textPrimary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            DTDButton("Go back", full: false) { dismiss() }
         }
     }
 
