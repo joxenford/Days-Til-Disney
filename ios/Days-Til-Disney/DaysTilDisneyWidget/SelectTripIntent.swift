@@ -13,12 +13,9 @@ struct TripAppEntity: AppEntity {
 
     var id: UUID
     var name: String
-    var parkEmoji: String
 
     var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(
-            title: "\(parkEmoji) \(name)"
-        )
+        DisplayRepresentation(title: "\(name)")
     }
 }
 

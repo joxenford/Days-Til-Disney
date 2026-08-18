@@ -6,6 +6,7 @@ struct TripDetailView: View {
 
     @Environment(AppContainer.self) private var appContainer
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel: TripDetailViewModel?
     @State private var isInitialLoad = true
     @State private var showShareSheet = false
@@ -344,7 +345,7 @@ struct TripDetailView: View {
                 // Share button — visible only when the trip is loaded.
                 if case .loaded(let trip, _) = viewModel?.viewState {
                     Button {
-                        viewModel?.generateShareImage(for: trip)
+                        viewModel?.generateShareImage(for: trip, scheme: colorScheme)
                     } label: {
                         if viewModel?.isGeneratingShareImage == true {
                             ProgressView().tint(DTDColor.textPrimary)
