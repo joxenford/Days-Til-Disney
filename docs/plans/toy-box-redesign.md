@@ -394,3 +394,14 @@ Keep the `.reveal` IntersectionObserver, nav `.is-scrolled`, smooth anchor scrol
 5. **`DTDFont` is not custom-font-based** — it already uses `.system(design:.rounded)`, so Outfit→SF Pro Rounded is a token extension, not a font-file addition. Many call sites also hand-roll raw `.system(...)`; the redesign should route them through the new tokens.
 6. **Two screens force `.preferredColorScheme(.dark)`** (Settings, AddEditTrip) — must be removed for light-mode to work; the handoff doesn't mention it.
 7. **Milestone screen does not exist today** — it's new UI + one new `AppNavigationRouter` route, not a restyle of an existing view.
+
+---
+
+## Post-review deferred tech debt (fast-follow, tracked)
+
+Code review (2026-08-18) cleared the redesign as ship-safe (zero Critical). Two **pure dead-code** cleanups were deliberately deferred out of the ship PR (they touch all 12 palettes / the guardrail-protected ViewModels and have zero user impact). Do these in a separate fast-follow PR:
+
+1. **Dead gradient data on `ParkColorPalette`.** Only `primary` and `backgroundGradientMid1` are live. Delete the orphaned `backgroundGradientStart/Mid2/End`, `accent`, `secondary`, `textOnPrimary`, and the `gradientStops` computed var across all 12 palette definitions; rename `backgroundGradientMid1` → `panelDeep` (it's the dark-panel tone now, not a gradient midpoint) and update `panelColor(for:)`.
+2. **`ParkThemeProvider` is now dead.** `setActivePark` is write-only (nothing reads `.park`). Remove `ParkThemeProvider`, `DisneyThemeEnvironment`, and the `setActivePark` calls in `HomeViewModel:97` + `TripDetailViewModel:62` (this finally lets `HomeViewModel`'s themeProvider injection go — the init-signature change that was correctly avoided during the redesign).
+
+The four ship-relevant review findings (California Adventure contrast, MilestoneView error state, unused TripRow, castle code-comment) were fixed in the ship PR.
