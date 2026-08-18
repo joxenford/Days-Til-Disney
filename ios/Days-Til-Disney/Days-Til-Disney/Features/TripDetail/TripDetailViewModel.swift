@@ -97,13 +97,14 @@ final class TripDetailViewModel {
     /// Renders the ShareCountdownCard to a UIImage and stores it in `shareImage`.
     /// Call this when the user taps the share button, then observe `shareImage`
     /// to know when to present the share sheet.
-    func generateShareImage(for trip: Trip) {
+    func generateShareImage(for trip: Trip, scheme: ColorScheme) {
         guard !isGeneratingShareImage else { return }
         isGeneratingShareImage = true
         shareImage = nil
 
-        // ImageRenderer must be created and used on the main actor.
-        let card = ShareCountdownCard(trip: trip)
+        // ImageRenderer must be created and used on the main actor. `scheme` is
+        // threaded explicitly because ImageRenderer does not inherit colorScheme.
+        let card = ShareCountdownCard(trip: trip, scheme: scheme)
         let renderer = ImageRenderer(content: card)
         // Render at 3x for crisp social-share quality.
         renderer.scale = 3.0

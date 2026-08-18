@@ -11,6 +11,9 @@ enum AppRoute: Hashable {
     case packingList(tripID: UUID)
     /// Live wait times and show schedule for a specific park during an ongoing trip.
     case parkDashboard(tripID: UUID, park: DisneyPark, allParks: [DisneyPark])
+    /// Milestone celebration screen. Carries only the trip; `MilestoneView` resolves
+    /// `daysUntilStart`, `primaryPark`, and the matching `Milestone` from the trip.
+    case milestone(tripID: UUID)
 }
 
 // MARK: - Root screen states
@@ -25,12 +28,12 @@ private enum RootScreen {
 
 /// Root navigation container using NavigationStack for path-based routing.
 /// Handles splash → onboarding (first launch) or splash → home (returning user).
-/// On iPad (horizontalSizeClass == .regular) the home screen is replaced by the
-/// two-column `iPadHomeLayout`; on iPhone the existing single-column path is unchanged.
+/// A single NavigationStack serves every size class; each screen adapts internally
+/// (see `DTDAdaptiveLayout`), so iPad detail screens are full-width pushes on the
+/// same path rather than a separate right-column stack.
 struct AppNavigationRouter: View {
     @Environment(UserPreferences.self) private var preferences
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var navigationPath = NavigationPath()
     @State private var rootScreen: RootScreen = .splash
 
@@ -68,18 +71,16 @@ struct AppNavigationRouter: View {
                 )
 
             case .home:
-                if horizontalSizeClass == .regular {
-                    // iPad: two-column layout.  The right column owns its own NavigationStack
-                    // so detail pushes fill the right pane while the hero stays on the left.
-                    iPadHomeLayout(router: self)
-                } else {
-                    // iPhone: unchanged single-column NavigationStack.
-                    NavigationStack(path: $navigationPath) {
-                        HomeView(router: self)
-                            .navigationDestination(for: AppRoute.self) { route in
-                                destination(for: route)
-                            }
-                    }
+                // One NavigationStack for every size class. iPhone (and compact iPad
+                // multitasking) render single-column screens; regular-width iPad screens
+                // adapt internally (max-width column or two-column canvas). Detail routes
+                // are full-width pushes on the same path, so `router.navigate` — including
+                // the milestone push from Trip Detail — surfaces correctly everywhere.
+                NavigationStack(path: $navigationPath) {
+                    HomeView(router: self)
+                        .navigationDestination(for: AppRoute.self) { route in
+                            destination(for: route)
+                        }
                 }
             }
         }
@@ -127,6 +128,9 @@ struct AppNavigationRouter: View {
 
         case .parkDashboard(let tripID, let park, let allParks):
             ParkDashboardView(tripID: tripID, parks: allParks, initialPark: park)
+
+        case .milestone(let tripID):
+            MilestoneView(tripID: tripID)
         }
     }
 

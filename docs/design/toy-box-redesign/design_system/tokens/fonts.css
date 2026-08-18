@@ -1,0 +1,5 @@
+/* Outfit (UI + display) and Karla (prose) are served from Google Fonts.
+   SUBSTITUTION NOTE: the iOS app ships SF Pro Rounded (system). Outfit is the
+   closest freely-licensable geometric equivalent for web/prototype work.
+   Replace with licensed binaries + local @font-face when available. */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Karla:wght@400;500;600;700&display=swap");

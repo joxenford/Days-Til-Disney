@@ -1,0 +1,93 @@
+<!-- @dsCard group="iOS App" viewport="700x680" subtitle="Widgets (all four families) and 4:5 share cards" name="Widgets & share cards" -->
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../design_system/styles.css">
+<style>
+  body { margin:0; padding:22px; background:var(--dark-bg); font-family:var(--font-ui); color:var(--dark-ink); }
+  *{box-sizing:border-box}
+  .lbl { font-size:10px; font-weight:700; letter-spacing:1.4px; color:var(--dark-ink-muted); margin:0 0 10px; }
+  .cols { display:flex; gap:22px; align-items:flex-start; }
+  .stack { display:flex; flex-direction:column; gap:18px; }
+  .w-sm { width:158px; height:158px; border-radius:34px; padding:18px; display:flex; flex-direction:column; }
+  .num { font-family:var(--font-ui); font-weight:800; letter-spacing:-4px; line-height:.84; }
+  .share { width:250px; height:312px; border-radius:30px; padding:24px; display:flex; flex-direction:column; color:#fff; }
+</style></head><body>
+<div class="cols">
+  <div class="stack">
+    <div>
+      <p class="lbl">SYSTEM SMALL — COUNTDOWN / PACKING</p>
+      <div style="display:flex; gap:14px">
+        <div class="w-sm" style="background:var(--park-magic-kingdom)">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.4px;color:rgba(255,255,255,.8)">MAGIC KINGDOM</div>
+          <div style="flex:1"></div>
+          <div class="num" style="font-size:62px;color:#fff">45</div>
+          <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.85)">days to go</div>
+        </div>
+        <div class="w-sm" style="background:var(--light-bg)">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.4px;color:var(--light-ink-muted)">PACKED</div>
+          <div style="flex:1"></div>
+          <div class="num" style="font-size:52px;letter-spacing:-3px;color:var(--light-ink)">12<span style="font-size:22px;color:var(--light-ink-faint)">/38</span></div>
+          <div style="margin-top:10px;height:8px;border-radius:999px;background:#E0E0DC;overflow:hidden"><span style="display:block;width:32%;height:8px;border-radius:999px;background:var(--park-magic-kingdom)"></span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="lbl">SYSTEM MEDIUM</p>
+      <div style="width:330px;height:158px;border-radius:34px;background:var(--park-magic-kingdom);padding:22px;display:flex;align-items:flex-end;justify-content:space-between">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.8)">MAGIC KINGDOM FAMILY TRIP</div>
+          <div style="margin-top:8px;display:flex;align-items:baseline;gap:8px">
+            <span class="num" style="font-size:80px;letter-spacing:-5px;color:#fff">45</span>
+            <span style="font-size:18px;font-weight:600;color:rgba(255,255,255,.85)">days</span>
+          </div>
+        </div>
+        <div style="text-align:right;font-family:var(--font-prose);font-size:13px;font-weight:600;line-height:1.7;color:rgba(255,255,255,.82)">
+          <div>30 Sep</div><div>7 nights</div><div>12/38 packed</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="lbl">ACCESSORY CIRCULAR / RECTANGULAR</p>
+      <div style="display:flex;gap:18px;align-items:center">
+        <div style="width:96px;height:96px;border-radius:999px;background:rgba(241,241,239,.14);display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span style="font-size:30px;font-weight:800;letter-spacing:-1.5px;line-height:1">45</span>
+          <span style="font-size:10px;font-weight:700;letter-spacing:1.2px;margin-top:2px">DAYS</span>
+        </div>
+        <div style="border-radius:20px;background:rgba(241,241,239,.14);padding:14px 16px;display:flex;align-items:center;gap:14px">
+          <span style="font-size:34px;font-weight:800;letter-spacing:-1.5px">45</span>
+          <span style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:13px;font-weight:700">Magic Kingdom Trip</span>
+            <span style="font-family:var(--font-prose);font-size:12px;opacity:.8">30 Sep · 7 nights</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="lbl">SHARE CARDS — 4:5 (1080×1350)</p>
+    <div style="display:flex; gap:14px">
+      <div class="share" style="background:var(--park-magic-kingdom)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.8)">MAGIC KINGDOM</div>
+        <div style="flex:1"></div>
+        <div class="num" style="font-size:106px;letter-spacing:-7px">45</div>
+        <div style="margin-top:4px;font-size:20px;font-weight:700;color:var(--gold)">days to go</div>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.3)">
+          <div style="font-size:17px;font-weight:600;letter-spacing:-.3px">Magic Kingdom Family Trip</div>
+          <div style="margin-top:4px;font-family:var(--font-prose);font-size:12px;color:rgba(255,255,255,.82)">30 Sep — 7 Oct 2026 · 7 nights</div>
+        </div>
+        <div style="margin-top:14px;font-size:10px;font-weight:700;letter-spacing:1.4px;color:rgba(255,255,255,.72)">COUNTDOWN TO MAGIC</div>
+      </div>
+      <div class="share" style="background:var(--park-tokyo-disneyland-deep)">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.6px;color:rgba(255,255,255,.8)">TOKYO DISNEYLAND</div>
+        <div style="flex:1"></div>
+        <div style="font-size:46px;font-weight:800;letter-spacing:-2px;line-height:1.05">Today is<br>the day</div>
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.3)">
+          <div style="font-size:17px;font-weight:600;letter-spacing:-.3px">Tokyo Adventure</div>
+          <div style="margin-top:4px;font-family:var(--font-prose);font-size:12px;color:rgba(255,255,255,.82)">16 Aug — 23 Aug 2026 · day 1 of 7</div>
+        </div>
+        <div style="margin-top:14px;font-size:10px;font-weight:700;letter-spacing:1.4px;color:rgba(255,255,255,.72)">COUNTDOWN TO MAGIC</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

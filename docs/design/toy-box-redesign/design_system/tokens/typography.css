@@ -1,0 +1,40 @@
+:root {
+  --font-ui: Outfit, system-ui, -apple-system, sans-serif;
+  --font-prose: Karla, system-ui, -apple-system, sans-serif;
+
+  /* Numerals — the app's loudest element. Always --font-ui at weight 800. */
+  --size-numeral-hero: 118px;   /* home countdown */
+  --size-numeral-screen: 96px;  /* trip detail, in-park */
+  --size-numeral-milestone: 172px;
+  --size-numeral-stat: 40px;    /* stat tiles */
+  --size-numeral-inline: 26px;  /* wait times, list badges */
+  --tracking-numeral-hero: -7px;
+  --tracking-numeral-screen: -6px;
+  --tracking-numeral-stat: -2px;
+
+  /* Display + UI */
+  --size-display: 38px;
+  --size-title: 24px;
+  --size-heading: 23px;
+  --size-body-strong: 17px;
+  --size-body: 16px;
+  --size-prose: 15px;
+  --size-caption: 13px;
+  --size-label: 12px;
+  --size-label-sm: 11px;
+
+  --tracking-display: -1.4px;
+  --tracking-title: -.4px;
+  --tracking-label: 1.4px;
+  --tracking-label-loose: 2.4px;
+
+  --leading-tight: 1.08;
+  --leading-snug: 1.25;
+  --leading-prose: 1.55;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;
+}

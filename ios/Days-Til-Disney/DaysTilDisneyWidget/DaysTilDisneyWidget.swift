@@ -55,6 +55,7 @@ struct DaysTilDisneyTimelineProvider: AppIntentTimelineProvider {
 // MARK: - Widget Definition
 
 struct DaysTilDisneyWidget: Widget {
+    // Unchanged — placed widgets must keep resolving.
     let kind = "DaysTilDisneyWidget"
 
     var body: some WidgetConfiguration {
@@ -64,21 +65,6 @@ struct DaysTilDisneyWidget: Widget {
             provider: DaysTilDisneyTimelineProvider()
         ) { entry in
             WidgetEntryView(entry: entry)
-                .containerBackground(for: .widget) {
-                    if let trip = entry.trip {
-                        LinearGradient(
-                            colors: trip.colorPalette.gradientStops,
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    } else {
-                        LinearGradient(
-                            colors: [Color(hex: "#0D2545"), Color(hex: "#1A1147")],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    }
-                }
         }
         .configurationDisplayName("Countdown to Magic")
         .description("Count down the days to your next trip.")
@@ -88,11 +74,23 @@ struct DaysTilDisneyWidget: Widget {
 
 // MARK: - Entry View (routes to size-specific views)
 
+// Toy Box: flat park `panelColor` container (no gradient), radius handled by the
+// widget system. Foundation tokens (Typography/DTDColor) are not widget-target
+// members and the widget numeral sizes aren't in the shared `Numeral` enum, so
+// numerals are hand-rolled `.system(size:weight:.black,design:.rounded)` per the
+// existing SYNC-NOTE precedent. `panelColor(for:)` comes free from ParkColorPalette.
 struct WidgetEntryView: View {
-    @Environment(\.widgetFamily) var family
+    @Environment(\.widgetFamily) private var family
+    @Environment(\.colorScheme) private var colorScheme
     let entry: DaysTilDisneyEntry
 
     var body: some View {
+        content
+            .containerBackground(for: .widget) { background }
+    }
+
+    @ViewBuilder
+    private var content: some View {
         switch family {
         case .systemSmall:
             SmallWidgetView(trip: entry.trip)
@@ -106,52 +104,67 @@ struct WidgetEntryView: View {
             SmallWidgetView(trip: entry.trip)
         }
     }
+
+    /// Home-screen families get the flat park panel; lock-screen accessory families
+    /// keep the system's translucent/vibrant background (no park fill on the lock screen).
+    @ViewBuilder
+    private var background: some View {
+        switch family {
+        case .accessoryCircular, .accessoryRectangular:
+            AccessoryWidgetBackground()
+        default:
+            if let trip = entry.trip {
+                trip.colorPalette.panelColor(for: colorScheme)
+            } else {
+                Color(hex: colorScheme == .dark ? "#15151A" : "#F3F3F1")
+            }
+        }
+    }
 }
 
-// MARK: - Small Widget
+// MARK: - Small Widget (countdown)
 
+// ponytail: only the countdown small variant ships. The design's "packing" small
+// variant needs packed/total counts that WidgetTripEntry doesn't carry and a
+// variant selector — data plumbing beyond this presentational restyle. Add the
+// entry fields + an intent parameter when the packing widget is greenlit.
 struct SmallWidgetView: View {
     let trip: WidgetTripEntry?
 
     var body: some View {
         if let trip {
-            ZStack(alignment: .bottomTrailing) {
-                // Hero mark watermark — larger and more ghostly for legibility.
-                WidgetHeroMark(size: 70)
-                    .opacity(0.12)
-                    .offset(x: 10, y: 10)
-                    .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(trip.primaryPark.displayName.uppercased())
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .tracking(1.4)
+                    .foregroundStyle(.white.opacity(0.8))
+                    .lineLimit(1)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(trip.primaryPark.emoji)
-                        .font(.title3)
+                Spacer(minLength: 0)
 
-                    Spacer()
-
-                    if trip.isToday {
-                        Text("TODAY!")
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                    } else if trip.isPast {
-                        Text("Complete")
-                            .font(.system(size: 20, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.8))
-                    } else {
-                        Text("\(trip.daysUntilStart)")
-                            .font(.system(size: 44, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                        Text(trip.daysUntilStart == 1 ? "day" : "days")
-                            .font(.system(size: 14, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.8))
-                    }
-
-                    Text(trip.tripName)
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(.white.opacity(0.7))
+                if trip.isToday {
+                    Text("Today!")
+                        .font(.system(size: 40, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                        .minimumScaleFactor(0.4)
+                } else if trip.isPast {
+                    Text("Complete")
+                        .font(.system(size: 30, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                        .minimumScaleFactor(0.4)
+                } else {
+                    Text("\(trip.daysUntilStart)")
+                        .font(.system(size: 62, weight: .black, design: .rounded))
+                        .tracking(-4)
+                        .foregroundStyle(.white)
+                        .minimumScaleFactor(0.4)
                         .lineLimit(1)
+                    Text(trip.daysUntilStart == 1 ? "day to go" : "days to go")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.85))
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
@@ -167,52 +180,47 @@ struct MediumWidgetView: View {
 
     var body: some View {
         if let trip {
-            ZStack(alignment: .trailing) {
-                // Hero mark on the right — partially clipped for a sense of grandeur.
-                WidgetHeroMark(size: 100)
-                    .opacity(0.2)
-                    .offset(x: 30, y: 15)
-                    .accessibilityHidden(true)
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(trip.tripName.uppercased())
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .tracking(1.6)
+                        .foregroundStyle(.white.opacity(0.8))
+                        .lineLimit(1)
 
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(trip.primaryPark.emoji)
-                            .font(.title3)
-
-                        Spacer()
-
-                        if trip.isToday {
-                            Text("TODAY!")
-                                .font(.system(size: 40, weight: .bold, design: .rounded))
+                    if trip.isToday {
+                        Text("Today!")
+                            .font(.system(size: 56, weight: .black, design: .rounded))
+                            .foregroundStyle(.white)
+                            .minimumScaleFactor(0.4)
+                    } else if trip.isPast {
+                        Text("Complete")
+                            .font(.system(size: 40, weight: .black, design: .rounded))
+                            .foregroundStyle(.white)
+                            .minimumScaleFactor(0.4)
+                    } else {
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            Text("\(trip.daysUntilStart)")
+                                .font(.system(size: 80, weight: .black, design: .rounded))
+                                .tracking(-5)
                                 .foregroundStyle(.white)
-                        } else if trip.isPast {
-                            Text("Complete")
-                                .font(.system(size: 24, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white.opacity(0.8))
-                        } else {
-                            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                                Text("\(trip.daysUntilStart)")
-                                    .font(.system(size: 48, weight: .bold, design: .rounded))
-                                    .foregroundStyle(.white)
-                                Text(trip.daysUntilStart == 1 ? "day" : "days")
-                                    .font(.system(size: 18, weight: .semibold, design: .rounded))
-                                    .foregroundStyle(.white.opacity(0.8))
-                            }
+                                .minimumScaleFactor(0.4)
+                                .lineLimit(1)
+                            Text(trip.daysUntilStart == 1 ? "day" : "days")
+                                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                                .foregroundStyle(.white.opacity(0.85))
                         }
-
-                        Text(trip.tripName)
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.8))
-                            .lineLimit(1)
-
-                        Text(trip.startDate.formatted(.dateTime.month(.wide).day().year()))
-                            .font(.system(size: 11, weight: .regular, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.5))
                     }
-
-                    Spacer()
                 }
+
+                Spacer(minLength: 12)
+
+                Text(trip.startDate.formatted(.dateTime.day().month(.abbreviated)))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.82))
+                    .lineLimit(1)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
@@ -230,32 +238,33 @@ struct AccessoryCircularWidgetView: View {
         if let trip {
             VStack(spacing: 1) {
                 if trip.isToday {
-                    Text(trip.primaryPark.emoji)
-                        .font(.caption)
                     Text("NOW")
-                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .font(.system(size: 20, weight: .black, design: .rounded))
                 } else if trip.isPast {
-                    // Show a checkmark instead of "0" — "0" is meaningless for a completed trip.
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 22, weight: .semibold))
-                    Text("Done")
+                    Text("DONE")
                         .font(.system(size: 10, weight: .bold, design: .rounded))
+                        .tracking(1.2)
                 } else {
-                    Text(trip.primaryPark.emoji)
-                        .font(.caption)
                     Text("\(trip.daysUntilStart)")
-                        .font(.system(size: 20, weight: .bold, design: .rounded))
-                    Text("days")
-                        .font(.system(size: 8, weight: .medium, design: .rounded))
+                        .font(.system(size: 30, weight: .black, design: .rounded))
+                        .tracking(-1.5)
+                        .minimumScaleFactor(0.5)
+                    Text("DAYS")
+                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                        .tracking(1.2)
                 }
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
-            VStack {
-                Image(systemName: "sparkles")
+            VStack(spacing: 1) {
                 Text("—")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(size: 20, weight: .black, design: .rounded))
+                Text("DAYS")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .tracking(1.2)
             }
             .accessibilityLabel("Countdown to Magic. No trip configured.")
         }
@@ -269,39 +278,33 @@ struct AccessoryRectangularWidgetView: View {
 
     var body: some View {
         if let trip {
-            HStack(spacing: 8) {
-                VStack(alignment: .center, spacing: 0) {
-                    if trip.isToday {
-                        Text("NOW")
-                            .font(.system(size: 22, weight: .bold, design: .rounded))
-                    } else {
-                        Text("\(trip.isPast ? 0 : trip.daysUntilStart)")
-                            .font(.system(size: 26, weight: .bold, design: .rounded))
-                    }
-                    Text(trip.isToday ? "" : "days")
-                        .font(.system(size: 9, weight: .medium, design: .rounded))
+            HStack(spacing: 12) {
+                if trip.isToday {
+                    Text("NOW")
+                        .font(.system(size: 34, weight: .black, design: .rounded))
+                        .tracking(-1.5)
+                } else {
+                    Text("\(trip.isPast ? 0 : trip.daysUntilStart)")
+                        .font(.system(size: 34, weight: .black, design: .rounded))
+                        .tracking(-1.5)
+                        .minimumScaleFactor(0.5)
                 }
-                .frame(minWidth: 40)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("\(trip.primaryPark.emoji) \(trip.tripName)")
-                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+                    Text(trip.tripName)
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
                         .lineLimit(1)
-                    Text(trip.startDate.formatted(.dateTime.month(.abbreviated).day()))
-                        .font(.system(size: 10, weight: .regular, design: .rounded))
-                        .opacity(0.7)
+                    Text(trip.startDate.formatted(.dateTime.day().month(.abbreviated)))
+                        .font(.system(size: 12))
+                        .opacity(0.8)
                 }
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel(widgetAccessibilityLabel(trip: trip))
         } else {
-            HStack {
-                Image(systemName: "sparkles")
-                    .accessibilityHidden(true)
-                Text("Add a trip!")
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
-            }
-            .accessibilityLabel("Countdown to Magic. Add a trip to start your countdown.")
+            Text("Add a trip to start your countdown.")
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .accessibilityLabel("Countdown to Magic. Add a trip to start your countdown.")
         }
     }
 }
@@ -322,7 +325,6 @@ private func widgetAccessibilityLabel(trip: WidgetTripEntry) -> String {
 
 // MARK: - Empty State
 
-// H-5: Improved visual hierarchy — app name as primary label, action text below.
 struct EmptyWidgetView: View {
     var body: some View {
         VStack(spacing: 6) {
@@ -330,69 +332,13 @@ struct EmptyWidgetView: View {
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.center)
-            WidgetHeroMark(size: 44)
-                .opacity(0.5)
-                .accessibilityHidden(true)
             Text("Add a trip!")
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
-                .foregroundStyle(.white.opacity(0.65))
+                .foregroundStyle(.white.opacity(0.75))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Countdown to Magic. Add a trip to start your countdown.")
-    }
-}
-
-// MARK: - Wish hero mark (self-contained for widget extension)
-
-struct WidgetHeroMark: View {
-    let size: CGFloat
-
-    var body: some View {
-        WidgetWishStarShape()
-            .fill(.white)
-            .frame(width: size, height: size)
-    }
-}
-
-/// The "Wish" shooting-star mark optimized for small widget sizes.
-///
-/// SYNC NOTE: This shape is intentionally duplicated from `WishStar.path(in:)` in
-/// `Days-Til-Disney/DesignSystem/Components/CastleSilhouetteView.swift`.
-/// The widget extension cannot import from the main app target, so both shapes
-/// must be maintained independently. If you change the path coordinates here,
-/// update the corresponding shape in CastleSilhouetteView.swift as well.
-struct WidgetWishStarShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        // Single continuous outline: a sparkle head (top / right / left tips) whose
-        // lower-left arm is elongated into a tapering comet trail.
-        let w = rect.width
-        let h = rect.height
-        let m = min(w, h)
-        var path = Path()
-
-        let cx = w * 0.60
-        let cy = h * 0.40
-        let arm = m * 0.30
-        let waist = m * 0.085
-
-        let n    = CGPoint(x: cx,        y: cy - arm)
-        let e    = CGPoint(x: cx + arm,  y: cy)
-        let wl   = CGPoint(x: cx - arm,  y: cy)
-        let tail = CGPoint(x: w * 0.10,  y: h * 0.92)
-
-        let vNE = CGPoint(x: cx + waist,       y: cy - waist)
-        let vES = CGPoint(x: cx + waist,       y: cy + waist)
-        let vTW = CGPoint(x: cx - waist * 1.3, y: cy + waist * 0.7)
-        let vWN = CGPoint(x: cx - waist,       y: cy - waist)
-
-        path.move(to: n)
-        path.addQuadCurve(to: e,    control: vNE)
-        path.addQuadCurve(to: tail, control: vES)
-        path.addQuadCurve(to: wl,   control: vTW)
-        path.addQuadCurve(to: n,    control: vWN)
-        path.closeSubpath()
-
-        return path
     }
 }
 

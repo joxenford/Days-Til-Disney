@@ -66,7 +66,7 @@ final class AppContainer {
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
         notificationDeepLinkHandler = NotificationDeepLinkHandler()
-        themeProvider = ParkThemeProvider(timeOfDayProvider: LiveTimeOfDayProvider())
+        themeProvider = ParkThemeProvider()
         liveParkDataService = DefaultLiveParkDataService()
     }
 
@@ -87,10 +87,7 @@ final class AppContainer {
         milestoneManager = DefaultMilestoneManager(defaults: defaults)
         milestoneNotificationManager = DefaultMilestoneNotificationManager()
         notificationDeepLinkHandler = NotificationDeepLinkHandler()
-        themeProvider = ParkThemeProvider(
-            park: .magicKingdom,
-            timeOfDayProvider: FixedTimeOfDayProvider.day
-        )
+        themeProvider = ParkThemeProvider(park: .magicKingdom)
         liveParkDataService = DefaultLiveParkDataService()
     }
 }

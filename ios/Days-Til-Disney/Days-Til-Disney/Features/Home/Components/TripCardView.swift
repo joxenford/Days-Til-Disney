@@ -12,83 +12,55 @@ struct TripCardView: View {
 
     private var isPast: Bool { trip.isPast }
 
+    /// Single meta line beneath the trip name — park + countdown status.
+    private var metaText: String {
+        if isPast {
+            let d = trip.daysSinceEnd
+            return d == 0 ? "Complete" : "\(d) \(d == 1 ? "day" : "days") ago"
+        }
+        if trip.isOngoing {
+            return "\(trip.primaryPark.displayName) · you're there now!"
+        }
+        let d = trip.daysUntilStart
+        return "\(trip.primaryPark.displayName) · \(d) \(d == 1 ? "day" : "days") away"
+    }
+
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 16) {
-                // Park color indicator strip — dimmed for past trips.
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(trip.colorPalette.primary.opacity(isPast ? 0.45 : 1.0))
-                    .frame(width: 5)
+            HStack(spacing: DTDSpacing.x6) {
+                // Park-identity swatch (not a park panel — a colour dot).
+                RoundedRectangle(cornerRadius: DTDRadius.chip, style: .continuous)
+                    .fill(trip.colorPalette.primary)
+                    .frame(width: 44, height: 44)
 
                 // Trip info.
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(trip.name)
-                        .font(DTDFont.bodyMedium)
-                        .foregroundStyle(.white.opacity(isPast ? 0.55 : 1.0))
+                        .font(DTDFont.bodyStrong)
+                        .foregroundStyle(DTDColor.textPrimary)
                         .lineLimit(1)
 
-                    Text(trip.primaryPark.displayName)
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(isPast ? 0.4 : 0.65))
-
-                    Text(trip.startDate.dayMonthDateString)
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(isPast ? 0.3 : 0.5))
+                    Text(metaText)
+                        .font(DTDFont.prose)
+                        .foregroundStyle(DTDColor.textMuted)
+                        .lineLimit(1)
                 }
 
-                Spacer()
+                Spacer(minLength: 0)
 
-                // Countdown badge — shows days-ago for past trips.
-                if isPast {
-                    let daysAgo = trip.daysSinceEnd
-                    VStack(spacing: 2) {
-                        Text(daysAgo == 0 ? "—" : "\(daysAgo)")
-                            .font(.system(size: daysAgo == 0 ? 22 : 28, weight: .black, design: .rounded))
-                            .foregroundStyle(.white.opacity(0.4))
-
-                        Text(daysAgo == 0 ? "Complete" : daysAgo == 1 ? "day ago" : "days ago")
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.white.opacity(0.35))
-                    }
-                    .frame(width: 64)
-                } else {
-                    VStack(spacing: 2) {
-                        Text("\(trip.daysUntilStart)")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
-                            .foregroundStyle(.white)
-
-                        Text(trip.daysUntilStart == 1 ? "day" : "days")
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.white.opacity(0.6))
-                    }
-                    .frame(width: 52)
-                }
-
-                // Context menu chevron.
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(isPast ? 0.2 : 0.4))
+                Text("›")
+                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DTDColor.textFaint)
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 16)
+            .padding(.vertical, DTDSpacing.x7)
+            .padding(.horizontal, DTDSpacing.x8)
             .background {
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(.ultraThinMaterial)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(trip.colorPalette.primary.opacity(isPast ? 0.03 : 0.08))
-                    }
+                RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous)
+                    .fill(DTDColor.surface)
             }
-            // Soften past cards to evoke nostalgia — full saturation so colors read as warm memories,
-            // not errors. A gentle warm overlay reinforces the "fond memory" feeling.
-            .opacity(isPast ? 0.85 : 1.0)
-            .overlay {
-                if isPast {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(red: 1.0, green: 0.85, blue: 0.6).opacity(0.06))
-                        .allowsHitTesting(false)
-                }
-            }
+            // Past trips read as fond memories — dimmed to 60% per the Toy Box spec.
+            .opacity(isPast ? 0.6 : 1.0)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .contextMenu {
@@ -146,7 +118,7 @@ struct TripCardView: View {
 
 #Preview {
     ZStack {
-        Color(hex: "#0D2545").ignoresSafeArea()
+        DTDColor.bg.ignoresSafeArea()
         VStack(spacing: 12) {
             TripCardView(
                 trip: Trip.preview,

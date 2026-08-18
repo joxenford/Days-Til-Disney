@@ -3,23 +3,23 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppContainer.self) private var appContainer
     @State private var viewModel: SettingsViewModel?
-    #if DEBUG
-    @State private var showDebugSection = false
-    @AppStorage("debug_forceOngoingTrip") private var forceOngoingTrip = false
-    #endif
 
     var body: some View {
-        Group {
-            if let vm = viewModel {
-                settingsForm(vm: vm)
-            } else {
-                ProgressView()
+        ZStack {
+            DTDColor.bg
+                .ignoresSafeArea()
+
+            Group {
+                if let vm = viewModel {
+                    settingsContent(vm: vm)
+                } else {
+                    ProgressView().tint(DTDColor.accentInteractive)
+                }
             }
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        // C-3: Match the dark gradient theme of the rest of the app.
-        .preferredColorScheme(.dark)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .task {
             let vm = SettingsViewModel.make(from: appContainer)
             viewModel = vm
@@ -28,214 +28,174 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private func settingsForm(vm: SettingsViewModel) -> some View {
-        Form {
-            // Appearance.
-            Section("Appearance") {
-                Picker("Theme", selection: Binding(
-                    get: { vm.themeMode },
-                    set: { vm.themeMode = $0 }
-                )) {
-                    ForEach(UserPreferences.ThemeMode.allCases) { mode in
-                        Label(mode.displayName, systemImage: mode.systemImageName)
-                            .tag(mode)
-                    }
-                }
-                .pickerStyle(.menu)
-            }
-
-            // iCloud Sync.
-            Section {
-                iCloudSyncRow(vm: vm)
-            } header: {
-                Text("iCloud")
-            } footer: {
-                if vm.iCloudSyncStatus == .notSignedIn {
-                    Text("Sign in to iCloud in iOS Settings to sync your trips across iPhone and iPad.")
-                        .font(DTDFont.caption)
-                }
-            }
-
-            // Notifications.
-            Section {
+    private func settingsContent(vm: SettingsViewModel) -> some View {
+        ScrollView {
+            VStack(spacing: DTDSpacing.tileGap) {
+                appearanceCard(vm: vm)
+                iCloudRow(vm: vm)
                 notificationsRow(vm: vm)
-            } header: {
-                Text("Notifications")
-            } footer: {
-                if vm.notificationPermissionDenied {
-                    Text("Notification permission was denied. Enable it in iOS Settings to receive milestone alerts.")
-                        .font(DTDFont.caption)
-                }
+                aboutCard(vm: vm)
+                disclaimer
+
+                Spacer().frame(height: 40)
             }
-
-            // About.
-            Section {
-                HStack {
-                    Text("Countdown to Magic")
-                        .font(DTDFont.body)
-                    Spacer()
-                    Image(systemName: "sparkles")
-                        .foregroundStyle(Color.disneyGold)
-                        .accessibilityHidden(true)
-                }
-
-                HStack {
-                    Text("Version")
-                        .font(DTDFont.body)
-                    Spacer()
-                    Text(vm.appVersion)
-                        .font(DTDFont.body)
-                        .foregroundStyle(.secondary)
-                }
-                #if DEBUG
-                .onTapGesture(count: 3) {
-                    withAnimation { showDebugSection = true }
-                }
-                #endif
-
-                if let privacyURL = URL(string: "https://thinkupllc.com/privacy") {
-                    Link("Privacy Policy", destination: privacyURL)
-                        .font(DTDFont.body)
-                }
-
-                if let supportURL = URL(string: "https://thinkupllc.com/support") {
-                    Link("Support", destination: supportURL)
-                        .font(DTDFont.body)
-                }
-            } header: {
-                Text("About")
-            } footer: {
-                Text("Countdown to Magic is an unofficial app. Not affiliated with, endorsed by, or sponsored by The Walt Disney Company.")
-                    .font(DTDFont.caption)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("about.disclaimer")
-            }
-
-            #if DEBUG
-            if showDebugSection {
-                Section {
-                    Toggle(isOn: $forceOngoingTrip) {
-                        Label {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("Force \"In Park\" Mode")
-                                    .font(DTDFont.body)
-                                Text("Treats all trips as ongoing to test live park data.")
-                                    .font(DTDFont.caption)
-                                    .foregroundStyle(.secondary)
-                            }
-                        } icon: {
-                            Image(systemName: "ant.fill")
-                                .foregroundStyle(.orange)
-                                .font(.title3)
-                                .frame(width: 28)
-                        }
-                    }
-                    .tint(.orange)
-                } header: {
-                    Text("Debug")
-                } footer: {
-                    Text("Debug options are only available in development builds.")
-                        .font(DTDFont.caption)
-                }
-            }
-            #endif
+            .padding(.horizontal, DTDSpacing.gutter)
+            .padding(.top, DTDSpacing.x7)
+            // Family (a) — clamp to ~680 and centre on regular-width iPad; no-op on compact.
+            .dtdContentColumn()
         }
     }
 
-    @ViewBuilder
-    private func iCloudSyncRow(vm: SettingsViewModel) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: vm.iCloudSyncStatus.systemImage)
-                .foregroundStyle(vm.iCloudSyncStatus.isActive ? Color.disneyGold : Color.secondary)
-                .font(.title3)
-                .frame(width: 28)
-                .animation(.easeInOut(duration: 0.2), value: vm.iCloudSyncStatus.isActive)
+    // MARK: - Appearance
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Sync Trips")
-                    .font(DTDFont.body)
-                Text(vm.iCloudSyncStatus.displayTitle)
-                    .font(DTDFont.caption)
-                    .foregroundStyle(vm.iCloudSyncStatus.isActive ? .primary : .secondary)
-            }
-
-            Spacer()
-
-            if !vm.iCloudSyncStatus.isActive && vm.iCloudSyncStatus != .unknown {
-                Button("Open Settings") {
-                    if let url = URL(string: UIApplication.openSettingsURLString) {
-                        UIApplication.shared.open(url)
-                    }
-                }
-                .font(DTDFont.captionBold)
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.capsule)
-                .controlSize(.small)
-            }
+    private func appearanceCard(vm: SettingsViewModel) -> some View {
+        VStack(alignment: .leading, spacing: DTDSpacing.x5) {
+            SectionLabel("Appearance")
+            SegmentedControl(options: ["Light", "Dark", "System"], selection: themeBinding(vm: vm))
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("iCloud Sync, \(vm.iCloudSyncStatus.displayTitle)")
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, DTDSpacing.x8)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surface)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
+    }
+
+    /// Maps the design's Light/Dark/System labels onto `UserPreferences.ThemeMode`
+    /// (whose "auto" case is presented as "System").
+    private func themeBinding(vm: SettingsViewModel) -> Binding<String> {
+        Binding(
+            get: {
+                switch vm.themeMode {
+                case .light: return "Light"
+                case .dark:  return "Dark"
+                case .auto:  return "System"
+                }
+            },
+            set: { newValue in
+                switch newValue {
+                case "Light": vm.themeMode = .light
+                case "Dark":  vm.themeMode = .dark
+                default:      vm.themeMode = .auto
+                }
+            }
+        )
+    }
+
+    // MARK: - Toggle rows
+
+    private func iCloudRow(vm: SettingsViewModel) -> some View {
+        settingRow(
+            title: "Sync trips with iCloud",
+            subtitle: vm.iCloudSyncStatus.displayTitle
+        ) {
+            // iCloud sync is system-controlled — the switch reflects state but is not tappable.
+            DTDToggle(isOn: .constant(vm.iCloudSyncStatus.isActive), accessibilityLabel: "iCloud sync")
+                .allowsHitTesting(false)
+        }
     }
 
     @ViewBuilder
     private func notificationsRow(vm: SettingsViewModel) -> some View {
         if vm.notificationPermissionDenied {
-            // System permission denied — show a link to iOS Settings.
-            HStack(alignment: .top, spacing: 12) {
-                Image(systemName: "bell.badge.fill")
-                    .foregroundStyle(Color.secondary)
-                    .font(.title3)
-                    .frame(width: 28)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Milestone Notifications")
-                        .font(DTDFont.body)
-                    Text("Get notified at 100 days, 1 week, and more.")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer()
-
-                Button("Open Settings") {
+            settingRow(
+                title: "Milestone notifications",
+                subtitle: "Enable notifications in iOS Settings"
+            ) {
+                DTDButton("Open Settings", variant: .secondary, full: false) {
                     if let url = URL(string: UIApplication.openSettingsURLString) {
                         UIApplication.shared.open(url)
                     }
                 }
-                .font(DTDFont.captionBold)
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.capsule)
-                .controlSize(.small)
             }
         } else {
-            // Normal toggle row.
-            Toggle(isOn: Binding(
-                get: { vm.milestoneNotificationsEnabled },
-                set: { newValue in
-                    Task { await vm.setMilestoneNotifications(enabled: newValue) }
-                }
-            )) {
-                Label {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Milestone Notifications")
-                            .font(DTDFont.body)
-                        Text("Get notified at 100 days, 1 week, and more.")
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                } icon: {
-                    Image(systemName: "bell.badge.fill")
-                        .foregroundStyle(
-                            vm.milestoneNotificationsEnabled ? Color.disneyGold : Color.secondary
-                        )
-                        .font(.title3)
-                        .frame(width: 28)
-                }
+            settingRow(
+                title: "Milestone notifications",
+                subtitle: "100 days, one week, and more"
+            ) {
+                DTDToggle(
+                    isOn: Binding(
+                        get: { vm.milestoneNotificationsEnabled },
+                        set: { newValue in Task { await vm.setMilestoneNotifications(enabled: newValue) } }
+                    ),
+                    accessibilityLabel: "Milestone notifications"
+                )
             }
-            .tint(Color.disneyGold)
         }
     }
 
+    private func settingRow<Trailing: View>(
+        title: String,
+        subtitle: String,
+        @ViewBuilder trailing: () -> Trailing
+    ) -> some View {
+        HStack(spacing: DTDSpacing.x6) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DTDColor.textPrimary)
+                Text(subtitle)
+                    .font(DTDFont.prose)
+                    .foregroundStyle(DTDColor.textMuted)
+            }
+            Spacer(minLength: 0)
+            trailing()
+        }
+        .padding(.vertical, DTDSpacing.x8)
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surface)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: - About
+
+    private func aboutCard(vm: SettingsViewModel) -> some View {
+        VStack(spacing: 0) {
+            aboutRow(label: "Version", value: Text(vm.appVersion).foregroundStyle(DTDColor.textMuted))
+            Divider().overlay(DTDColor.hairline)
+            if let privacyURL = URL(string: "https://thinkupllc.com/privacy") {
+                Link(destination: privacyURL) {
+                    aboutRow(label: "Privacy policy", value: chevron)
+                }
+            }
+            Divider().overlay(DTDColor.hairline)
+            if let supportURL = URL(string: "https://thinkupllc.com/support") {
+                Link(destination: supportURL) {
+                    aboutRow(label: "Support", value: chevron)
+                }
+            }
+        }
+        .padding(.horizontal, DTDSpacing.x9)
+        .background(DTDColor.surface)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tile, style: .continuous))
+    }
+
+    private var chevron: Text {
+        Text("›").foregroundStyle(DTDColor.textMuted)
+    }
+
+    private func aboutRow(label: String, value: Text) -> some View {
+        HStack {
+            Text(label)
+                .font(.system(size: 16, weight: .regular, design: .rounded))
+                .foregroundStyle(DTDColor.textPrimary)
+            Spacer(minLength: 0)
+            value.font(DTDFont.body)
+        }
+        .padding(.vertical, DTDSpacing.x6)
+        .contentShape(Rectangle())
+    }
+
+    // MARK: - Disclaimer (5.2.1 — verbatim, queried by RebrandQATests)
+
+    private var disclaimer: some View {
+        Text("Countdown to Magic is an unofficial app. Not affiliated with, endorsed by, or sponsored by The Walt Disney Company.")
+            .font(DTDFont.prose)
+            .foregroundStyle(DTDColor.textMuted)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, DTDSpacing.x2)
+            .accessibilityIdentifier("about.disclaimer")
+    }
 }
 
 // MARK: - Preview

@@ -8,24 +8,23 @@ struct ParkDashboardView: View {
     let initialPark: DisneyPark
 
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
 
     @State private var viewModel: ParkDashboardViewModel?
 
     var body: some View {
         ZStack {
-            GradientBackgroundView()
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             if let vm = viewModel {
                 dashboardContent(vm: vm)
             } else {
-                ProgressView().tint(.white)
+                ProgressView().tint(DTDColor.accentInteractive)
             }
         }
+        .navigationTitle("Wait times")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             let vm = ParkDashboardViewModel.make(
@@ -46,58 +45,36 @@ struct ParkDashboardView: View {
         switch vm.viewState {
         case .loading:
             loadingView
-
         case .error(let message):
             errorView(message: message, vm: vm)
-
         case .loaded:
             loadedView(vm: vm)
         }
     }
 
-    // MARK: - Loading
-
     private var loadingView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DTDSpacing.x7) {
             ProgressView()
-                .tint(.white)
+                .tint(DTDColor.accentInteractive)
                 .scaleEffect(1.4)
             Text("Loading live park data...")
-                .font(DTDFont.body)
-                .foregroundStyle(.white.opacity(0.8))
+                .font(DTDFont.prose)
+                .foregroundStyle(DTDColor.textMuted)
         }
     }
 
-    // MARK: - Error
-
     private func errorView(message: String, vm: ParkDashboardViewModel) -> some View {
-        VStack(spacing: 24) {
-            Image(systemName: "wifi.slash")
-                .font(.system(size: 52))
-                .foregroundStyle(.white.opacity(0.55))
-                .accessibilityHidden(true)
-
-            VStack(spacing: 10) {
-                Text("Live Data Unavailable")
-                    .font(DTDFont.titlePrimary)
-                    .foregroundStyle(.white)
-                Text(message)
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white.opacity(0.7))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
-            }
-
-            Button {
+        VStack(spacing: DTDSpacing.x11) {
+            Text("Live data unavailable")
+                .font(DTDFont.title)
+                .foregroundStyle(DTDColor.textPrimary)
+            Text(message)
+                .font(DTDFont.prose)
+                .foregroundStyle(DTDColor.textMuted)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            DTDButton("Try again", full: false) {
                 Task { await vm.refresh() }
-            } label: {
-                Text("Try Again")
-                    .font(DTDFont.headline)
-                    .foregroundStyle(.black)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 12)
-                    .background(Color.disneyGold)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
             }
         }
     }
@@ -105,34 +82,47 @@ struct ParkDashboardView: View {
     // MARK: - Loaded
 
     @ViewBuilder
+    // Family (b) — two-column canvas on regular width; the single column on compact.
+    // Lead col: park selector + the deep-tone summary panel + sort pills. Trailing col:
+    // the attraction list (and shows).
     private func loadedView(vm: ParkDashboardViewModel) -> some View {
+        DTDTwoColumnCanvas(
+            lead: { VStack(spacing: DTDSpacing.tileGap) { leadContent(vm: vm) } },
+            trailing: { VStack(spacing: DTDSpacing.tileGap) { trailingContent(vm: vm) } },
+            compact: { AnyView(singleColumn(vm: vm)) }
+        )
+    }
+
+    // The iPhone / compact body — unchanged content and order.
+    private func singleColumn(vm: ParkDashboardViewModel) -> some View {
         ScrollView {
-            LazyVStack(spacing: 20) {
-                // Park picker for multi-park trips.
-                if vm.parks.count > 1 {
-                    parkPicker(vm: vm)
-                }
-
-                // Summary banner.
-                summaryBanner(vm: vm)
-
-                // Sort picker.
-                sortPicker(vm: vm)
-
-                // Attractions section.
-                attractionsSection(vm: vm)
-
-                // Shows section.
-                if !vm.shows.isEmpty {
-                    showsSection(vm: vm)
-                }
-
+            LazyVStack(spacing: DTDSpacing.tileGap) {
+                leadContent(vm: vm)
+                trailingContent(vm: vm)
                 Spacer().frame(height: 40)
             }
-            .padding(.top, 16)
+            .padding(.horizontal, DTDSpacing.gutter)
+            .padding(.top, DTDSpacing.x7)
         }
-        .refreshable {
-            await vm.refresh()
+        .refreshable { await vm.refresh() }
+    }
+
+    // Lead column: selector + the sole (deep-tone) summary panel + sort pills.
+    @ViewBuilder
+    private func leadContent(vm: ParkDashboardViewModel) -> some View {
+        if vm.parks.count > 1 {
+            parkPicker(vm: vm)
+        }
+        summaryPanel(vm: vm)
+        sortPills(vm: vm)
+    }
+
+    // Trailing column: the attraction list and shows.
+    @ViewBuilder
+    private func trailingContent(vm: ParkDashboardViewModel) -> some View {
+        attractionsSection(vm: vm)
+        if !vm.shows.isEmpty {
+            showsSection(vm: vm)
         }
     }
 
@@ -140,192 +130,104 @@ struct ParkDashboardView: View {
 
     private func parkPicker(vm: ParkDashboardViewModel) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
+            HStack(spacing: DTDSpacing.x3) {
                 ForEach(vm.parks) { park in
-                    let isSelected = park == vm.selectedPark
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            vm.selectPark(park)
-                        }
-                    } label: {
-                        Text(park.displayName)
-                            .font(DTDFont.captionBold)
-                            .foregroundStyle(isSelected ? .black : .white)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
-                            .background(
-                                Capsule()
-                                    .fill(isSelected ? Color.disneyGold : Color.white.opacity(0.15))
-                            )
+                    DTDChip(park.displayName, selected: park == vm.selectedPark) {
+                        vm.selectPark(park)
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 2)
         }
     }
 
-    // MARK: - Summary banner
+    // MARK: - Summary panel (deep tone — the single sanctioned fixed-scheme site)
 
-    private func summaryBanner(vm: ParkDashboardViewModel) -> some View {
-        HStack(spacing: 0) {
-            summaryStatCell(
-                icon: "figure.walk",
-                value: "\(vm.operatingCount)",
-                label: "Rides Open"
-            )
+    private func summaryPanel(vm: ParkDashboardViewModel) -> some View {
+        let shortest = vm.sortedAttractions
+            .filter { $0.status == .operating }
+            .compactMap { $0.standbyWaitMinutes }
+            .min()
 
-            Divider()
-                .frame(height: 36)
-                .background(.white.opacity(0.2))
-
-            if let avg = vm.averageWait {
-                summaryStatCell(
-                    icon: "clock.fill",
-                    value: "\(avg) min",
-                    label: "Avg Wait"
-                )
-            } else {
-                summaryStatCell(
-                    icon: "clock.fill",
-                    value: "—",
-                    label: "Avg Wait"
-                )
-            }
-
-            if let updated = vm.lastUpdated {
-                Divider()
-                    .frame(height: 36)
-                    .background(.white.opacity(0.2))
-
-                summaryStatCell(
-                    icon: "arrow.clockwise",
-                    value: updated.formatted(date: .omitted, time: .shortened),
-                    label: "Updated"
-                )
-            }
+        return HStack(spacing: 0) {
+            summaryStat(value: "\(vm.operatingCount)", label: "OPEN")
+            summaryStat(value: vm.averageWait.map { "\($0)" } ?? "—", label: "AVG MIN")
+            summaryStat(value: shortest.map { "\($0)" } ?? "—", label: "SHORTEST")
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 16)
-        .padding(.horizontal, 20)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .strokeBorder(.white.opacity(0.12), lineWidth: 1)
-                )
-        )
-        .padding(.horizontal, 20)
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel({
-            var parts = ["\(vm.operatingCount) rides open"]
-            if let avg = vm.averageWait { parts.append("average wait \(avg) minutes") }
-            return parts.joined(separator: ", ")
-        }())
+        .padding(.vertical, DTDSpacing.x9)
+        .padding(.horizontal, DTDSpacing.x11)
+        // The dashboard always wants the deep tone regardless of app scheme — a deliberate
+        // constant, NOT a colorScheme branch (the one sanctioned fixed-scheme panel).
+        .background(vm.selectedPark.colorPalette.panelColor(for: .dark))
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.card, style: .continuous))
     }
 
-    private func summaryStatCell(icon: String, value: String, label: String) -> some View {
-        VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.footnote)
-                .foregroundStyle(Color.disneyGold)
-                .accessibilityHidden(true)
+    private func summaryStat(value: String, label: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
             Text(value)
-                .font(DTDFont.bodyMedium)
+                .font(.system(size: 34, weight: .black, design: .rounded))
+                .tracking(-1.5)
                 .foregroundStyle(.white)
             Text(label)
-                .font(DTDFont.caption)
-                .foregroundStyle(.white.opacity(0.6))
+                .font(DTDFont.labelSmall)
+                .tracking(0.6)
+                .foregroundStyle(.white.opacity(0.8))
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    // MARK: - Sort picker
+    // MARK: - Sort pills
 
-    private func sortPicker(vm: ParkDashboardViewModel) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: "arrow.up.arrow.down")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.white.opacity(0.6))
-                .accessibilityHidden(true)
-
+    private func sortPills(vm: ParkDashboardViewModel) -> some View {
+        HStack(spacing: DTDSpacing.x3) {
             ForEach(AttractionSortOrder.allCases) { order in
-                let isActive = vm.sortOrder == order
+                let active = vm.sortOrder == order
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        vm.sortOrder = order
-                    }
+                    vm.sortOrder = order
                 } label: {
                     Text(order.rawValue)
-                        .font(DTDFont.caption)
-                        .foregroundStyle(isActive ? .black : .white.opacity(0.75))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(
-                            Capsule()
-                                .fill(isActive ? Color.disneyGold : Color.white.opacity(0.10))
-                        )
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(active ? DTDColor.goldInk : DTDColor.textMuted)
+                        .padding(.vertical, DTDSpacing.x3)
+                        .padding(.horizontal, DTDSpacing.x6)
+                        .background(active ? DTDColor.gold : DTDColor.surface)
+                        .clipShape(Capsule())
+                        .contentShape(Capsule())
                 }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(isActive ? .isSelected : [])
+                .buttonStyle(DTDPressStyle())
+                .accessibilityAddTraits(active ? .isSelected : [])
             }
-
-            Spacer()
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 20)
     }
 
-    // MARK: - Attractions section
+    // MARK: - Attractions
 
     @ViewBuilder
     private func attractionsSection(vm: ParkDashboardViewModel) -> some View {
         let attractions = vm.sortedAttractions
         if attractions.isEmpty {
             Text("No attraction data available.")
-                .font(DTDFont.body)
-                .foregroundStyle(.white.opacity(0.6))
-                .padding(.horizontal, 20)
+                .font(DTDFont.prose)
+                .foregroundStyle(DTDColor.textMuted)
+                .frame(maxWidth: .infinity, alignment: .leading)
         } else {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 8) {
-                    Image(systemName: "star.fill")
-                        .foregroundStyle(Color.disneyGold)
-                        .font(DTDFont.titleSecondary)
-                        .accessibilityHidden(true)
-                    Text("Attractions")
-                        .font(DTDFont.titleSecondary)
-                        .foregroundStyle(.white)
-                }
-                .padding(.horizontal, 20)
-
+            VStack(spacing: DTDSpacing.x4) {
                 ForEach(attractions) { attraction in
-                    AttractionRowCard(attraction: attraction)
-                        .padding(.horizontal, 20)
+                    AttractionRow(attraction: attraction)
                 }
             }
         }
     }
 
-    // MARK: - Shows section
+    // MARK: - Shows
 
     private func showsSection(vm: ParkDashboardViewModel) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 8) {
-                Image(systemName: "theatermasks.fill")
-                    .foregroundStyle(Color.disneyGold)
-                    .font(DTDFont.titleSecondary)
-                    .accessibilityHidden(true)
-                Text("Shows")
-                    .font(DTDFont.titleSecondary)
-                    .foregroundStyle(.white)
-            }
-            .padding(.horizontal, 20)
-
+        VStack(alignment: .leading, spacing: DTDSpacing.x4) {
+            SectionLabel("Shows")
+                .padding(.top, DTDSpacing.x2)
             ForEach(vm.shows) { show in
-                ShowRowCard(show: show)
-                    .padding(.horizontal, 20)
+                ShowRow(show: show)
             }
         }
     }
@@ -334,96 +236,57 @@ struct ParkDashboardView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            if let vm = viewModel {
-                VStack(spacing: 2) {
-                    Text(vm.selectedPark.displayName)
-                        .font(DTDFont.headline)
-                        .foregroundStyle(.white)
-                    Text("Live Wait Times")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.65))
-                }
+        ToolbarItem(placement: .navigationBarTrailing) {
+            DTDIconButton(glyph: "↻", accessibilityLabel: "Refresh") {
+                Task { await viewModel?.refresh() }
             }
         }
     }
 }
 
-// MARK: - Attraction row card
+// MARK: - Attraction row
 
-private struct AttractionRowCard: View {
+private struct AttractionRow: View {
     let attraction: LiveAttraction
 
     var body: some View {
-        HStack(spacing: 14) {
-            // Status indicator dot.
-            Circle()
-                .fill(attraction.status.badgeColor)
-                .frame(width: 10, height: 10)
-                .shadow(color: attraction.status.badgeColor.opacity(0.6), radius: 4)
-                .accessibilityHidden(true)
+        HStack(spacing: DTDSpacing.x5) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(attraction.name)
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(attraction.status == .operating ? DTDColor.textPrimary : DTDColor.textFaint)
+                    .lineLimit(2)
+                if let meta {
+                    Text(meta)
+                        .font(DTDFont.prose)
+                        .foregroundStyle(isGoldMeta ? DTDColor.goldLabel : DTDColor.textMuted)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Name.
-            Text(attraction.name)
-                .font(DTDFont.bodyMedium)
-                .foregroundStyle(.white)
-                .lineLimit(2)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-            // Right side: wait time or status badge.
-            trailingContent
+            WaitPill(minutes: attraction.standbyWaitMinutes, status: attraction.status)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(attraction.status.cardTint)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(.white.opacity(0.08), lineWidth: 1)
-                )
-        )
+        .padding(.vertical, DTDSpacing.x7)
+        .padding(.horizontal, DTDSpacing.x8)
+        .background(DTDColor.surface)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tileSm, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
     }
 
-    @ViewBuilder
-    private var trailingContent: some View {
-        VStack(alignment: .trailing, spacing: 4) {
-            if attraction.status == .operating {
-                if let wait = attraction.standbyWaitMinutes {
-                    HStack(alignment: .lastTextBaseline, spacing: 2) {
-                        Text("\(wait)")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
-                            .foregroundStyle(waitTimeColor(wait))
-                        Text("min")
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.white.opacity(0.7))
-                    }
-                } else {
-                    Text("Walk-on")
-                        .font(DTDFont.captionBold)
-                        .foregroundStyle(Color(hex: "#4CAF50"))
-                }
-
-                // Lightning Lane info.
-                if let ll = attraction.lightningLaneReturnWindow {
-                    Text("LL: \(ll.displayString)")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.65))
-                } else if let paid = attraction.paidLightningLanePrice {
-                    Text("ILL: \(paid.displayPrice)")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(Color.disneyGold.opacity(0.9))
-                }
-            } else {
-                StatusBadge(status: attraction.status)
-            }
+    /// Only renders fields `LiveAttraction` actually has — no land/area field.
+    private var meta: String? {
+        if let ll = attraction.lightningLaneReturnWindow {
+            return "Lightning Lane \(ll.displayString)"
         }
+        if let paid = attraction.paidLightningLanePrice {
+            return "Premier Access \(paid.displayPrice)"
+        }
+        return nil
+    }
+
+    private var isGoldMeta: Bool {
+        attraction.lightningLaneReturnWindow != nil || attraction.paidLightningLanePrice != nil
     }
 
     private var accessibilityLabel: String {
@@ -435,75 +298,52 @@ private struct AttractionRowCard: View {
             } else {
                 parts.append("walk-on, no wait")
             }
-        case .closed:       parts.append("closed")
+        case .closed:        parts.append("closed")
         case .refurbishment: parts.append("under refurbishment")
-        case .down:         parts.append("temporarily down")
+        case .down:          parts.append("temporarily down")
         }
         if let ll = attraction.lightningLaneReturnWindow {
-            parts.append("Lightning Lane available, return \(ll.displayString)")
+            parts.append("Lightning Lane, return \(ll.displayString)")
         }
         return parts.joined(separator: ". ")
     }
-
-    private func waitTimeColor(_ minutes: Int) -> Color {
-        switch minutes {
-        case ..<20:  return Color(hex: "#4CAF50")   // green
-        case ..<45:  return Color.disneyGold
-        default:     return Color(hex: "#FF6B6B")   // red-ish
-        }
-    }
 }
 
-// MARK: - Show row card
+// MARK: - Show row
 
-private struct ShowRowCard: View {
+private struct ShowRow: View {
     let show: LiveShow
 
     var body: some View {
-        HStack(spacing: 14) {
-            Image(systemName: "music.note.list")
-                .font(.body)
-                .foregroundStyle(Color.disneyGold)
-                .frame(width: 22)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: 4) {
+        HStack(spacing: DTDSpacing.x5) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(show.name)
-                    .font(DTDFont.bodyMedium)
-                    .foregroundStyle(.white)
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(show.status == .operating ? DTDColor.textPrimary : DTDColor.textFaint)
                     .lineLimit(2)
-
                 if let next = show.nextShowTime {
-                    Text("Next: \(next.formatted(date: .omitted, time: .shortened))")
-                        .font(DTDFont.caption)
-                        .foregroundStyle(.white.opacity(0.65))
-                }
-
-                if show.allShowTimes.count > 1 {
-                    let remaining = show.allShowTimes.filter { $0 > Date() }
-                    if remaining.count > 1 {
-                        Text(remaining.map { $0.formatted(date: .omitted, time: .shortened) }.joined(separator: " · "))
-                            .font(DTDFont.caption)
-                            .foregroundStyle(.white.opacity(0.45))
-                            .lineLimit(2)
-                    }
+                    Text("Next \(next.formatted(date: .omitted, time: .shortened))")
+                        .font(DTDFont.prose)
+                        .foregroundStyle(DTDColor.textMuted)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            Spacer()
-
-            StatusBadge(status: show.status)
+            if show.status != .operating {
+                Text(show.status == .refurbishment ? "REFURB" : show.status.displayLabel.uppercased())
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .tracking(0.6)
+                    .foregroundStyle(DTDColor.textMuted)
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, DTDSpacing.x5)
+                    .background(DTDColor.surfaceRaised)
+                    .clipShape(Capsule())
+            }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .strokeBorder(.white.opacity(0.08), lineWidth: 1)
-                )
-        )
+        .padding(.vertical, DTDSpacing.x7)
+        .padding(.horizontal, DTDSpacing.x8)
+        .background(DTDColor.surface)
+        .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tileSm, style: .continuous))
         .accessibilityElement(children: .combine)
         .accessibilityLabel({
             var parts = [show.name]
@@ -512,46 +352,6 @@ private struct ShowRowCard: View {
             }
             return parts.joined(separator: ". ")
         }())
-    }
-}
-
-// MARK: - Status badge
-
-private struct StatusBadge: View {
-    let status: AttractionStatus
-
-    var body: some View {
-        Text(status.displayLabel)
-            .font(DTDFont.caption)
-            .foregroundStyle(.white)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(
-                Capsule().fill(status.badgeColor.opacity(0.85))
-            )
-    }
-}
-
-// MARK: - AttractionStatus visual helpers
-
-private extension AttractionStatus {
-    var badgeColor: Color {
-        switch self {
-        case .operating:     return Color(hex: "#4CAF50")
-        case .closed:        return Color(hex: "#F44336")
-        case .refurbishment: return Color(hex: "#FF9800")
-        case .down:          return Color(hex: "#FF9800")
-        }
-    }
-
-    /// Subtle tinted fill layered over the glass card background.
-    var cardTint: Color {
-        switch self {
-        case .operating:     return Color.clear
-        case .closed:        return Color(hex: "#F44336").opacity(0.05)
-        case .refurbishment: return Color(hex: "#FF9800").opacity(0.05)
-        case .down:          return Color(hex: "#FF9800").opacity(0.05)
-        }
     }
 }
 

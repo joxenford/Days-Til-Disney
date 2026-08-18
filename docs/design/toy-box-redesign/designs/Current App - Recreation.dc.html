@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body { margin:0; background:#141414; -webkit-font-smoothing:antialiased; }
+  a { color:#C9A84C; text-decoration:none; }
+  a:hover { color:#E8C84A; }
+</style>
+</helmet>
+
+<section style="padding:56px; display:flex; flex-direction:column; gap:28px; font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;">
+  <div style="display:flex; align-items:baseline; gap:16px;">
+    <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:28px; font-weight:700; color:#F2F2F7;">Countdown to Magic — current build, recreated from source</div>
+    <div style="font-size:13px; color:#8E8E93; font-family:ui-monospace,'SF Mono',monospace;">ios/Days-Til-Disney · main</div>
+  </div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:40px; align-items:flex-start;">
+
+    <!-- ══ WELCOME ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Welcome · WelcomeView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:linear-gradient(180deg,#080E24 0%,#0D2545 33%,#1A3A6B 66%,#2B5BA0 100%); box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="position:absolute; inset:0; opacity:.55; background-image:radial-gradient(1.6px 1.6px at 12% 9%,#fff,transparent),radial-gradient(2.2px 2.2px at 78% 14%,#fff,transparent),radial-gradient(1.4px 1.4px at 44% 22%,#fff,transparent),radial-gradient(2px 2px at 88% 38%,#fff,transparent),radial-gradient(1.8px 1.8px at 24% 44%,#fff,transparent),radial-gradient(1.4px 1.4px at 62% 6%,#fff,transparent),radial-gradient(2.4px 2.4px at 33% 60%,#fff,transparent),radial-gradient(1.6px 1.6px at 70% 52%,#fff,transparent);"></div>
+        <div style="position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 0 40px;">
+          <div style="position:relative; width:280px; height:280px; display:grid; place-items:center;">
+            <svg viewBox="0 0 200 200" width="240" height="240" style="filter:drop-shadow(0 0 28px rgba(255,231,128,.45)); opacity:.9;"><path d="M120,20 Q137,63 180,80 Q137,97 20,184 Q97.9,91.9 60,80 Q103,63 120,20 Z" fill="#fff"></path></svg>
+            <div style="position:absolute; inset:0; color:#FFE780; font-size:14px;">
+              <span style="position:absolute; left:12px; top:100px; font-size:16px;">✦</span>
+              <span style="position:absolute; right:14px; top:85px; font-size:11px;">✦</span>
+              <span style="position:absolute; left:52px; top:190px; font-size:9px;">✦</span>
+              <span style="position:absolute; right:35px; top:180px; font-size:13px;">✦</span>
+              <span style="position:absolute; left:140px; top:60px; font-size:10px;">✦</span>
+            </div>
+          </div>
+          <div style="height:40px;"></div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:rgba(255,255,255,.85);">Welcome to</div>
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:36px; font-weight:900; color:#C9A84C; text-shadow:0 4px 8px rgba(201,168,76,.4);">Countdown to Magic</div>
+            <div style="font-size:17px; line-height:1.35; color:rgba(255,255,255,.75); text-align:center; padding:0 32px;">Start counting down to your<br>magical adventure</div>
+          </div>
+          <div style="height:48px;"></div>
+          <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:16px;">
+            <div style="margin:0 32px; width:calc(100% - 64px); background:#fff; border-radius:18px; padding:18px 0; text-align:center; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600; color:#000; box-shadow:0 6px 12px rgba(255,255,255,.25);">✦ Create Your First Trip</div>
+            <div style="background:rgba(255,255,255,.1); border-radius:999px; padding:12px 20px; font-size:17px; color:rgba(255,255,255,.7);">I'll do this later</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HOME — LOADED ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Home · HomeView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:linear-gradient(180deg,#080E24 0%,#0D2545 33%,#1A3A6B 66%,#2B5BA0 100%); box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="position:absolute; inset:0; opacity:.5; background-image:radial-gradient(1.6px 1.6px at 12% 9%,#fff,transparent),radial-gradient(2.2px 2.2px at 78% 14%,#fff,transparent),radial-gradient(1.4px 1.4px at 44% 22%,#fff,transparent),radial-gradient(2px 2px at 88% 38%,#fff,transparent),radial-gradient(1.8px 1.8px at 24% 44%,#fff,transparent),radial-gradient(1.4px 1.4px at 62% 6%,#fff,transparent);"></div>
+        <div style="position:relative; height:100%; display:flex; flex-direction:column;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:44px;">
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600; color:#fff;">Countdown to Magic</div>
+            <div style="display:flex; align-items:center; gap:16px; color:#fff; font-size:20px;">
+              <span>⊕</span><span style="opacity:.85;">⚙</span>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:20px; padding:16px 0 0; overflow:hidden;">
+
+            <!-- Countdown hero -->
+            <div style="margin:0 20px; border-radius:28px; padding:28px 0; background:linear-gradient(135deg,rgba(26,58,107,.30),rgba(43,91,160,.12)),rgba(255,255,255,.10); backdrop-filter:blur(20px); border:1px solid rgba(232,200,74,.28); box-shadow:0 10px 24px rgba(0,0,0,.35),0 4px 32px rgba(232,200,74,.25); display:flex; flex-direction:column; align-items:center;">
+              <svg viewBox="0 0 200 200" width="110" height="110" style="filter:drop-shadow(0 0 16px rgba(232,200,74,.5)); opacity:.8;"><path d="M120,20 Q137,63 180,80 Q137,97 20,184 Q97.9,91.9 60,80 Q103,63 120,20 Z" fill="#fff"></path></svg>
+              <div style="margin-top:4px; font-size:12px; font-weight:600; letter-spacing:2px; color:rgba(255,255,255,.65);">MAGIC KINGDOM</div>
+              <div style="margin-top:8px; padding:0 24px; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:22px; font-weight:600; color:#fff; text-align:center;">Magic Kingdom Family Trip</div>
+              <div style="margin-top:20px; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:88px; line-height:.95; font-weight:900; color:#fff;">45</div>
+                <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:600; letter-spacing:3px; color:rgba(255,255,255,.75);">DAYS</div>
+              </div>
+              <div style="margin-top:12px; display:flex; align-items:center; gap:6px; font-size:12px; color:rgba(255,255,255,.6);">
+                <span style="font-size:13px;">🗓</span><span>Tue, Sep 30 – Tue, Oct 7</span>
+              </div>
+            </div>
+
+            <!-- Daily content card -->
+            <div style="margin:0 20px; border-radius:20px; background:rgba(201,168,76,.05),rgba(255,255,255,.10); backdrop-filter:blur(20px); padding:18px 0;">
+              <div style="display:flex; align-items:flex-start; gap:12px; padding:0 18px;">
+                <div style="width:36px; height:36px; flex:0 0 36px; border-radius:999px; background:rgba(201,168,76,.15); color:#C9A84C; display:grid; place-items:center; font-size:18px;">✧</div>
+                <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                  <div style="font-size:12px; font-weight:600; letter-spacing:1.5px; color:#C9A84C;">FUN FACT</div>
+                  <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600; color:#fff;">Cinderella Castle Has No Bricks</div>
+                </div>
+                <div style="color:rgba(255,255,255,.5); font-size:12px;">⌄</div>
+              </div>
+              <div style="padding:8px 18px 0; font-size:17px; line-height:1.35; color:rgba(255,255,255,.75); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">The castle is built from fiberglass and steel, not stone — and forced perspective makes its 189 feet read far taller.</div>
+            </div>
+
+            <!-- Other trips -->
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; align-items:center; gap:8px; padding:0 20px;">
+                <span style="font-size:18px; color:rgba(255,255,255,.8);">🧳</span>
+                <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:#fff;">Other Trips</span>
+              </div>
+              <div style="margin:0 20px; border-radius:16px; background:rgba(198,40,40,.08),rgba(255,255,255,.10); backdrop-filter:blur(20px); padding:16px; display:flex; align-items:center; gap:16px;">
+                <div style="width:5px; align-self:stretch; border-radius:4px; background:#C62828;"></div>
+                <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+                  <div style="font-size:17px; font-weight:500; color:#fff;">Tokyo Adventure</div>
+                  <div style="font-size:12px; color:rgba(255,255,255,.65);">Tokyo Disneyland</div>
+                  <div style="font-size:12px; color:rgba(255,255,255,.5);">Tue, Aug 16</div>
+                </div>
+                <div style="width:52px; text-align:center; display:flex; flex-direction:column; gap:2px;">
+                  <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:28px; font-weight:900; color:#fff;">0</div>
+                  <div style="font-size:12px; color:rgba(255,255,255,.6);">days</div>
+                </div>
+                <div style="color:rgba(255,255,255,.4); font-size:12px;">›</div>
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:0 20px;">
+              <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:rgba(255,255,255,.7);">Past Trips (1)</span>
+              <span style="font-size:13px; font-weight:600; color:rgba(255,255,255,.5);">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HOME — EMPTY ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Empty state · HomeView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:linear-gradient(180deg,#080E24 0%,#0D2545 33%,#1A3A6B 66%,#2B5BA0 100%); box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="position:absolute; inset:0; opacity:.5; background-image:radial-gradient(1.6px 1.6px at 18% 12%,#fff,transparent),radial-gradient(2.2px 2.2px at 72% 18%,#fff,transparent),radial-gradient(1.4px 1.4px at 40% 30%,#fff,transparent),radial-gradient(2px 2px at 84% 44%,#fff,transparent);"></div>
+        <div style="position:relative; height:100%; display:flex; flex-direction:column;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:44px;">
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600; color:#fff;">Countdown to Magic</div>
+            <div style="display:flex; align-items:center; gap:16px; color:#fff; font-size:20px;"><span>⊕</span><span style="opacity:.85;">⚙</span></div>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:28px;">
+            <svg viewBox="0 0 200 200" width="160" height="160" style="filter:drop-shadow(0 0 24px rgba(255,231,128,.45)); opacity:.85;"><path d="M120,20 Q137,63 180,80 Q137,97 20,184 Q97.9,91.9 60,80 Q103,63 120,20 Z" fill="#fff"></path></svg>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+              <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:22px; font-weight:600; color:#fff;">Your adventure awaits!</div>
+              <div style="font-size:17px; color:rgba(255,255,255,.75); text-align:center; padding:0 32px;">Add your first trip to start the countdown.</div>
+            </div>
+            <div style="width:calc(100% - 80px); background:#fff; border-radius:16px; padding:16px 0; text-align:center; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600; color:#000;">⊕ Add Your First Trip</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TRIP DETAIL ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Trip detail · TripDetailView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:linear-gradient(180deg,#080E24 0%,#0D2545 33%,#1A3A6B 66%,#2B5BA0 100%); box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="position:absolute; inset:0; opacity:.45; background-image:radial-gradient(1.6px 1.6px at 14% 10%,#fff,transparent),radial-gradient(2px 2px at 80% 16%,#fff,transparent),radial-gradient(1.4px 1.4px at 48% 26%,#fff,transparent);"></div>
+        <div style="position:relative; height:100%; display:flex; flex-direction:column;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:44px; color:#fff; font-size:17px;">
+            <span>‹ Back</span>
+            <span style="display:flex; gap:16px; font-size:20px;"><span>⤴</span><span>✎</span></span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:24px; padding-top:24px; overflow:hidden;">
+            <div style="display:flex; justify-content:center;">
+              <svg viewBox="0 0 200 200" width="180" height="180" style="opacity:.55;"><path d="M120,20 Q137,63 180,80 Q137,97 20,184 Q97.9,91.9 60,80 Q103,63 120,20 Z" fill="#fff"></path></svg>
+            </div>
+            <div style="padding:0 24px; text-align:center; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:28px; font-weight:700; color:#fff;">Magic Kingdom Family Trip</div>
+            <div style="margin:0 20px; border-radius:28px; padding:24px 0; background:linear-gradient(135deg,rgba(26,58,107,.30),rgba(43,91,160,.12)),rgba(255,255,255,.10); border:1px solid rgba(232,200,74,.28); display:flex; flex-direction:column; align-items:center;">
+              <div style="font-size:12px; font-weight:600; letter-spacing:2px; color:rgba(255,255,255,.65);">MAGIC KINGDOM</div>
+              <div style="margin-top:12px; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:88px; line-height:.95; font-weight:900; color:#fff;">45</div>
+              <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:600; letter-spacing:3px; color:rgba(255,255,255,.75);">DAYS</div>
+            </div>
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.07); padding:16px 20px; display:flex; justify-content:space-between;">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="color:#C9A84C; font-size:20px;">🗓</div><div style="font-size:17px; font-weight:500; color:#fff;">Sep 30</div><div style="font-size:12px; color:rgba(255,255,255,.6);">Start</div></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="color:#C9A84C; font-size:20px;">🗓</div><div style="font-size:17px; font-weight:500; color:#fff;">Oct 7</div><div style="font-size:12px; color:rgba(255,255,255,.6);">End</div></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><div style="color:#C9A84C; font-size:20px;">☾</div><div style="font-size:17px; font-weight:500; color:#fff;">7</div><div style="font-size:12px; color:rgba(255,255,255,.6);">Nights</div></div>
+            </div>
+            <div style="padding:0 20px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+              <span style="background:rgba(26,58,107,.4); border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600; color:#fff;">Magic Kingdom</span>
+              <span style="background:rgba(26,58,107,.4); border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600; color:#fff;">EPCOT</span>
+              <span style="background:rgba(26,58,107,.4); border-radius:999px; padding:5px 10px; font-size:12px; font-weight:600; color:#fff;">Hollywood Studios</span>
+            </div>
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.07); padding:16px 20px; display:flex; align-items:center; gap:12px;">
+              <span style="color:#C9A84C; font-size:17px; width:22px;">▮</span>
+              <span style="flex:1; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:#fff;">Packing List</span>
+              <span style="background:rgba(255,255,255,.12); border-radius:999px; padding:4px 8px; font-size:12px; font-weight:600; color:rgba(255,255,255,.6);">12/38</span>
+              <span style="color:rgba(255,255,255,.4); font-size:12px;">›</span>
+            </div>
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.07); padding:14px 20px; display:flex; align-items:center; gap:10px;">
+              <span style="color:#C9A84C; font-size:17px;">▤</span>
+              <span style="flex:1; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:#fff;">Trip Notes</span>
+              <span style="width:8px; height:8px; border-radius:999px; background:#C9A84C;"></span>
+              <span style="color:rgba(255,255,255,.7); font-size:12px;">⌄</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PACKING LIST ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Packing list · PackingListView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:linear-gradient(180deg,#080E24 0%,#0D2545 33%,#1A3A6B 66%,#2B5BA0 100%); box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="position:relative; height:100%; display:flex; flex-direction:column;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:44px; color:#fff;">
+            <span style="font-size:17px;">‹ Back</span>
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600;">Packing List</span>
+            <span style="display:flex; gap:8px; font-size:20px;"><span>↺</span><span>+</span></span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:20px; padding:16px 0 0; overflow:hidden;">
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.07); padding:16px 0;">
+              <div style="padding:0 20px; display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                  <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:#fff;">12 of 38 packed</div>
+                  <div style="font-size:12px; color:rgba(255,255,255,.65);">26 items left to pack</div>
+                </div>
+                <div style="width:52px; height:52px; border-radius:999px; display:grid; place-items:center; background:conic-gradient(#C9A84C 0 32%, rgba(255,255,255,.15) 32% 100%); position:relative;">
+                  <div style="position:absolute; inset:4px; border-radius:999px; background:#12294a;"></div>
+                  <div style="position:relative; font-size:11px; font-weight:700; color:#fff;">32%</div>
+                </div>
+              </div>
+              <div style="margin:12px 20px 0; height:6px; border-radius:4px; background:rgba(255,255,255,.15); overflow:hidden;"><div style="width:32%; height:100%; background:#C9A84C; border-radius:4px;"></div></div>
+            </div>
+
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.07); overflow:hidden;">
+              <div style="display:flex; align-items:center; gap:8px; padding:10px 20px;">
+                <span style="color:#C9A84C; font-size:12px;">★</span>
+                <span style="font-size:12px; font-weight:600; letter-spacing:.5px; color:rgba(255,255,255,.75);">ESSENTIALS</span>
+                <span style="flex:1;"></span>
+                <span style="font-size:12px; color:rgba(255,255,255,.45);">3/8</span>
+              </div>
+              <div style="height:1px; margin:0 20px; background:rgba(255,255,255,.1);"></div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px;">
+                <span style="width:24px; height:24px; border-radius:999px; background:#C9A84C; color:#000; display:grid; place-items:center; font-size:11px; font-weight:700;">✓</span>
+                <span style="font-size:17px; color:rgba(255,255,255,.4); text-decoration:line-through;">Sunscreen (SPF 50+)</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px;">
+                <span style="width:24px; height:24px; border-radius:999px; border:1.5px solid rgba(255,255,255,.3);"></span>
+                <span style="font-size:17px; color:#fff;">Comfortable walking shoes</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px;">
+                <span style="width:24px; height:24px; border-radius:999px; border:1.5px solid rgba(255,255,255,.3);"></span>
+                <span style="font-size:17px; color:#fff;">Portable phone charger / power bank</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px;">
+                <span style="width:24px; height:24px; border-radius:999px; background:#C9A84C; color:#000; display:grid; place-items:center; font-size:11px; font-weight:700;">✓</span>
+                <span style="font-size:17px; color:rgba(255,255,255,.4); text-decoration:line-through;">Reusable water bottle</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px 16px;">
+                <span style="width:24px; height:24px; border-radius:999px; border:1.5px solid rgba(255,255,255,.3);"></span>
+                <span style="font-size:17px; color:#fff;">Blister prevention / moleskin</span>
+              </div>
+            </div>
+
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.07); overflow:hidden;">
+              <div style="display:flex; align-items:center; gap:8px; padding:10px 20px;">
+                <span style="color:#C9A84C; font-size:12px;">▲</span>
+                <span style="font-size:12px; font-weight:600; letter-spacing:.5px; color:rgba(255,255,255,.75);">PARK DAY</span>
+                <span style="flex:1;"></span>
+                <span style="font-size:12px; color:rgba(255,255,255,.45);">1/7</span>
+              </div>
+              <div style="height:1px; margin:0 20px; background:rgba(255,255,255,.1);"></div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px;">
+                <span style="width:24px; height:24px; border-radius:999px; border:1.5px solid rgba(255,255,255,.3);"></span>
+                <span style="font-size:17px; color:#fff;">Park bag / day pack</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:14px; padding:13px 20px 16px;">
+                <span style="width:24px; height:24px; border-radius:999px; border:1.5px solid rgba(255,255,255,.3);"></span>
+                <span style="font-size:17px; color:#fff;">Themed ears / headband</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PARK DASHBOARD ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Park dashboard · ParkDashboardView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:linear-gradient(180deg,#080E24 0%,#0D2545 33%,#1A3A6B 66%,#2B5BA0 100%); box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="position:relative; height:100%; display:flex; flex-direction:column;">
+          <div style="height:54px;"></div>
+          <div style="display:flex; align-items:center; justify-content:center; height:44px; flex-direction:column; gap:2px;">
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:17px; font-weight:600; color:#fff;">Magic Kingdom</div>
+            <div style="font-size:12px; color:rgba(255,255,255,.65);">Live Wait Times</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:20px; padding:16px 0 0; overflow:hidden;">
+            <div style="display:flex; gap:10px; padding:0 20px;">
+              <span style="background:#C9A84C; color:#000; border-radius:999px; padding:8px 14px; font-size:12px; font-weight:600;">Magic Kingdom</span>
+              <span style="background:rgba(255,255,255,.15); color:#fff; border-radius:999px; padding:8px 14px; font-size:12px; font-weight:600;">EPCOT</span>
+            </div>
+            <div style="margin:0 20px; border-radius:16px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); padding:16px 20px; display:flex;">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="color:#C9A84C; font-size:13px;">⤳</span><span style="font-size:17px; font-weight:500; color:#fff;">38</span><span style="font-size:12px; color:rgba(255,255,255,.6);">Rides Open</span></div>
+              <div style="width:1px; height:36px; background:rgba(255,255,255,.2);"></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="color:#C9A84C; font-size:13px;">◷</span><span style="font-size:17px; font-weight:500; color:#fff;">42 min</span><span style="font-size:12px; color:rgba(255,255,255,.6);">Avg Wait</span></div>
+              <div style="width:1px; height:36px; background:rgba(255,255,255,.2);"></div>
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;"><span style="color:#C9A84C; font-size:13px;">↻</span><span style="font-size:17px; font-weight:500; color:#fff;">2:14 PM</span><span style="font-size:12px; color:rgba(255,255,255,.6);">Updated</span></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; padding:0 20px;">
+              <span style="font-size:12px; font-weight:600; color:rgba(255,255,255,.6);">⇅</span>
+              <span style="background:#C9A84C; color:#000; border-radius:999px; padding:6px 12px; font-size:12px;">Wait Time</span>
+              <span style="background:rgba(255,255,255,.1); color:rgba(255,255,255,.75); border-radius:999px; padding:6px 12px; font-size:12px;">Name</span>
+              <span style="background:rgba(255,255,255,.1); color:rgba(255,255,255,.75); border-radius:999px; padding:6px 12px; font-size:12px;">Status</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="display:flex; align-items:center; gap:8px; padding:0 20px;">
+                <span style="color:#C9A84C; font-size:18px;">★</span>
+                <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:500; color:#fff;">Attractions</span>
+              </div>
+              <div style="margin:0 20px; border-radius:14px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.08); padding:14px 16px; display:flex; align-items:center; gap:14px;">
+                <span style="width:10px; height:10px; border-radius:999px; background:#4CAF50; box-shadow:0 0 8px rgba(76,175,80,.6);"></span>
+                <span style="flex:1; font-size:17px; font-weight:500; color:#fff;">Peter Pan's Flight</span>
+                <span style="display:flex; align-items:baseline; gap:2px;"><span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:28px; font-weight:900; color:#FF6B6B;">65</span><span style="font-size:12px; color:rgba(255,255,255,.7);">min</span></span>
+              </div>
+              <div style="margin:0 20px; border-radius:14px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.08); padding:14px 16px; display:flex; align-items:center; gap:14px;">
+                <span style="width:10px; height:10px; border-radius:999px; background:#4CAF50; box-shadow:0 0 8px rgba(76,175,80,.6);"></span>
+                <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                  <span style="font-size:17px; font-weight:500; color:#fff;">Haunted Mansion</span>
+                </div>
+                <span style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                  <span style="display:flex; align-items:baseline; gap:2px;"><span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:28px; font-weight:900; color:#C9A84C;">35</span><span style="font-size:12px; color:rgba(255,255,255,.7);">min</span></span>
+                  <span style="font-size:12px; color:rgba(255,255,255,.65);">LL: 3:40 PM – 4:40 PM</span>
+                </span>
+              </div>
+              <div style="margin:0 20px; border-radius:14px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.08); padding:14px 16px; display:flex; align-items:center; gap:14px;">
+                <span style="width:10px; height:10px; border-radius:999px; background:#4CAF50; box-shadow:0 0 8px rgba(76,175,80,.6);"></span>
+                <span style="flex:1; font-size:17px; font-weight:500; color:#fff;">Tomorrowland Speedway</span>
+                <span style="display:flex; align-items:baseline; gap:2px;"><span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:28px; font-weight:900; color:#4CAF50;">15</span><span style="font-size:12px; color:rgba(255,255,255,.7);">min</span></span>
+              </div>
+              <div style="margin:0 20px; border-radius:14px; background:rgba(244,67,54,.05),rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.08); padding:14px 16px; display:flex; align-items:center; gap:14px;">
+                <span style="width:10px; height:10px; border-radius:999px; background:#F44336; box-shadow:0 0 8px rgba(244,67,54,.6);"></span>
+                <span style="flex:1; font-size:17px; font-weight:500; color:#fff;">Space Mountain</span>
+                <span style="background:rgba(244,67,54,.85); border-radius:999px; padding:4px 8px; font-size:12px; color:#fff;">Closed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ADD TRIP ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Add trip · AddEditTripView.swift (iOS Form, dark)</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#000; box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="height:54px;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:44px; color:#fff;">
+          <span style="font-size:17px; color:#0A84FF;">‹ Back</span>
+          <span style="font-size:17px; font-weight:600;">New Trip</span>
+          <span style="width:44px;"></span>
+        </div>
+        <div style="padding:18px 0 0; display:flex; flex-direction:column; gap:30px; font-size:17px; color:#fff;">
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">Trip Name</div>
+            <div style="background:#1C1C1E; margin:0 16px; border-radius:10px; padding:11px 16px; color:#8E8E93;">e.g. Smith Family Magic Adventure</div>
+          </div>
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">Trip Dates</div>
+            <div style="background:#1C1C1E; margin:0 16px; border-radius:10px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:11px 16px;"><span>Start Date</span><span style="background:#2C2C2E; border-radius:8px; padding:6px 11px; font-size:17px;">Sep 30, 2026</span></div>
+              <div style="height:1px; margin-left:16px; background:#38383A;"></div>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:11px 16px;"><span>End Date</span><span style="background:#2C2C2E; border-radius:8px; padding:6px 11px; font-size:17px;">Oct 7, 2026</span></div>
+            </div>
+          </div>
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">Destination</div>
+            <div style="margin:0 16px; display:flex; flex-direction:column; gap:12px;">
+              <div style="background:#1C1C1E; border-radius:16px; border:2px solid #1A3A6B;">
+                <div style="display:flex; align-items:center; gap:14px; padding:14px 16px;">
+                  <span style="width:32px; height:32px; border-radius:999px; border:2px solid #1A3A6B; display:grid; place-items:center;"><span style="width:18px; height:18px; border-radius:999px; background:#1A3A6B; display:block;"></span></span>
+                  <span style="flex:1; display:flex; flex-direction:column; gap:2px;"><span style="font-size:17px; font-weight:500;">Walt Disney World</span><span style="font-size:12px; color:#8E8E93;">Orlando, Florida</span></span>
+                  <span style="font-size:12px; color:#8E8E93;">4 parks</span>
+                  <span style="font-size:12px; color:#8E8E93;">⌃</span>
+                </div>
+                <div style="height:1px; margin:0 16px; background:#38383A;"></div>
+                <div style="padding:0 0 8px;">
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 20px;"><span style="color:#1A3A6B; font-size:20px;">◉</span><span>🏰</span><span>Magic Kingdom</span></div>
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 20px;"><span style="color:rgba(142,142,147,.5); font-size:20px;">◯</span><span>🌍</span><span>EPCOT</span></div>
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 20px;"><span style="color:rgba(142,142,147,.5); font-size:20px;">◯</span><span>🎬</span><span>Hollywood Studios</span></div>
+                  <div style="display:flex; align-items:center; gap:12px; padding:10px 20px;"><span style="color:rgba(142,142,147,.5); font-size:20px;">◯</span><span>🦁</span><span>Animal Kingdom</span></div>
+                </div>
+              </div>
+              <div style="background:#1C1C1E; border-radius:16px; display:flex; align-items:center; gap:14px; padding:14px 16px;">
+                <span style="width:32px; height:32px; border-radius:999px; border:2px solid rgba(142,142,147,.4);"></span>
+                <span style="flex:1; display:flex; flex-direction:column; gap:2px;"><span style="font-size:17px; font-weight:500;">Disneyland Resort</span><span style="font-size:12px; color:#8E8E93;">Anaheim, California</span></span>
+                <span style="font-size:12px; color:#8E8E93;">2 parks</span>
+                <span style="font-size:12px; color:#8E8E93;">⌄</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:#1C1C1E; margin:0 16px; border-radius:10px; padding:11px 16px; display:flex; align-items:center; gap:12px;">
+            <span style="flex:1; display:flex; flex-direction:column; gap:2px;"><span>Set as Primary Trip</span><span style="font-size:12px; color:#8E8E93;">Shows as the main countdown on your home screen.</span></span>
+            <span style="width:51px; height:31px; border-radius:999px; background:#30D158; position:relative; flex:0 0 51px;"><span style="position:absolute; top:2px; right:2px; width:27px; height:27px; border-radius:999px; background:#fff;"></span></span>
+          </div>
+          <div style="background:#1C1C1E; margin:0 16px; border-radius:10px; padding:11px 16px; text-align:center; font-family:ui-rounded,'SF Pro Rounded',system-ui; font-weight:600; color:#0A84FF;">Create Trip</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Settings · SettingsView.swift</div>
+      <div style="width:390px; height:844px; border-radius:44px; overflow:hidden; position:relative; background:#000; box-shadow:0 24px 60px rgba(0,0,0,.5);">
+        <div style="height:54px;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:44px; color:#fff;">
+          <span style="font-size:17px; color:#0A84FF;">‹ Back</span>
+          <span style="font-size:17px; font-weight:600;">Settings</span>
+          <span style="width:44px;"></span>
+        </div>
+        <div style="padding:18px 0 0; display:flex; flex-direction:column; gap:30px; font-size:17px; color:#fff;">
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">Appearance</div>
+            <div style="background:#1C1C1E; margin:0 16px; border-radius:10px; padding:11px 16px; display:flex; justify-content:space-between;"><span>Theme</span><span style="color:#8E8E93;">System ⌄</span></div>
+          </div>
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">iCloud</div>
+            <div style="background:#1C1C1E; margin:0 16px; border-radius:10px; padding:11px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="width:28px; color:#C9A84C; font-size:20px;">☁</span>
+              <span style="flex:1; display:flex; flex-direction:column; gap:2px;"><span>Sync Trips</span><span style="font-size:12px; color:#8E8E93;">Syncing with iCloud</span></span>
+            </div>
+          </div>
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">Notifications</div>
+            <div style="background:#1C1C1E; margin:0 16px; border-radius:10px; padding:11px 16px; display:flex; align-items:center; gap:12px;">
+              <span style="width:28px; color:#C9A84C; font-size:20px;">🔔</span>
+              <span style="flex:1; display:flex; flex-direction:column; gap:2px;"><span>Milestone Notifications</span><span style="font-size:12px; color:#8E8E93;">Get notified at 100 days, 1 week, and more.</span></span>
+              <span style="width:51px; height:31px; border-radius:999px; background:#C9A84C; position:relative; flex:0 0 51px;"><span style="position:absolute; top:2px; right:2px; width:27px; height:27px; border-radius:999px; background:#fff;"></span></span>
+            </div>
+          </div>
+          <div>
+            <div style="padding:0 32px 7px; font-size:13px; text-transform:uppercase; color:#8E8E93;">About</div>
+            <div style="background:#1C1C1E; margin:0 16px; border-radius:10px;">
+              <div style="display:flex; justify-content:space-between; padding:11px 16px;"><span>Countdown to Magic</span><span style="color:#C9A84C;">✦</span></div>
+              <div style="height:1px; margin-left:16px; background:#38383A;"></div>
+              <div style="display:flex; justify-content:space-between; padding:11px 16px;"><span>Version</span><span style="color:#8E8E93;">1.0.0 (1)</span></div>
+              <div style="height:1px; margin-left:16px; background:#38383A;"></div>
+              <div style="padding:11px 16px; color:#0A84FF;">Privacy Policy</div>
+              <div style="height:1px; margin-left:16px; background:#38383A;"></div>
+              <div style="padding:11px 16px; color:#0A84FF;">Support</div>
+            </div>
+            <div style="padding:7px 32px 0; font-size:12px; line-height:1.35; color:#8E8E93;">Countdown to Magic is an unofficial app. Not affiliated with, endorsed by, or sponsored by The Walt Disney Company.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ WIDGETS ══ -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#8E8E93; font-weight:600;">Widgets · DaysTilDisneyWidget.swift</div>
+      <div style="width:390px; padding:32px 24px; border-radius:32px; background:#1C1C1E; display:flex; flex-direction:column; gap:28px;">
+        <div style="display:flex; gap:20px; align-items:flex-start;">
+          <div style="width:158px; height:158px; border-radius:22px; overflow:hidden; position:relative; background:linear-gradient(135deg,#080E24,#0D2545 40%,#1A3A6B 70%,#2B5BA0); padding:14px; display:flex; flex-direction:column;">
+            <svg viewBox="0 0 200 200" width="70" height="70" style="position:absolute; right:-10px; bottom:-10px; opacity:.12;"><path d="M120,20 Q137,63 180,80 Q137,97 20,184 Q97.9,91.9 60,80 Q103,63 120,20 Z" fill="#fff"></path></svg>
+            <div style="font-size:20px;">🏰</div>
+            <div style="flex:1;"></div>
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:44px; font-weight:700; color:#fff; line-height:1;">42</div>
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:14px; font-weight:600; color:rgba(255,255,255,.8);">days</div>
+            <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:12px; font-weight:500; color:rgba(255,255,255,.7);">Magic Trip</div>
+          </div>
+          <div style="width:158px; height:158px; border-radius:22px; overflow:hidden; position:relative; background:#000; display:grid; place-items:center;">
+            <div style="width:96px; height:96px; border-radius:999px; background:rgba(255,255,255,.12); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; color:#fff;">
+              <span style="font-size:12px;">🏰</span>
+              <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:20px; font-weight:700;">42</span>
+              <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:8px; font-weight:500;">days</span>
+            </div>
+          </div>
+        </div>
+        <div style="width:100%; height:158px; border-radius:22px; overflow:hidden; position:relative; background:linear-gradient(135deg,#080E24,#0D2545 40%,#1A3A6B 70%,#2B5BA0); padding:16px; display:flex; flex-direction:column;">
+          <svg viewBox="0 0 200 200" width="100" height="100" style="position:absolute; right:-30px; top:15px; opacity:.2;"><path d="M120,20 Q137,63 180,80 Q137,97 20,184 Q97.9,91.9 60,80 Q103,63 120,20 Z" fill="#fff"></path></svg>
+          <div style="font-size:20px;">🏰</div>
+          <div style="flex:1;"></div>
+          <div style="display:flex; align-items:baseline; gap:4px;">
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:48px; font-weight:700; color:#fff; line-height:1;">42</span>
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:18px; font-weight:600; color:rgba(255,255,255,.8);">days</span>
+          </div>
+          <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:14px; font-weight:500; color:rgba(255,255,255,.8);">Magic Trip</div>
+          <div style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:11px; color:rgba(255,255,255,.5);">September 27, 2026</div>
+        </div>
+        <div style="width:100%; border-radius:16px; background:rgba(255,255,255,.12); padding:12px 16px; display:flex; align-items:center; gap:8px; color:#fff;">
+          <div style="min-width:40px; display:flex; flex-direction:column; align-items:center;">
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:26px; font-weight:700;">42</span>
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:9px; font-weight:500;">days</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:12px; font-weight:600;">🏰 Magic Trip</span>
+            <span style="font-family:ui-rounded,'SF Pro Rounded',system-ui; font-size:10px; opacity:.7;">Sep 27</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

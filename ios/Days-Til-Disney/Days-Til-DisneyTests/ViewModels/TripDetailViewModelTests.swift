@@ -114,7 +114,7 @@ final class TripDetailViewModelTests: XCTestCase {
         let sut = makeVM(tripID: trip.id)
         await sut.onAppear()
 
-        XCTAssertEqual(themeProvider.currentTheme.park, .tokyoDisneySea)
+        XCTAssertEqual(themeProvider.park, .tokyoDisneySea)
     }
 
     // MARK: - Milestone checking

@@ -2,10 +2,8 @@ import SwiftUI
 
 struct HomeView: View {
     @Environment(AppContainer.self) private var appContainer
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var viewModel: HomeViewModel?
-    @State private var showCelebration = false
     @State private var pastTripsExpanded = false
     /// Tracks whether the initial load via `.task` has completed.
     /// `.onAppear` skips the first fire so only return-from-navigation refreshes run.
@@ -15,25 +13,21 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            // Layer 0: Park-themed gradient fills the entire screen.
-            GradientBackgroundView()
-
-            // Layer 1: Star field (visible at dusk/night, invisible during the day).
-            StarFieldView()
+            DTDColor.bg
+                .ignoresSafeArea()
 
             Group {
                 if let vm = viewModel {
                     contentView(vm: vm)
                 } else {
                     ProgressView()
-                        .tint(.white)
+                        .tint(DTDColor.accentInteractive)
                 }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        // C-1: Prevent the system from inserting a translucent material bar over the gradient.
+        // Keep the flat bg showing through — no translucent material bar.
         .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar { toolbarContent }
         .task {
             // Create the VM once on first appearance and load data.
@@ -50,20 +44,13 @@ struct HomeView: View {
             Task { await vm.onRefresh() }
         }
         .onChange(of: viewModel?.activeMilestone) { _, newValue in
-            withAnimation(reduceMotion ? .none : .easeInOut(duration: 0.3)) {
-                showCelebration = newValue != nil
-            }
-        }
-        .onChange(of: showCelebration) { _, isShown in
-            // When the overlay is dismissed (by tapping or the button), clear the VM's state.
-            if !isShown { viewModel?.dismissMilestone() }
-        }
-        .overlay {
-            if showCelebration, let vm = viewModel, let event = vm.activeMilestone {
-                CelebrationOverlay(event: event, isPresented: $showCelebration)
-                    .transition(.opacity)
-                    .zIndex(100)
-            }
+            // Reaching a milestone pushes the full-bleed MilestoneView (replaces the dropped
+            // particle overlay). Fire the haptic at the instant it resolves, then clear the
+            // VM flag so re-triggering works.
+            guard let event = newValue else { return }
+            MilestoneHaptic.fire(event.celebrationType)
+            router.navigate(to: .milestone(tripID: event.tripID))
+            viewModel?.dismissMilestone()
         }
     }
 
@@ -93,64 +80,39 @@ struct HomeView: View {
     private var loadingView: some View {
         VStack(spacing: 16) {
             ProgressView()
-                .tint(.white)
+                .tint(DTDColor.accentInteractive)
                 .scaleEffect(1.4)
             Text("Loading your magic...")
-                .font(DTDFont.body)
-                .foregroundStyle(.white.opacity(0.8))
+                .font(DTDFont.prose)
+                .foregroundStyle(DTDColor.textMuted)
         }
     }
 
+    // Family (b) — two-column canvas on regular width; the existing single column on
+    // compact (iPhone + iPad multitasking). Two-column only anchors when a primary trip
+    // exists (it owns the sole park panel); otherwise the single column is used at any width.
     @ViewBuilder
     private func loadedView(vm: HomeViewModel, primary: Trip?, secondary: [Trip], past: [Trip]) -> some View {
+        if let primary {
+            DTDTwoColumnCanvas(
+                lead: { VStack(spacing: 20) { heroAndTiles(vm: vm, primary: primary) } },
+                trailing: { VStack(spacing: 20) { neutralStack(vm: vm, secondary: secondary, past: past) } },
+                compact: { AnyView(singleColumn(vm: vm, primary: primary, secondary: secondary, past: past)) }
+            )
+        } else {
+            singleColumn(vm: vm, primary: nil, secondary: secondary, past: past)
+        }
+    }
+
+    // The iPhone / compact body — unchanged content and order (hero → tiles → daily →
+    // list → past). Kept as the single source the two-column families reuse.
+    private func singleColumn(vm: HomeViewModel, primary: Trip?, secondary: [Trip], past: [Trip]) -> some View {
         ScrollView {
             LazyVStack(spacing: 20) {
-                // Hero countdown for primary trip.
                 if let primary {
-                    CountdownHeroView(
-                        trip: primary,
-                        onTap: { router.navigate(to: .tripDetail(tripID: primary.id)) },
-                        onAddTrip: { router.navigate(to: .addTrip) }
-                    )
+                    heroAndTiles(vm: vm, primary: primary)
                 }
-
-                // Daily content card.
-                if let content = vm.dailyContent {
-                    DailyContentCardView(content: content)
-                        .padding(.horizontal, 20)
-                }
-
-                // Secondary trip cards (upcoming and ongoing).
-                if !secondary.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "suitcase.fill")
-                                .font(DTDFont.titleSecondary)
-                                .foregroundStyle(.white.opacity(0.8))
-                                .accessibilityHidden(true)
-                            Text("Other Trips")
-                                .font(DTDFont.titleSecondary)
-                                .foregroundStyle(.white)
-                        }
-                        .padding(.horizontal, 20)
-
-                        ForEach(secondary) { trip in
-                            TripCardView(
-                                trip: trip,
-                                onTap: { router.navigate(to: .tripDetail(tripID: trip.id)) },
-                                onSetPrimary: { Task { await vm.setPrimaryTrip(id: trip.id) } },
-                                onEdit: { router.navigate(to: .editTrip(tripID: trip.id)) },
-                                onDelete: { Task { await vm.deleteTrip(id: trip.id) } }
-                            )
-                            .padding(.horizontal, 20)
-                        }
-                    }
-                }
-
-                // Collapsible past trips section.
-                if !past.isEmpty {
-                    pastTripsSection(vm: vm, past: past)
-                }
+                neutralStack(vm: vm, secondary: secondary, past: past)
 
                 // Bottom padding for tab bar / home indicator.
                 Spacer().frame(height: 40)
@@ -158,6 +120,50 @@ struct HomeView: View {
             .padding(.top, 16)
         }
         .refreshable { await vm.onRefresh() }
+    }
+
+    // Lead column content: the sole park panel (hero) + its stat tiles.
+    @ViewBuilder
+    private func heroAndTiles(vm: HomeViewModel, primary: Trip) -> some View {
+        CountdownHeroView(
+            trip: primary,
+            onTap: { router.navigate(to: .tripDetail(tripID: primary.id)) },
+            onAddTrip: { router.navigate(to: .addTrip) }
+        )
+
+        statTiles(for: primary)
+            .padding(.horizontal, 20)
+    }
+
+    // Trailing column content: the neutral stack (daily card + trip list + past trips).
+    @ViewBuilder
+    private func neutralStack(vm: HomeViewModel, secondary: [Trip], past: [Trip]) -> some View {
+        if let content = vm.dailyContent {
+            DailyContentCardView(content: content)
+                .padding(.horizontal, 20)
+        }
+
+        if !secondary.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionLabel("Other trips")
+                    .padding(.horizontal, 20)
+
+                ForEach(secondary) { trip in
+                    TripCardView(
+                        trip: trip,
+                        onTap: { router.navigate(to: .tripDetail(tripID: trip.id)) },
+                        onSetPrimary: { Task { await vm.setPrimaryTrip(id: trip.id) } },
+                        onEdit: { router.navigate(to: .editTrip(tripID: trip.id)) },
+                        onDelete: { Task { await vm.deleteTrip(id: trip.id) } }
+                    )
+                    .padding(.horizontal, 20)
+                }
+            }
+        }
+
+        if !past.isEmpty {
+            pastTripsSection(vm: vm, past: past)
+        }
     }
 
     @ViewBuilder
@@ -170,15 +176,13 @@ struct HomeView: View {
                 }
             } label: {
                 HStack(spacing: 8) {
-                    Text("Past Trips (\(past.count))")
-                        .font(DTDFont.titleSecondary)
-                        .foregroundStyle(.white.opacity(0.7))
+                    SectionLabel("Past trips (\(past.count))")
 
                     Spacer()
 
                     Image(systemName: "chevron.right")
                         .font(.footnote.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.5))
+                        .foregroundStyle(DTDColor.textFaint)
                         .rotationEffect(.degrees(pastTripsExpanded ? 90 : 0))
                 }
                 .padding(.horizontal, 20)
@@ -210,34 +214,82 @@ struct HomeView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            // H-1: Use DTDFont.headline — rounds, semibold, Dynamic Type aware.
+            // Plain wordmark. Fixed 19pt (never grows with Dynamic Type, so it can't
+            // clip at AX5) and left queryable so the UITest can find the staticText.
+            // fixedSize forces the leading toolbar slot to grant intrinsic width —
+            // without it the slot compresses the text to "C…". Safe at AX5 because the
+            // point size is fixed, so the natural width never exceeds the bar.
             Text("Countdown to Magic")
-                .font(DTDFont.headline)
-                .foregroundStyle(.white)
+                .font(.system(size: 19, weight: .bold, design: .rounded))
+                .tracking(-0.3)
+                .foregroundStyle(DTDColor.textPrimary)
+                .lineLimit(1)
                 .fixedSize()
-                .accessibilityHidden(true)
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-            HStack(spacing: 16) {
-                Button {
+            HStack(spacing: DTDSpacing.x3) {
+                DTDIconButton(glyph: "+", accessibilityLabel: "Add new trip", tone: .loud) {
                     router.navigate(to: .addTrip)
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(.white)
-                        .font(.title3)
                 }
-                .accessibilityLabel("Add new trip")
-
-                Button {
+                // The "•••" button is the toolbar Settings entry — label kept as "Settings".
+                DTDIconButton(glyph: "•••", accessibilityLabel: "Settings") {
                     router.navigate(to: .settings)
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .foregroundStyle(.white.opacity(0.85))
-                        .font(.title3)
                 }
-                .accessibilityLabel("Settings")
             }
         }
+    }
+
+    // MARK: - Stat tiles (Home)
+
+    /// The Packed + Next-up tile pair beneath the hero. Both derive from the trip
+    /// (packing items / milestone thresholds) — no ViewModel API added.
+    @ViewBuilder
+    private func statTiles(for trip: Trip) -> some View {
+        HStack(spacing: DTDSpacing.tileGap) {
+            packedTile(for: trip)
+            nextUpTile(for: trip)
+        }
+    }
+
+    @ViewBuilder
+    private func packedTile(for trip: Trip) -> some View {
+        let items = trip.packingItems ?? []
+        let total = items.count
+        let packed = items.filter(\.isChecked).count
+
+        Button {
+            router.navigate(to: .packingList(tripID: trip.id))
+        } label: {
+            StatTile(label: "Packed",
+                     value: "\(packed)",
+                     sub: total > 0 ? "/\(total)" : nil) {
+                if total > 0 {
+                    DTDProgressBar(value: packed, total: total).padding(.top, DTDSpacing.x1)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func nextUpTile(for trip: Trip) -> some View {
+        // Next milestone the countdown will reach (largest threshold still below today's count).
+        // Non-navigating in Wave A — the milestone screen + route land in Phase 4.10.
+        let daysOut = trip.daysUntilStart
+        Button {
+            router.navigate(to: .milestone(tripID: trip.id))
+        } label: {
+            if let next = Milestone.all.filter({ $0.daysOut < daysOut }).max(by: { $0.daysOut < $1.daysOut }) {
+                StatTile(label: "Next up",
+                         value: "\(next.daysOut)",
+                         caption: "days → \(next.title)")
+            } else {
+                StatTile(label: "Next up",
+                         value: "—",
+                         caption: trip.isPast ? "trip complete" : "you're there now!")
+            }
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -247,40 +299,45 @@ private struct EmptyTripsView: View {
     let onAddTrip: () -> Void
 
     var body: some View {
-        VStack(spacing: 28) {
-            HeroMarkView(
-                park: .magicKingdom,
-                size: 160,
-                color: .white,
-                opacity: 0.85,
-                showGlow: true,
-                glowColor: Color.magicSparkle
+        VStack(spacing: 20) {
+            // Neutral surface panel (no park colour when there's nothing to count down to).
+            VStack(alignment: .leading, spacing: 0) {
+                Text("00")
+                    .dtdNumeral(.screen)
+                    .foregroundStyle(DTDColor.textFaint)
+
+                Text("Nothing to count down to — yet.")
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .tracking(-0.6)
+                    .foregroundStyle(DTDColor.textPrimary)
+                    .padding(.top, DTDSpacing.x7)
+
+                Text("Pick your park and your dates. Everything else fills itself in.")
+                    .font(.system(size: 16, weight: .regular, design: .default))
+                    .lineSpacing(4)
+                    .foregroundStyle(DTDColor.textMuted)
+                    .padding(.top, DTDSpacing.x4)
+
+                DTDButton("Add a trip", action: onAddTrip)
+                    .padding(.top, DTDSpacing.x9)
+                    .accessibilityLabel("Add a trip")
+            }
+            .padding(.vertical, DTDSpacing.x14)
+            .padding(.horizontal, DTDSpacing.x12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: DTDRadius.hero, style: .continuous)
+                    .fill(DTDColor.surface)
             )
 
-            VStack(spacing: 12) {
-                Text("Your adventure awaits!")
-                    .font(DTDFont.titlePrimary)
-                    .foregroundStyle(.white)
-
-                Text("Add your first trip to start the countdown.")
-                    .font(DTDFont.body)
-                    .foregroundStyle(.white.opacity(0.75))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
+            HStack(spacing: DTDSpacing.tileGap) {
+                StatTile(label: "Parks", value: "12", caption: "across 6 resorts")
+                StatTile(label: "Tips", value: "1/day", caption: "once a trip exists")
             }
-
-            Button(action: onAddTrip) {
-                Label("Add Your First Trip", systemImage: "plus.circle.fill")
-                    .font(DTDFont.headline)
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .padding(.horizontal, 40)
-            }
-            .accessibilityLabel("Add your first trip")
         }
+        .padding(.horizontal, DTDSpacing.gutter)
+        .padding(.top, 16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }
 
@@ -294,27 +351,19 @@ private struct ErrorStateView: View {
         VStack(spacing: 20) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 44))
-                .foregroundStyle(.white.opacity(0.8))
+                .foregroundStyle(DTDColor.textMuted)
 
             Text("Something went wrong")
-                .font(DTDFont.titleSecondary)
-                .foregroundStyle(.white)
+                .font(DTDFont.title)
+                .foregroundStyle(DTDColor.textPrimary)
 
             Text(message)
-                .font(DTDFont.body)
-                .foregroundStyle(.white.opacity(0.7))
+                .font(DTDFont.prose)
+                .foregroundStyle(DTDColor.textMuted)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
 
-            Button(action: onRetry) {
-                Text("Try Again")
-                    .font(DTDFont.headline)
-                    .foregroundStyle(.black)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 12)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
+            DTDButton("Try again", full: false, action: onRetry)
         }
     }
 }

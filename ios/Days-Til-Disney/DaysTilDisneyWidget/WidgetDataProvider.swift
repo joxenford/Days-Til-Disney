@@ -75,7 +75,7 @@ struct WidgetDataProvider {
         let trips = (try? context.fetch(descriptor)) ?? []
         // Show primary trips first in the picker.
         let sorted = trips.sorted { ($0.isPrimary ? 0 : 1) < ($1.isPrimary ? 0 : 1) }
-        return sorted.map { TripAppEntity(id: $0.id, name: $0.name, parkEmoji: $0.primaryPark.emoji) }
+        return sorted.map { TripAppEntity(id: $0.id, name: $0.name) }
     }
 }
 

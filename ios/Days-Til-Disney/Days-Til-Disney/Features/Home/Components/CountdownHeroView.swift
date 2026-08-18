@@ -2,26 +2,22 @@ import SwiftUI
 
 /// The large, park-themed countdown hero displayed for the primary trip.
 /// Shows days when >1 day away, switches to hours/minutes on the final day,
-/// and displays a celebration state when daysOut == 0.
+/// and displays a celebration/ongoing state when the trip is under way.
+///
+/// Toy Box: one `ParkPanel` (the single park-coloured surface on Home), oversized
+/// left-aligned numeral, white-on-panel text. No gradient, shadow, or blur.
 struct CountdownHeroView: View {
     let trip: Trip
     let onTap: () -> Void
     /// Called when the user taps "Plan your next adventure" on a past primary trip.
     var onAddTrip: (() -> Void)? = nil
 
-    @Environment(\.parkThemeProvider) private var themeProvider
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(AppContainer.self) private var appContainer
 
-    @State private var countdownScale: Double = 1.0
     /// Shortest standby wait fetched for the live teaser. nil while loading or if unavailable.
     @State private var shortestWait: Int? = nil
     @State private var liveFetchAttempted = false
-
-    /// Accent color used for glows — prefer the theme's accent, fall back to park palette.
-    private var accentColor: Color {
-        themeProvider.currentTheme.accentColor
-    }
 
     var body: some View {
         // Always use a 1-second interval so the isFinalDay transition fires promptly at
@@ -31,92 +27,27 @@ struct CountdownHeroView: View {
             let countdown = trip.startDate.countdownComponents
 
             Button(action: trip.isPast ? (onAddTrip ?? onTap) : onTap) {
-                ZStack {
-                    // Card background: subtle park gradient tint over glass material.
-                    RoundedRectangle(cornerRadius: 28)
-                        .fill(.ultraThinMaterial)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 28)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            trip.colorPalette.primary.opacity(0.30),
-                                            trip.colorPalette.backgroundGradientEnd.opacity(0.12),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                        }
-                        // Thin accent border for park identity.
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 28)
-                                .strokeBorder(
-                                    LinearGradient(
-                                        colors: [
-                                            accentColor.opacity(0.40),
-                                            accentColor.opacity(0.10),
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                        }
-
-                    VStack(spacing: 0) {
-                        // Hero mark header — glows with the park's accent color.
-                        HeroMarkView(
-                            park: trip.primaryPark,
-                            size: 110,
-                            color: .white,
-                            opacity: 0.80,
-                            showGlow: true,
-                            glowColor: accentColor
-                        )
-                        .padding(.top, 28)
-
-                        // Park name — use .textCase(.uppercase) rather than .uppercased()
-                        // so VoiceOver reads the natural name instead of spelling letters.
-                        Text(trip.primaryPark.displayName)
-                            .font(DTDFont.captionBold)
-                            .foregroundStyle(.white.opacity(0.65))
-                            .textCase(.uppercase)
-                            .tracking(2)
-                            .padding(.top, 4)
+                ParkPanel(park: trip.primaryPark,
+                          label: trip.primaryPark.displayName,
+                          badge: "PRIMARY") {
+                    VStack(alignment: .leading, spacing: DTDSpacing.x5) {
+                        countdownDisplay(countdown: countdown)
 
                         // Trip name.
                         Text(trip.name)
-                            .font(DTDFont.titlePrimary)
+                            .font(DTDFont.title)
                             .foregroundStyle(.white)
-                            .multilineTextAlignment(.center)
                             .lineLimit(2)
-                            .padding(.horizontal, 24)
-                            .padding(.top, 8)
 
-                        // Countdown display.
-                        countdownDisplay(countdown: countdown)
-                            .padding(.top, 20)
-                            .scaleEffect(countdownScale)
-
-                        // Trip dates.
-                        HStack(spacing: 6) {
-                            Image(systemName: "calendar")
-                                .font(.footnote)
-                            Text("\(trip.startDate.dayMonthDateString) – \(trip.endDate.dayMonthDateString)")
-                                .font(DTDFont.caption)
-                        }
-                        .foregroundStyle(.white.opacity(0.6))
-                        .padding(.top, 12)
-                        .padding(.bottom, 28)
+                        // Trip dates + nights.
+                        Text(datesLine)
+                            .font(DTDFont.prose)
+                            .foregroundStyle(.white.opacity(0.78))
                     }
                 }
             }
             .buttonStyle(.plain)
-            .padding(.horizontal, 20)
-            // Two-layer shadow: a deep shadow for elevation, plus a colored bloom for magic.
-            .shadow(color: .black.opacity(0.35), radius: 24, y: 10)
-            .shadow(color: accentColor.opacity(0.25), radius: 32, y: 4)
+            .padding(.horizontal, DTDSpacing.gutter)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(trip.isPast
                 ? "Trip complete. \(trip.name)."
@@ -126,22 +57,6 @@ struct CountdownHeroView: View {
                 ? "Tap to plan your next adventure"
                 : "Tap to view full trip details"
             )
-            .onChange(of: countdown.days) { _, _ in
-                // Animate the number change when the day flips.
-                guard !reduceMotion else { return }
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
-                    countdownScale = 1.08
-                }
-            }
-            .task(id: countdownScale) {
-                // Return scale to 1.0 after the bounce — Task cancels automatically
-                // when the view disappears or countdownScale changes again.
-                guard countdownScale != 1.0 else { return }
-                try? await Task.sleep(for: .seconds(0.3))
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    countdownScale = 1.0
-                }
-            }
         }
     }
 
@@ -156,113 +71,68 @@ struct CountdownHeroView: View {
         } else if countdown.isFinalDay {
             finalDayDisplay(countdown: countdown)
         } else {
-            daysDisplay(countdown: countdown)
-        }
-    }
-
-    private func daysDisplay(countdown: Date.CountdownComponents) -> some View {
-        VStack(spacing: 4) {
-            Text("\(countdown.days)")
-                .font(DTDFont.countdownLarge)
-                .foregroundStyle(.white)
-                .minimumScaleFactor(0.5)
-                .contentTransition(.numericText())
-
-            // Use .textCase(.uppercase) so VoiceOver reads "days" not "D-A-Y-S".
-            Text(countdown.days == 1 ? "day" : "days")
-                .font(DTDFont.countdownLabel())
-                .foregroundStyle(.white.opacity(0.75))
-                .textCase(.uppercase)
-                .tracking(3)
+            // The day-flip spring bump lives inside CountdownNumeral (bumps on value change).
+            CountdownNumeral(value: countdown.days,
+                             unit: countdown.days == 1 ? "day" : "days",
+                             size: .hero,
+                             onPark: true)
         }
     }
 
     private func finalDayDisplay(countdown: Date.CountdownComponents) -> some View {
-        VStack(spacing: 4) {
-            HStack(alignment: .lastTextBaseline, spacing: 4) {
-                Text("\(countdown.hours)")
-                    .font(DTDFont.countdownSmall)
-                    .foregroundStyle(.white)
-                    .minimumScaleFactor(0.5)
-                    .contentTransition(.numericText())
-
-                Text("h")
-                    .font(DTDFont.titleSecondary)
-                    .foregroundStyle(.white.opacity(0.75))
-
-                Text("\(countdown.minutes)")
-                    .font(DTDFont.countdownSmall)
-                    .foregroundStyle(.white)
-                    .minimumScaleFactor(0.5)
-                    .contentTransition(.numericText())
-
-                Text("m")
-                    .font(DTDFont.titleSecondary)
-                    .foregroundStyle(.white.opacity(0.75))
+        VStack(alignment: .leading, spacing: DTDSpacing.x1) {
+            HStack(alignment: .lastTextBaseline, spacing: DTDSpacing.x2) {
+                Text("\(countdown.hours)").dtdNumeral(.screen)
+                Text("h").font(DTDFont.title).foregroundStyle(.white.opacity(0.7))
+                Text("\(countdown.minutes)").dtdNumeral(.screen)
+                Text("m").font(DTDFont.title).foregroundStyle(.white.opacity(0.7))
             }
+            .foregroundStyle(.white)
 
-            // Use .textCase(.uppercase) so VoiceOver reads "until magic" not "U-N-T-I-L".
+            // .textCase(.uppercase) so VoiceOver reads "until magic" not "U-N-T-I-L".
             Text("until magic")
-                .font(DTDFont.countdownLabel())
-                .foregroundStyle(.white.opacity(0.75))
+                .font(DTDFont.labelUpper)
+                .foregroundStyle(.white.opacity(0.7))
                 .textCase(.uppercase)
-                .tracking(2)
+                .tracking(1.4)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var ongoingDisplay: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: DTDSpacing.x3) {
             // "Day X of Y" counter.
-            let dayNumber = ongoingDayNumber
-            let totalDays = trip.durationDays
-
-            HStack(alignment: .lastTextBaseline, spacing: 4) {
-                Text("Day")
-                    .font(DTDFont.titleSecondary)
-                    .foregroundStyle(.white.opacity(0.75))
-                Text("\(dayNumber)")
-                    .font(.system(size: 56, weight: .black, design: .rounded))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [Color.magicSparkle, accentColor],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .shadow(color: Color.magicSparkle.opacity(0.6), radius: 10)
-                Text("of \(totalDays)")
-                    .font(DTDFont.titleSecondary)
-                    .foregroundStyle(.white.opacity(0.75))
+            HStack(alignment: .lastTextBaseline, spacing: DTDSpacing.x2) {
+                Text("Day").font(DTDFont.title).foregroundStyle(.white.opacity(0.75))
+                Text("\(ongoingDayNumber)").dtdNumeral(.screen).foregroundStyle(.white)
+                Text("of \(trip.durationDays)").font(DTDFont.title).foregroundStyle(.white.opacity(0.75))
             }
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Day \(dayNumber) of \(totalDays)")
+            .accessibilityLabel("Day \(ongoingDayNumber) of \(trip.durationDays)")
 
             Text("You're at the parks!")
-                .font(DTDFont.headline)
+                .font(DTDFont.bodyStrong)
                 .foregroundStyle(.white.opacity(0.85))
 
             // Live wait teaser — only shown after a successful fetch.
             if let wait = shortestWait {
-                HStack(spacing: 6) {
+                HStack(spacing: DTDSpacing.x2) {
                     Image(systemName: "clock.fill")
                         .font(.caption)
-                        .foregroundStyle(Color(hex: "#4CAF50"))
                         .accessibilityHidden(true)
                     Text("Shortest wait: \(wait) min")
-                        .font(DTDFont.captionBold)
-                        .foregroundStyle(Color(hex: "#4CAF50"))
+                        .font(DTDFont.bodyStrong)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(
-                    Capsule()
-                        .fill(Color(hex: "#4CAF50").opacity(0.15))
-                        .overlay(Capsule().strokeBorder(Color(hex: "#4CAF50").opacity(0.35), lineWidth: 1))
-                )
+                .foregroundStyle(.white)
+                .padding(.horizontal, DTDSpacing.x5)
+                .padding(.vertical, DTDSpacing.x2)
+                .background(DTDColor.onParkBadge)
+                .clipShape(Capsule())
                 .transition(.opacity.combined(with: .scale(scale: 0.9)))
                 .accessibilityLabel("Shortest current wait: \(wait) minutes")
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .task(id: trip.id) {
             // Only fetch once per view instance; cache handles freshness.
             guard !liveFetchAttempted, trip.isOngoing else { return }
@@ -271,7 +141,7 @@ struct CountdownHeroView: View {
                 let minWait = data.operatingAttractions
                     .compactMap(\.standbyWaitMinutes)
                     .min()
-                withAnimation(.easeIn(duration: 0.3)) {
+                withAnimation(reduceMotion ? .none : .easeIn(duration: 0.3)) {
                     shortestWait = minWait
                 }
             }
@@ -288,39 +158,41 @@ struct CountdownHeroView: View {
     }
 
     private var pastDisplay: some View {
-        VStack(spacing: 12) {
-            // Warm golden icon with a soft glow to evoke fond memories, not an error state.
-            ZStack {
-                Image(systemName: "photo.on.rectangle")
-                    .font(.system(size: 40))
-                    .foregroundStyle(accentColor)
-                    .blur(radius: 10)
-                    .opacity(0.5)
-                Image(systemName: "photo.on.rectangle")
-                    .font(.system(size: 40))
-                    .foregroundStyle(accentColor.opacity(0.9))
-            }
+        VStack(alignment: .leading, spacing: DTDSpacing.x3) {
+            Image(systemName: "photo.on.rectangle")
+                .font(.system(size: 40))
+                .foregroundStyle(.white.opacity(0.9))
 
-            Text("Trip Complete")
-                .font(DTDFont.headline)
-                .foregroundStyle(.white.opacity(0.85))
+            Text("Trip complete")
+                .font(DTDFont.title)
+                .foregroundStyle(.white)
 
             Text("The memories live on forever.")
-                .font(DTDFont.caption)
-                .foregroundStyle(.white.opacity(0.65))
+                .font(DTDFont.prose)
+                .foregroundStyle(.white.opacity(0.78))
 
             if onAddTrip != nil {
-                Label("Plan your next adventure!", systemImage: "plus.circle.fill")
-                    .font(DTDFont.bodyMedium)
-                    .foregroundStyle(.black)
+                // Visual affordance only — the whole hero Button routes to onAddTrip for past trips.
+                Text("Plan your next adventure")
+                    .font(DTDFont.bodyStrong)
+                    .foregroundStyle(DTDColor.textPrimary)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(Color.white.opacity(0.9))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(.horizontal, 8)
-                    .padding(.top, 4)
+                    .padding(.vertical, 15)
+                    .background(DTDColor.bg)
+                    .clipShape(RoundedRectangle(cornerRadius: DTDRadius.tileSm, style: .continuous))
+                    .padding(.top, DTDSpacing.x1)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    // MARK: - Helpers
+
+    private var datesLine: String {
+        let base = "\(trip.startDate.dayMonthDateString) – \(trip.endDate.dayMonthDateString)"
+        let nights = max(0, trip.durationDays - 1)
+        guard nights > 0 else { return base }
+        return "\(base) · \(nights) night\(nights == 1 ? "" : "s")"
     }
 }
 
@@ -328,7 +200,7 @@ struct CountdownHeroView: View {
 
 #Preview("45 Days") {
     ZStack {
-        Color(hex: "#0D2545").ignoresSafeArea()
+        DTDColor.bg.ignoresSafeArea()
         CountdownHeroView(trip: Trip.preview, onTap: {})
             .environment(\.parkThemeProvider, ParkThemeProvider.preview())
             .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
@@ -337,7 +209,7 @@ struct CountdownHeroView: View {
 
 #Preview("Today") {
     ZStack {
-        Color(hex: "#880E4F").ignoresSafeArea()
+        DTDColor.bg.ignoresSafeArea()
         CountdownHeroView(trip: Trip.previewToday, onTap: {})
             .environment(\.parkThemeProvider, ParkThemeProvider.preview(park: .tokyoDisneyland))
             .environment(AppContainer(modelContainer: SwiftDataContainer.preview))
