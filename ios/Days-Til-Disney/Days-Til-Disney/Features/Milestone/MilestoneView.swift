@@ -29,7 +29,9 @@ struct MilestoneView: View {
             } else if loadFailed {
                 notFound
             } else {
-                ProgressView().tint(.white)
+                // `backdrop` is still the neutral page colour until the trip resolves,
+                // so tint like every other loading state — a white spinner is invisible.
+                ProgressView().tint(DTDColor.accentInteractive)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
@@ -87,11 +89,12 @@ struct MilestoneView: View {
                         MilestoneStrip(daysOut: daysOut, onPark: true)
                             .padding(.top, DTDSpacing.x2)
 
-                        VStack(spacing: DTDSpacing.x3) {
-                            DTDButton("Let's go", variant: .onPark) { dismiss() }
-                            DTDButton("Share it", variant: .outlineOnPark) { dismiss() }
-                        }
-                        .padding(.top, DTDSpacing.x4)
+                        // ponytail: only the dismiss action ships. The design's "Share it"
+                        // button had no share plumbing here (it just dismissed, which reads
+                        // as a broken share). Sharing lives on Trip Detail; add it back when
+                        // ShareCountdownCard + ImageRenderer are lifted out of TripDetailView.
+                        DTDButton("Let's go", variant: .onPark) { dismiss() }
+                            .padding(.top, DTDSpacing.x4)
                     }
                 }
                 // Clamp the type block on regular-width iPad (full-bleed colour still bleeds

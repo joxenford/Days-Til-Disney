@@ -190,7 +190,9 @@ struct CountdownHeroView: View {
 
     private var datesLine: String {
         let base = "\(trip.startDate.dayMonthDateString) – \(trip.endDate.dayMonthDateString)"
-        let nights = max(0, trip.durationDays - 1)
+        // `durationDays` is already the night count (start→end day delta), matching the
+        // "Nights" tile on Trip Detail and ShareCountdownCard. Do not subtract again.
+        let nights = trip.durationDays
         guard nights > 0 else { return base }
         return "\(base) · \(nights) night\(nights == 1 ? "" : "s")"
     }

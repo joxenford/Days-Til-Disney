@@ -89,7 +89,8 @@ struct ParkDashboardView: View {
         DTDTwoColumnCanvas(
             lead: { VStack(spacing: DTDSpacing.tileGap) { leadContent(vm: vm) } },
             trailing: { VStack(spacing: DTDSpacing.tileGap) { trailingContent(vm: vm) } },
-            compact: { AnyView(singleColumn(vm: vm)) }
+            compact: { AnyView(singleColumn(vm: vm)) },
+            refresh: { await vm.refresh() }
         )
     }
 
