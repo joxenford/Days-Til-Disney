@@ -39,8 +39,12 @@ struct MilestoneView: View {
         .navigationBarTitleDisplayMode(.inline)
         // Transparent bar keeps the system back/swipe escape over the full-bleed colour.
         .toolbarBackground(.hidden, for: .navigationBar)
+        // UIActivityViewController dismisses itself, so clear in onDismiss rather than
+        // relying on the binding setter alone — otherwise the flag stays true and the
+        // second "Share it" tap does nothing.
         .sheet(isPresented: Binding(get: { shareImage != nil },
-                                    set: { if !$0 { shareImage = nil } })) {
+                                    set: { if !$0 { shareImage = nil } }),
+               onDismiss: { shareImage = nil }) {
             if let shareImage {
                 ShareSheet(image: shareImage)
                     .ignoresSafeArea()
