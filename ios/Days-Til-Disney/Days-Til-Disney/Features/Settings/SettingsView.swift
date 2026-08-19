@@ -83,14 +83,30 @@ struct SettingsView: View {
 
     // MARK: - Toggle rows
 
+    @ViewBuilder
     private func iCloudRow(vm: SettingsViewModel) -> some View {
-        settingRow(
-            title: "Sync trips with iCloud",
-            subtitle: vm.iCloudSyncStatus.displayTitle
-        ) {
-            // iCloud sync is system-controlled — the switch reflects state but is not tappable.
-            DTDToggle(isOn: .constant(vm.iCloudSyncStatus.isActive), accessibilityLabel: "iCloud sync")
-                .allowsHitTesting(false)
+        if vm.iCloudSyncStatus == .notSignedIn {
+            // Not signed in — an untappable off switch is a dead end, so offer the same
+            // escape hatch the notifications row uses.
+            settingRow(
+                title: "Sync trips with iCloud",
+                subtitle: "Sign in to iCloud in Settings to sync across your devices"
+            ) {
+                DTDButton("Open Settings", variant: .secondary, full: false) {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            }
+        } else {
+            settingRow(
+                title: "Sync trips with iCloud",
+                subtitle: vm.iCloudSyncStatus.displayTitle
+            ) {
+                // iCloud sync is system-controlled — the switch reflects state but is not tappable.
+                DTDToggle(isOn: .constant(vm.iCloudSyncStatus.isActive), accessibilityLabel: "iCloud sync")
+                    .allowsHitTesting(false)
+            }
         }
     }
 

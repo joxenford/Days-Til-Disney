@@ -102,13 +102,7 @@ final class TripDetailViewModel {
         isGeneratingShareImage = true
         shareImage = nil
 
-        // ImageRenderer must be created and used on the main actor. `scheme` is
-        // threaded explicitly because ImageRenderer does not inherit colorScheme.
-        let card = ShareCountdownCard(trip: trip, scheme: scheme)
-        let renderer = ImageRenderer(content: card)
-        // Render at 3x for crisp social-share quality.
-        renderer.scale = 3.0
-        shareImage = renderer.uiImage
+        shareImage = ShareCountdownCard.rendered(trip: trip, scheme: scheme)
         isGeneratingShareImage = false
     }
 

@@ -372,23 +372,6 @@ struct TripDetailView: View {
     }
 }
 
-// MARK: - UIActivityViewController wrapper
-
-/// A thin UIViewControllerRepresentable that presents UIActivityViewController
-/// for sharing a UIImage.
-private struct ShareSheet: UIViewControllerRepresentable {
-    let image: UIImage
-
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(
-            activityItems: [image],
-            applicationActivities: nil
-        )
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
 // MARK: - Preview
 
 #Preview {

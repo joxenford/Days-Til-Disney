@@ -15,6 +15,8 @@ struct MilestoneView: View {
 
     @State private var trip: Trip?
     @State private var loadFailed = false
+    /// Non-nil once the share card has rendered — doubles as the sheet's presentation flag.
+    @State private var shareImage: UIImage?
 
     var body: some View {
         ZStack {
@@ -29,12 +31,25 @@ struct MilestoneView: View {
             } else if loadFailed {
                 notFound
             } else {
-                ProgressView().tint(.white)
+                // `backdrop` is still the neutral page colour until the trip resolves,
+                // so tint like every other loading state — a white spinner is invisible.
+                ProgressView().tint(DTDColor.accentInteractive)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
         // Transparent bar keeps the system back/swipe escape over the full-bleed colour.
         .toolbarBackground(.hidden, for: .navigationBar)
+        // UIActivityViewController dismisses itself, so clear in onDismiss rather than
+        // relying on the binding setter alone — otherwise the flag stays true and the
+        // second "Share it" tap does nothing.
+        .sheet(isPresented: Binding(get: { shareImage != nil },
+                                    set: { if !$0 { shareImage = nil } }),
+               onDismiss: { shareImage = nil }) {
+            if let shareImage {
+                ShareSheet(image: shareImage)
+                    .ignoresSafeArea()
+            }
+        }
         .task {
             // Read-only trip fetch — no new ViewModel API (guardrail); resolves park,
             // daysUntilStart, and the matching milestone locally. On throw/nil we surface a
@@ -87,9 +102,14 @@ struct MilestoneView: View {
                         MilestoneStrip(daysOut: daysOut, onPark: true)
                             .padding(.top, DTDSpacing.x2)
 
-                        VStack(spacing: DTDSpacing.x3) {
+                        // Stacked pair, 12px gap per the button spec. The card carries the
+                        // live countdown, which differs from the milestone numeral above when
+                        // this screen was reached by browsing rather than by hitting the day.
+                        VStack(spacing: DTDSpacing.x5) {
                             DTDButton("Let's go", variant: .onPark) { dismiss() }
-                            DTDButton("Share it", variant: .outlineOnPark) { dismiss() }
+                            DTDButton("Share it", variant: .outlineOnPark) {
+                                shareImage = ShareCountdownCard.rendered(trip: trip, scheme: colorScheme)
+                            }
                         }
                         .padding(.top, DTDSpacing.x4)
                     }

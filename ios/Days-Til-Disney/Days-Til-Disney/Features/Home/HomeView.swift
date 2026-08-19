@@ -97,7 +97,10 @@ struct HomeView: View {
             DTDTwoColumnCanvas(
                 lead: { VStack(spacing: 20) { heroAndTiles(vm: vm, primary: primary) } },
                 trailing: { VStack(spacing: 20) { neutralStack(vm: vm, secondary: secondary, past: past) } },
-                compact: { AnyView(singleColumn(vm: vm, primary: primary, secondary: secondary, past: past)) }
+                compact: { AnyView(singleColumn(vm: vm, primary: primary, secondary: secondary, past: past)) },
+                // Home has no toolbar refresh, so the regular-width columns must keep
+                // pull-to-refresh or iPad loses every way to reload.
+                refresh: { await vm.onRefresh() }
             )
         } else {
             singleColumn(vm: vm, primary: nil, secondary: secondary, past: past)
@@ -274,22 +277,26 @@ struct HomeView: View {
     @ViewBuilder
     private func nextUpTile(for trip: Trip) -> some View {
         // Next milestone the countdown will reach (largest threshold still below today's count).
-        // Non-navigating in Wave A — the milestone screen + route land in Phase 4.10.
         let daysOut = trip.daysUntilStart
-        Button {
-            router.navigate(to: .milestone(tripID: trip.id))
-        } label: {
-            if let next = Milestone.all.filter({ $0.daysOut < daysOut }).max(by: { $0.daysOut < $1.daysOut }) {
+        let next = Milestone.all.filter { $0.daysOut < daysOut }.max(by: { $0.daysOut < $1.daysOut })
+
+        if let next {
+            Button {
+                router.navigate(to: .milestone(tripID: trip.id))
+            } label: {
                 StatTile(label: "Next up",
                          value: "\(next.daysOut)",
                          caption: "days → \(next.title)")
-            } else {
-                StatTile(label: "Next up",
-                         value: "—",
-                         caption: trip.isPast ? "trip complete" : "you're there now!")
             }
+            .buttonStyle(.plain)
+        } else {
+            // No milestone left (in-park or past). Stays inert — pushing MilestoneView here
+            // would fall back to the day-0 "Today is the day!" entry, which is wrong for a
+            // trip that already happened.
+            StatTile(label: "Next up",
+                     value: "—",
+                     caption: trip.isPast ? "trip complete" : "you're there now!")
         }
-        .buttonStyle(.plain)
     }
 }
 

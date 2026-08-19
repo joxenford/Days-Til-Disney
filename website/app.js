@@ -65,42 +65,6 @@
   });
 })();
 
-/* ---- Live countdown ticker (hero phone mockup) ---- */
-(function initCountdown() {
-  // Update the phone mockup and countdown demo blocks with a realistic countdown.
-  // We use a fixed "trip date" 47 days from page load just for demo purposes.
-  var tripDate = new Date();
-  tripDate.setDate(tripDate.getDate() + 47);
-  tripDate.setHours(14, 32, 0, 0);
-
-  function pad(n) {
-    return String(n).padStart(2, '0');
-  }
-
-  function update() {
-    var now = new Date();
-    var diff = tripDate - now;
-
-    if (diff <= 0) return;
-
-    var totalSeconds = Math.floor(diff / 1000);
-    var days         = Math.floor(totalSeconds / 86400);
-    var hours        = Math.floor((totalSeconds % 86400) / 3600);
-    var minutes      = Math.floor((totalSeconds % 3600) / 60);
-
-    // Feature card countdown demo
-    var demoNums = document.querySelectorAll('.countdown-demo__num');
-    if (demoNums.length >= 3) {
-      demoNums[0].textContent = pad(days);
-      demoNums[1].textContent = pad(hours);
-      demoNums[2].textContent = pad(minutes);
-    }
-  }
-
-  update();
-  setInterval(update, 1000);
-})();
-
 /* ---- Smooth scroll for anchor links ---- */
 (function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {

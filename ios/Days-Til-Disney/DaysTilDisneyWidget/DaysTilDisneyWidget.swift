@@ -327,14 +327,16 @@ private func widgetAccessibilityLabel(trip: WidgetTripEntry) -> String {
 
 struct EmptyWidgetView: View {
     var body: some View {
+        // No trip -> the container paints the neutral page colour, not a park panel,
+        // so the labels must be ink (.primary/.secondary), never white.
         VStack(spacing: 6) {
             Text("Countdown to Magic")
                 .font(.system(size: 13, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
                 .multilineTextAlignment(.center)
             Text("Add a trip!")
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
-                .foregroundStyle(.white.opacity(0.75))
+                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)

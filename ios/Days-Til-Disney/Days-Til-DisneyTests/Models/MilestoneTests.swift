@@ -98,4 +98,23 @@ final class MilestoneTests: XCTestCase {
         // On/after arrival: all eight reached.
         XCTAssertEqual(MilestoneStrip.passedCount(daysOut: 0), 8)
     }
+
+    // MARK: - "Next up" milestone selection (Home tile + MilestoneView share this rule)
+
+    /// The largest threshold still *below* today's count — the one the countdown will hit next.
+    private func nextUp(daysOut: Int) -> Milestone? {
+        Milestone.all.filter { $0.daysOut < daysOut }.max(by: { $0.daysOut < $1.daysOut })
+    }
+
+    func test_nextUpMilestone_selection() {
+        XCTAssertEqual(nextUp(daysOut: 45)?.daysOut, 30)
+        // Standing exactly on a threshold looks past it, never at itself.
+        XCTAssertEqual(nextUp(daysOut: 30)?.daysOut, 14)
+        XCTAssertEqual(nextUp(daysOut: 1)?.daysOut, 0)
+        // Arrival day and after have nothing left — the Home tile must stay inert here
+        // rather than pushing MilestoneView, which falls back to the day-0 entry.
+        XCTAssertNil(nextUp(daysOut: 0))
+        XCTAssertNil(nextUp(daysOut: -5))
+        XCTAssertEqual(MilestoneView.milestone(for: -5).daysOut, 0)
+    }
 }

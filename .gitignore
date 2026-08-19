@@ -206,3 +206,18 @@ logs/
 *.swp
 *.swo
 *~
+
+
+# ============================================================
+# Claude Code
+# ============================================================
+# Local state only — agent definitions are shared config and stay tracked.
+# `.claude/*` (not `.claude/`) so the negation below can re-include a child.
+.claude/*
+!.claude/agents/
+**/.claude/agent-memory/
+**/.claude/settings.local.json
+.netlify/
+
+# Local QA / review captures
+screenshots/

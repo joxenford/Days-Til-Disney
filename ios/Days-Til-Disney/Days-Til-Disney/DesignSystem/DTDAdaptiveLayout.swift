@@ -54,6 +54,9 @@ struct DTDTwoColumnCanvas<Lead: View, Trailing: View>: View {
     @ViewBuilder var trailing: () -> Trailing
     /// The single-column (compact / iPhone) body. Kept verbatim so compact never changes.
     @ViewBuilder var compact: () -> AnyView
+    /// Pull-to-refresh for the regular-width columns. The compact body owns its own
+    /// `.refreshable`; without this the two-column path silently loses the gesture.
+    var refresh: (() async -> Void)? = nil
 
     @Environment(\.horizontalSizeClass) private var hSize
 
@@ -82,15 +85,30 @@ struct DTDTwoColumnCanvas<Lead: View, Trailing: View>: View {
                         .padding(.top, DTDSpacing.x7)
                         .padding(.bottom, 40)
                 }
+                .refreshableIfAvailable(refresh)
                 ScrollView {
                     trailing()
                         .frame(width: trailingWidth, alignment: .leading)
                         .padding(.top, DTDSpacing.x7)
                         .padding(.bottom, 40)
                 }
+                .refreshableIfAvailable(refresh)
             }
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.horizontal, margin)
+        }
+    }
+}
+
+private extension View {
+    /// `.refreshable` only when a handler was supplied — passing nil leaves the
+    /// ScrollView gesture-free rather than installing a no-op refresh control.
+    @ViewBuilder
+    func refreshableIfAvailable(_ action: (() async -> Void)?) -> some View {
+        if let action {
+            self.refreshable { await action() }
+        } else {
+            self
         }
     }
 }
