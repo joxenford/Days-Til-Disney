@@ -15,6 +15,8 @@ struct MilestoneView: View {
 
     @State private var trip: Trip?
     @State private var loadFailed = false
+    /// Non-nil once the share card has rendered — doubles as the sheet's presentation flag.
+    @State private var shareImage: UIImage?
 
     var body: some View {
         ZStack {
@@ -37,6 +39,13 @@ struct MilestoneView: View {
         .navigationBarTitleDisplayMode(.inline)
         // Transparent bar keeps the system back/swipe escape over the full-bleed colour.
         .toolbarBackground(.hidden, for: .navigationBar)
+        .sheet(isPresented: Binding(get: { shareImage != nil },
+                                    set: { if !$0 { shareImage = nil } })) {
+            if let shareImage {
+                ShareSheet(image: shareImage)
+                    .ignoresSafeArea()
+            }
+        }
         .task {
             // Read-only trip fetch — no new ViewModel API (guardrail); resolves park,
             // daysUntilStart, and the matching milestone locally. On throw/nil we surface a
@@ -89,12 +98,16 @@ struct MilestoneView: View {
                         MilestoneStrip(daysOut: daysOut, onPark: true)
                             .padding(.top, DTDSpacing.x2)
 
-                        // ponytail: only the dismiss action ships. The design's "Share it"
-                        // button had no share plumbing here (it just dismissed, which reads
-                        // as a broken share). Sharing lives on Trip Detail; add it back when
-                        // ShareCountdownCard + ImageRenderer are lifted out of TripDetailView.
-                        DTDButton("Let's go", variant: .onPark) { dismiss() }
-                            .padding(.top, DTDSpacing.x4)
+                        // Stacked pair, 12px gap per the button spec. The card carries the
+                        // live countdown, which differs from the milestone numeral above when
+                        // this screen was reached by browsing rather than by hitting the day.
+                        VStack(spacing: DTDSpacing.x5) {
+                            DTDButton("Let's go", variant: .onPark) { dismiss() }
+                            DTDButton("Share it", variant: .outlineOnPark) {
+                                shareImage = ShareCountdownCard.rendered(trip: trip, scheme: colorScheme)
+                            }
+                        }
+                        .padding(.top, DTDSpacing.x4)
                     }
                 }
                 // Clamp the type block on regular-width iPad (full-bleed colour still bleeds

@@ -134,6 +134,38 @@ extension ShareCountdownCard {
     }
 }
 
+// MARK: - Rendering
+
+extension ShareCountdownCard {
+    /// Renders the card to a share-ready image. `scheme` is threaded explicitly
+    /// because `ImageRenderer` does not inherit `colorScheme` — pass the sharing
+    /// screen's scheme so the export matches what the user is looking at.
+    @MainActor
+    static func rendered(trip: Trip, scheme: ColorScheme) -> UIImage? {
+        let renderer = ImageRenderer(content: ShareCountdownCard(trip: trip, scheme: scheme))
+        // Render at 3x for crisp social-share quality.
+        renderer.scale = 3.0
+        return renderer.uiImage
+    }
+}
+
+// MARK: - UIActivityViewController wrapper
+
+/// A thin UIViewControllerRepresentable that presents UIActivityViewController
+/// for sharing a UIImage. Shared by Trip Detail and the milestone screen.
+struct ShareSheet: UIViewControllerRepresentable {
+    let image: UIImage
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(
+            activityItems: [image],
+            applicationActivities: nil
+        )
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
 // MARK: - Preview
 
 #Preview("Share Card — Countdown") {
